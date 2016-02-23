@@ -1,10 +1,11 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :signed_in?
+  helper_method :current_user, :signed_in?, :logged_in!
 
   private
   def current_user
+    return nil unless session[:session_token]
     @current_user ||= User.find_by_session_token(session[:session_token])
   end
 
@@ -12,9 +13,9 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
-  def logged_in
-    if signed_in?
-      render json: @current_user
+  def logged_in!
+    if current_user
+      render json: current_user
     end
   end
 

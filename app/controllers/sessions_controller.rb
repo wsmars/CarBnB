@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :logged_in
+  before_filter :logged_in!, only: [:create, :new]
 
   def new
   end
@@ -20,6 +20,6 @@ class SessionsController < ApplicationController
 
   def destroy
     sign_out
-    redirect_to new_session_url
+    redirect_to root_url
   end
 end
