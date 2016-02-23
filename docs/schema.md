@@ -13,6 +13,11 @@ status      | string    | not null, (available, pending)
 user_id     | integer   | not null, foreign key (references users(hoster)), indexed
 availability| boolean   | not null, default: true
 price       | float     | not null
+street_#    | integer   | not null
+street_name | string    | not null
+city        | string    | not null
+state       | string    | not null
+zip_code    | integer   | not null
 
 ## images
 column name | data type | details
@@ -22,7 +27,7 @@ images_url  | string    | not null
 car_id      | integer   | not null, foreign key (references cars), indexed
 
 
-## location
+<!-- ## location
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
@@ -31,7 +36,7 @@ street_#    | integer   | not null
 street_name | string    | not null
 city        | string    | not null
 state       | string    | not null
-zip_code    | integer   | not null
+zip_code    | integer   | not null -->
 
 
 

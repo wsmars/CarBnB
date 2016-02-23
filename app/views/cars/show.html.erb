@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>show page for car</title>
+  </head>
+  <body>
+    <h2><%= @car.year %> <%= @car.make %> <%= @car.model %></h2>
+    <ul>Milage: <%= @car.milage %></ul>
+    <ul>One day cost: $<%= @car.price %></ul>
+    <ul>Car type: <%= @car.car_type %></ul>
+    <ul>Car status: <%= @car.status %></ul>
+    <ul>Car Location: <%= @car.street %>, <%= @car.city %>, <%= @car.state %> <%= @car.zip_code %>
+    </ul>
+    <p>
+      <h5>Description</h5>
+      <br>
+      <%= @car.description %>
+    </p>
+    <br>
+    <% if @car.owner == current_user %>
+      <h3>Edit Car</h3>
+      <form action="<%= car_url(@car) %>" method="post">
+        <input type="hidden" name="_method" value="patch">
+        <%= auth_token_input %>
+
+        <label>
+          Make
+          <input type="text" name="car[make]" value="<%= @car.make %>">
+        </label>
+
+        <label>
+          Model
+          <input type="text" name="car[model]" value="<%= @car.model %>">
+        </label>
+
+        <label>
+          Year
+        <select name="car[year]">
+          <option></option>
+          <% Car::YEAR.each do |year| %>
+            <option
+              <%= @car.year == year ? "selected" : "" %>
+              value="<%= year %>">
+              <%= year %>
+            </option>
+          <% end %>
+        </select>
+        </label>
+
+        <label>
+          Milage
+          <input type="number" name="car[milage]" value="<%= @car.milage %>">
+        </label>
+
+        <label>
+          Price
+          <input type="number" step="0.01" name="car[price]" value="<%= @car.price %>">
+        </label>
+
+        <label>
+          Car Type
+        <select name="car[car_type]">
+          <option></option>
+          <% Car::CAR_TYPE.each do |car_type| %>
+            <option
+            <%= @car.car_type == car_type ? "selected" : "" %>
+            value="<%= car_type %>">
+              <%= car_type %>
+            </option>
+          <% end %>
+        </select>
+        </label>
+        <br>
+
+        <label>
+          Location:
+          Street
+          <input type="text" name="car[street]" value="<%= @car.street %>">
+        </label>
+
+        <label>
+          City
+          <input type="text" name="car[city]" value="<%= @car.city %>">
+        </label>
+
+        <label>
+          State
+        <select name="car[state]">
+          <option></option>
+          <% Car::STATE.each do |state| %>
+            <option
+            <%= @car.state == state ? "selected" : "" %>
+            value="<%= state %>">
+              <%= state %>
+            </option>
+          <% end %>
+        </select>
+        </label>
+
+        <label>
+          Zip Code
+          <input type="number" name="car[zip_code]" value="<%= @car.zip_code %>">
+        </label>
+
+        <br>
+        <label>
+          Description:
+          <br>
+          <textarea name="car[description]" rows="8" cols="40"><%= @car.description %></textarea>
+        </label>
+
+        <input type="submit" value="Edit the Car">
+      </form>
+
+      <br>
+
+      <%= button_to "Delete", car_url(@car), method: :delete%>
+    <% end %>
+    <%= button_to "Back to Car List", cars_url, method: :get %>
+  </body>
+</html>

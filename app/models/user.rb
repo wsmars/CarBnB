@@ -17,10 +17,12 @@ class User < ActiveRecord::Base
   after_initialize :ensure_session_token!
 
   validates :username, :password_digest, :session_token, presence: true
-  validates :username, :session_token, uniqueness: true
+  validates :username, :email, :session_token, uniqueness: true
   validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create }
-  validates :password, length: {minimum: 6, allow_nil: true}
+  validates :password, length: {minimum: 6, maximum: 12,  allow_nil: true}
   validates_confirmation_of :password
+
+  has_many :cars
 
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)

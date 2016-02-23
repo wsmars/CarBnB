@@ -5,6 +5,103 @@
     <title>Cars</title>
   </head>
   <body>
+    <head>
+      CarBnB
+    </head>
+    <ul>
+      <% @cars.each do |car| %>
+        <li><%= car.year %> <%=link_to car.make, car_url(car)%> <%= link_to car.model, car_url(car) %> <%= car.milage %> miles</li>
+      <% end %>
+    </ul>
 
+    <br>
+    <h3>Make a Post</h3>
+    <br>
+    <form action="<%= cars_url %>" method="post">
+      <%= auth_token_input %>
+
+      <label>
+        Make
+        <input type="text" name="car[make]" value="">
+      </label>
+
+      <label>
+        Model
+        <input type="text" name="car[model]" value="">
+      </label>
+
+      <label>
+        Year
+      <select name="car[year]">
+        <option></option>
+        <% Car::YEAR.each do |year| %>
+          <option>
+            <%= year %>
+          </option>
+        <% end %>
+      </select>
+      </label>
+
+      <label>
+        Milage
+        <input type="number" name="car[milage]" value="">
+      </label>
+
+      <label>
+        Price
+        <input type="number" step="0.01" name="car[price]" value="">
+      </label>
+
+      <label>
+        Car Type
+      <select name="car[car_type]">
+        <option></option>
+        <% Car::CAR_TYPE.each do |car_type| %>
+          <option>
+            <%= car_type %>
+          </option>
+        <% end %>
+      </select>
+      </label>
+      <br>
+
+      <label>
+        Location:
+        Street
+        <input type="text" name="car[street]" value="">
+      </label>
+
+      <label>
+        City
+        <input type="text" name="car[city]" value="">
+      </label>
+
+      <label>
+        State
+      <select name="car[state]">
+        <option></option>
+        <% Car::STATE.each do |state| %>
+          <option>
+            <%= state %>
+          </option>
+        <% end %>
+      </select>
+      </label>
+
+      <label>
+        Zip Code
+        <input type="number" name="car[zip_code]" value="">
+      </label>
+
+      <br>
+      <label>
+        Description:
+        <br>
+        <textarea name="car[description]" rows="8" cols="40"></textarea>
+      </label>
+
+      <input type="submit" value="Post A Car">
+    </form>
   </body>
+  <%= button_to "Back to Root", root_url, :method => :get %>
 </html>
