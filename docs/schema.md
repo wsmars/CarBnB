@@ -13,7 +13,7 @@ status      | string    | not null, (available, pending)
 hoster_id   | integer   | not null, foreign key (references users(hoster)), indexed
 location_id | integer   | not null, foreign key (references location), indexed
 availability| boolean   | not null, default: false
-images      | option    |
+images_ulr  | array     |
 
 ## location
 column name | data type | details
@@ -62,3 +62,4 @@ username        | string    | not null, indexed, unique
 password_digest | string    | not null
 session_token   | string    | not null, indexed, unique
 user_type       | string    | not null, only: (client, hoster)
+email           | string    | not null

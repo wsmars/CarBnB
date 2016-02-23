@@ -1,4 +1,4 @@
-# FresherNote
+# CarBnB
 
 [AirBnB link][airbnb] **NB:** This should be a link to your production site
 
