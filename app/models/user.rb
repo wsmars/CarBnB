@@ -6,7 +6,6 @@
 #  username        :string           not null
 #  password_digest :string           not null
 #  session_token   :string           not null
-#  user_type       :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  email           :string
@@ -17,11 +16,10 @@ class User < ActiveRecord::Base
 
   after_initialize :ensure_session_token!
 
-  validates :username, :password_digest, :session_token, :user_type, presence: true
+  validates :username, :password_digest, :session_token, presence: true
   validates :username, :session_token, uniqueness: true
   validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, on: :create }
   validates :password, length: {minimum: 6, allow_nil: true}
-  validates :user_type, inclusion: %w(hoster client)
   validates_confirmation_of :password
 
   def self.find_by_credentials(username, password)

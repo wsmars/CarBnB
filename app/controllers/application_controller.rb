@@ -12,6 +12,12 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
+  def logged_in
+    if signed_in?
+      render json: @current_user
+    end
+  end
+
   def sign_in(user)
     @current_user = user
     session[:session_token] = user.reset_token!

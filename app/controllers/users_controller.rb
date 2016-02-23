@@ -6,14 +6,14 @@
 #  username        :string           not null
 #  password_digest :string           not null
 #  session_token   :string           not null
-#  user_type       :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  email           :string
 #
 
 class UsersController < ApplicationController
-
+  before_action :logged_in
+  
   def new
     @user = User.new
   end
@@ -31,6 +31,6 @@ class UsersController < ApplicationController
 
   private
   def user_params
-    params.require(:user).permit(:username, :password, :password_confirmation, :email, :user_type)
+    params.require(:user).permit(:username, :password, :password_confirmation, :email)
   end
 end

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: redirect("/users")
+  root to: redirect("/users/new")
 
   resources :users, only: [:new, :create]
   resource :session, only: [:new, :create, :destroy]
