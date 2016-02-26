@@ -1,0 +1,43 @@
+{
+  "name": "CarBnB",
+  "version": "1.0.0",
+  "description": "TrekBnB, a clone of airbnb.com, is a web application built with Ruby on Rails, PostgreSQL, React.js, Flux, Google Maps API v3, Bootstrap, and jQuery.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wsmars/CarBnB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/appacademy/BenchBnb/issues"
+  },
+  "homepage": "https://github.com/wsmars/CarBnB#readme",
+  "devDependencies": {
+    "babel-core": "^6.2.0",
+    "babel-loader": "^6.2.0",
+    "babel-preset-react": "^6.1.18",
+    "webpack": "^1.12.2"
+  },
+  "dependencies": {
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.3",
+    "babel-preset-react": "^6.5.0",
+    "flux": "^2.1.1",
+    "history": "^1.17.0",
+    "jquery": "^2.1.4",
+    "react": "^0.14.7",
+    "react-addons-linked-state-mixin": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-router": "^1.0.3",
+    "webpack": "^1.12.14"
+  }
+}

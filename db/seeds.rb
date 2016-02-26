@@ -12,6 +12,7 @@ User.create!(username: 'wsmars1', password: 123456, email: 'wsmars1@hotmail.com'
 User.create!(username: 'wsmars2', password: 123456, email: 'wsmars2@hotmail.com')
 User.create!(username: 'wsmars3', password: 123456, email: 'wsmars3@hotmail.com')
 User.create!(username: 'wsmars4', password: 123456, email: 'wsmars4@hotmail.com')
+User.create!(username: 'wsmars5', password: 123456, email: 'wsmars5@hotmail.com')
 
 Car.create!(make: 'BMW', model: 'M3', year: 2015, milage: 5000, price: 200.00,
             car_type: 'Sports Car', description: 'A fast car', street: '123 Wolf rd.',
@@ -36,3 +37,7 @@ Car.create!(make: 'Mecedes-Benz', model: 'GLA', year: 2015, milage: 15000, price
             car_type: 'Convertible', description: 'A confortable car',
             street: '400 Finch rd.', city: 'Cupertino', state: 'CA', zip_code: 95014,
             user_id: 1)
+Car.create!(make: 'VW', model: 'GTI', year: 2015, milage: 15000, price: 70.00,
+            car_type: 'Convertible', description: 'A small car', status: 'rent out',
+            street: '1000 De Anza Blvd.', city: 'Cupertino', state: 'CA', zip_code: 95014,
+            user_id: 2)

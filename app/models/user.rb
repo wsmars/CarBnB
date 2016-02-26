@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
 
   has_many :cars
 
+  has_many :requests
+  
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)
     (user && user.is_password?(password)) ? user : nil
