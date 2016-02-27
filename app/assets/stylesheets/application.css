@@ -13,3 +13,23 @@
  *= require_tree .
  *= require_self
  */
+html, body, #root, #app {
+  height: 100%;
+  // font: sans-serif;
+  font-family: 'Oxygen', sans-serif;
+  font-size: 14px;
+  padding: 10px 10px;
+  background-image: url(home_page_background);
+}
+
+.land-page {
+
+}
+
+.home-page-slogan {
+
+}
+
+.home-page-statement {
+
+}

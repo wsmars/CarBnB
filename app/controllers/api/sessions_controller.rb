@@ -4,6 +4,14 @@ class Api::SessionsController < ApplicationController
   def new
   end
 
+  def show
+    if current_user
+      @user = current_user
+    else
+      render json: nil
+    end
+  end
+
   def create
     @user = User.find_by_credentials(
       params[:user][:username],
@@ -11,13 +19,14 @@ class Api::SessionsController < ApplicationController
     )
     if @user
       sign_in(@user)
+      render :show
     else
-      render json: {error: "Username or Password is invalid"}
+      render json: {message: ["Username or Password is invalid"]}, status: 422
     end
   end
 
   def destroy
     sign_out
-    render json: ["You have logged out"]
+    render json: {message: "You have logged out"}
   end
 end

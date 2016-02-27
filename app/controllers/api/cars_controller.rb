@@ -37,7 +37,7 @@ class Api::CarsController < ApplicationController
     if @car.save
       redirect_to car_url(@car)
     else
-      render json: {errors: @car.errors.full_messages}
+      render json: {message: @car.errors.full_messages}, status: 422
     end
   end
 
@@ -50,8 +50,7 @@ class Api::CarsController < ApplicationController
     if @car.update_attributes(car_params)
       redirect_to car_url(@car)
     else
-      flash.now[:errors] = @car.errors.full_messages
-      render :edit
+      render json: {message: @car.errors.full_messages}, status: 422
     end
   end
 

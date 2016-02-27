@@ -22,16 +22,29 @@ var SessionActions = {
     });
   },
 
-  logIn: function(credential) {
-    ApiUtil.createSession(credential, this.receiveCurrentUser);
+  showError: function(error) {
+    AppDispatcher.dispatch({
+      actionType: 'ERROR',
+      error: error
+    });
+  }, 
+
+  cleanError: function() {
+    AppDispatcher.dispatch({
+      actionType: 'CLEAN_ERROR',
+    });
+  },
+
+  logIn: function(credential, backRootPage) {
+    ApiUtil.createSession(credential, this.receiveCurrentUser, backRootPage, this.cleanError, this.showError);
   },
 
   logOut: function() {
     ApiUtil.deleteSession(this.removeCurrentUser);
   },
 
-  signUp: function(userAttributes) {
-    ApiUtil.createUser(userAttributes, this.receiveNewUser)
+  signUp: function(userAttributes, backRootPage) {
+    ApiUtil.createUser(userAttributes, this.receiveNewUser, backRootPage, this.cleanError, this.showError)
   }
 };
 

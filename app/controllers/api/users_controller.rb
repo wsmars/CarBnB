@@ -12,16 +12,14 @@
 #
 
 class Api::UsersController < ApplicationController
-  before_action :not_logged_in, only: [:create, :new]
-
+  
   def create
     @user = User.new(user_params)
     if @user.save
       sign_in(@user)
-      render json: @user
+      render :show
     else
-      # flash.now[:errors] = @user.errors.full_messages
-      render json: {errors: @user.errors.full_messages}, status: 422
+      render json: {message: @user.errors.full_messages}, status: 422
     end
   end
 

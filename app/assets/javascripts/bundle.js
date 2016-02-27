@@ -49,19 +49,29 @@
 	var ReactRouter = __webpack_require__(159);
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
+	var IndexRoute = ReactRouter.IndexRoute;
 	var History = __webpack_require__(206);
 	
 	var App = __webpack_require__(211);
+	var Session = __webpack_require__(241);
+	var SignUp = __webpack_require__(246);
+	var SignIn = __webpack_require__(244);
 	var Search = __webpack_require__(212);
 	
 	var routes = React.createElement(
-	  Router,
-	  { history: History.hashHistory },
-	  React.createElement(Route, { path: '/', component: App })
+		Router,
+		{ history: History.HashHistory },
+		React.createElement(
+			Route,
+			{ path: '/', component: App },
+			React.createElement(IndexRoute, { component: Session }),
+			React.createElement(Route, { path: 'signup', component: SignUp }),
+			React.createElement(Route, { path: 'signin', component: SignIn })
+		)
 	);
 	
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(routes, document.getElementById('root'));
+		ReactDOM.render(routes, document.getElementById('root'));
 	});
 
 /***/ },
@@ -24423,17 +24433,67 @@
 
 	var React = __webpack_require__(1);
 	var Search = __webpack_require__(212);
+	
 	var Session = __webpack_require__(241);
+	var MessageStore = __webpack_require__(245);
+	var ApiUtil = __webpack_require__(236);
+	var SessionActions = __webpack_require__(242);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
 	
+	  getInitialState: function () {
+	    return {
+	      error: MessageStore.error()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.tokenUser = MessageStore.addListener(this.updateMessage);
+	    ApiUtil.fetchCurrentUser(SessionActions.receiveCurrentUser);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	
+	  updateMessage: function () {
+	    this.setState({ error: MessageStore.error() });
+	  },
+	
+	  renderError: function (error) {
+	    if (error.length > 0) {
+	      var returnArray = [];
+	      error.forEach(function (message) {
+	        returnArray.push(React.createElement(
+	          'li',
+	          null,
+	          message
+	        ));
+	      });
+	      return returnArray;
+	    } else {
+	      return null;
+	    }
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement(Session, null),
+	      { className: 'land-page' },
+	      this.props.children,
+	      this.renderError(this.state.error),
+	      React.createElement(
+	        'h1',
+	        { className: 'home-page-slogan' },
+	        'TRAVEL YOUR WAY'
+	      ),
+	      React.createElement(
+	        'h4',
+	        { className: 'home-page-statement' },
+	        'Rent unique cars to travel from local hosts.'
+	      ),
 	      React.createElement(Search, null)
 	    );
 	  }
@@ -31352,13 +31412,29 @@
 	    });
 	  },
 	
-	  createSession: function (credential, receiveCurrentUser) {
+	  fetchCurrentUser: function (receiveCurrentUser) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'GET',
+	      success: function (user) {
+	        receiveCurrentUser(user);
+	      }
+	    });
+	  },
+	
+	  createSession: function (credential, receiveCurrentUser, backRootPage, cleanError, showError) {
 	    $.ajax({
 	      url: '/api/session',
 	      data: { user: credential },
 	      type: 'POST',
 	      success: function (user) {
+	        cleanError();
+	        backRootPage();
 	        receiveCurrentUser(user);
+	      },
+	      error: function (error) {
+	        showError(error.responseJSON.message);
+	        // do something with errors
 	      }
 	    });
 	  },
@@ -31373,13 +31449,19 @@
 	    });
 	  },
 	
-	  createUser: function (userAttributes, receiveNewUser) {
+	  createUser: function (userAttributes, receiveNewUser, backRootPage, cleanError, showError) {
 	    $.ajax({
 	      url: '/api/users',
 	      data: { user: userAttributes },
 	      type: 'POST',
 	      success: function (user) {
+	        cleanError();
+	        backRootPage();
 	        receiveNewUser(user);
+	      },
+	      error: function (error) {
+	        showError(error.responseJSON.message);
+	        // do something with errors
 	      }
 	    });
 	  }
@@ -31627,8 +31709,8 @@
 	var SessionActions = __webpack_require__(242);
 	var UserStore = __webpack_require__(243);
 	var LogInForm = __webpack_require__(244);
-	var SignUpForm = __webpack_require__(245);
-	var LogOutButton = __webpack_require__(246);
+	var SignUpForm = __webpack_require__(246);
+	var LogOutButton = __webpack_require__(247);
 	
 	var Session = React.createClass({
 	  displayName: 'Session',
@@ -31637,63 +31719,73 @@
 	
 	  getInitialState: function () {
 	    return {
-	      clickStatus: false
+	      currentUser: UserStore.all()
 	    };
 	  },
 	
-	  clickSignIn: function () {
-	    this.setState({ clickStatus: 'SignIn' });
+	  componentDidMount: function () {
+	    this.token = UserStore.addListener(this.updateCurrentUser);
 	  },
 	
-	  clickSignUp: function () {
-	    this.setState({ clickStatus: 'SignUp' });
+	  componentWillUnmount: function () {
+	    this.token.remove();
 	  },
 	
-	  clickSignOut: function () {
-	    this.setState({ clickStatus: false });
+	  updateCurrentUser: function () {
+	    this.setState({
+	      currentUser: UserStore.all()
+	    });
 	  },
-	  logoutButton: function () {
-	    debugger;
-	    return UserStore.is_logged_in() ? React.createElement(LogOutButton, null) : null;
+	
+	  toSignUpForm: function () {
+	    this.props.history.push('signup');
+	  },
+	
+	  toSignInForm: function () {
+	    this.props.history.push('signin');
+	  },
+	
+	  handleLogOut: function (e) {
+	    e.preventDefault();
+	    SessionActions.logOut();
+	  },
+	
+	  renderDiv: function () {
+	    if (this.state.currentUser) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        'Hello, ',
+	        this.state.currentUser.username,
+	        React.createElement(
+	          'button',
+	          { onClick: this.handleLogOut },
+	          'Log out'
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'button',
+	          { onClick: this.toSignUpForm },
+	          'Sign Up'
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.toSignInForm },
+	          'Sign In'
+	        )
+	      );
+	    }
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      this.state.clickStatus === 'SignIn' ? React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'button',
-	          { onClick: this.clickSignUp },
-	          'Sign Up'
-	        ),
-	        React.createElement(LogInForm, null)
-	      ) : this.state.clickStatus === 'SignUp' ? React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'button',
-	          { onClick: this.clickSignIn },
-	          'Sign In'
-	        ),
-	        React.createElement(SignUpForm, null)
-	      ) : React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'button',
-	          { onClick: this.clickSignUp },
-	          'Sign Up'
-	        ),
-	        React.createElement(
-	          'button',
-	          { onClick: this.clickSignIn },
-	          'Sign In'
-	        )
-	      ),
-	      this.logoutButton()
+	      this.renderDiv()
 	    );
 	  }
 	});
@@ -31728,16 +31820,29 @@
 	    });
 	  },
 	
-	  logIn: function (credential) {
-	    ApiUtil.createSession(credential, this.receiveCurrentUser);
+	  showError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: 'ERROR',
+	      error: error
+	    });
+	  },
+	
+	  cleanError: function () {
+	    AppDispatcher.dispatch({
+	      actionType: 'CLEAN_ERROR'
+	    });
+	  },
+	
+	  logIn: function (credential, backRootPage) {
+	    ApiUtil.createSession(credential, this.receiveCurrentUser, backRootPage, this.cleanError, this.showError);
 	  },
 	
 	  logOut: function () {
 	    ApiUtil.deleteSession(this.removeCurrentUser);
 	  },
 	
-	  signUp: function (userAttributes) {
-	    ApiUtil.createUser(userAttributes, this.receiveNewUser);
+	  signUp: function (userAttributes, backRootPage) {
+	    ApiUtil.createUser(userAttributes, this.receiveNewUser, backRootPage, this.cleanError, this.showError);
 	  }
 	};
 	
@@ -31765,7 +31870,7 @@
 	  return _user;
 	};
 	
-	UserStore.is_logged_in = function () {
+	UserStore.isLoggedIn = function () {
 	  if (_user) {
 	    return true;
 	  } else {
@@ -31801,22 +31906,28 @@
 	
 	var SessionActions = __webpack_require__(242);
 	var UserStore = __webpack_require__(243);
+	var MessageStore = __webpack_require__(245);
 	
 	var LogInForm = React.createClass({
 	  displayName: 'LogInForm',
+	
 	
 	  mixins: [LinkedStateMixin],
 	
 	  getInitialState: function () {
 	    return {
-	      user: [],
+	      user: undefined,
 	      username: '',
 	      password: ''
 	    };
 	  },
 	
 	  componentDidMount: function () {
-	    UserStore.addListener(this.updateUser);
+	    this.token = UserStore.addListener(this.updateUser);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
 	  },
 	
 	  updateUser: function () {
@@ -31830,7 +31941,17 @@
 	    SessionActions.logIn({
 	      username: this.state.username,
 	      password: this.state.password
-	    });
+	    }, this.backRootPage);
+	  },
+	
+	  backRootPage: function () {
+	    this.props.history.push('/');
+	  },
+	
+	  handleCancel: function () {
+	    this.setState({ username: '', password: '' });
+	    SessionActions.cleanError();
+	    this.props.history.push('/');
 	  },
 	
 	  render: function () {
@@ -31854,7 +31975,11 @@
 	        ),
 	        React.createElement('input', { type: 'submit', value: 'Sign In' })
 	      ),
-	      this.state.user.username
+	      React.createElement(
+	        'button',
+	        { onClick: this.handleCancel },
+	        'Cancel'
+	      )
 	    );
 	  }
 	});
@@ -31863,6 +31988,43 @@
 
 /***/ },
 /* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(214).Store;
+	var AppDispatcher = __webpack_require__(232);
+	var MessageStore = new Store(AppDispatcher);
+	
+	var _message = [];
+	
+	MessageStore.error = function () {
+	  return _message.slice(0);
+	};
+	
+	MessageStore.receiveError = function (message) {
+	  _message = message;
+	};
+	
+	MessageStore.cleanMessage = function () {
+	  _message = [];
+	};
+	
+	MessageStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "ERROR":
+	      this.receiveError(payload.error);
+	      MessageStore.__emitChange();
+	      break;
+	    case "CLEAN_ERROR":
+	      this.cleanMessage();
+	      MessageStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = MessageStore;
+
+/***/ },
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31878,7 +32040,7 @@
 	
 	  getInitialState: function () {
 	    return {
-	      user: [],
+	      user: undefined,
 	      username: '',
 	      password: '',
 	      passwordConfirmation: '',
@@ -31887,7 +32049,11 @@
 	  },
 	
 	  componentDidMount: function () {
-	    UserStore.addListener(this.updateUser);
+	    this.token = UserStore.addListener(this.updateUser);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
 	  },
 	
 	  updateUser: function () {
@@ -31901,7 +32067,17 @@
 	      password: this.state.password,
 	      password_confirmation: this.state.passwordConfirmation,
 	      email: this.state.email
-	    });
+	    }, this.backRootPage);
+	  },
+	
+	  backRootPage: function () {
+	    this.props.history.push('/');
+	  },
+	
+	  handleCancel: function () {
+	    this.setState({ username: '', password: '', passwordConfirmation: '', email: '' });
+	    SessionActions.cleanError();
+	    this.props.history.push('/');
 	  },
 	
 	  render: function () {
@@ -31937,7 +32113,11 @@
 	        ),
 	        React.createElement('input', { type: 'submit', value: 'Sign Up' })
 	      ),
-	      this.state.user.username
+	      React.createElement(
+	        'button',
+	        { onClick: this.handleCancel },
+	        'Cancel'
+	      )
 	    );
 	  }
 	});
@@ -31945,7 +32125,7 @@
 	module.exports = SignUpForm;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31966,7 +32146,6 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement('br', null),
 	      React.createElement(
 	        'button',
 	        { onClick: this.handleLogOut },

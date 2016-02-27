@@ -10,15 +10,31 @@ var ApiUtil = {
         receiveCars(cars);
         }
       })
+  },  
+
+  fetchCurrentUser: function(receiveCurrentUser) {
+    $.ajax ({
+      url: '/api/session',
+      type: 'GET',
+      success: function(user) {
+        receiveCurrentUser(user);
+        }
+      })
   },
 
-  createSession: function(credential, receiveCurrentUser) {
+  createSession: function(credential, receiveCurrentUser, backRootPage, cleanError, showError) {
     $.ajax ({
       url: '/api/session',
       data: {user: credential},
       type: 'POST',
       success: function(user) {
+        cleanError();
+        backRootPage();
         receiveCurrentUser(user);
+      },
+      error: function(error){
+        showError(error.responseJSON.message);
+      // do something with errors
       }
     })
   },
@@ -33,13 +49,19 @@ var ApiUtil = {
     })
   },
 
-  createUser: function(userAttributes, receiveNewUser) {
+  createUser: function(userAttributes, receiveNewUser, backRootPage, cleanError, showError) {
     $.ajax ({
       url: '/api/users',
       data: {user: userAttributes},
       type: 'POST',
       success: function(user) {
+        cleanError();
+        backRootPage();
         receiveNewUser(user);
+      },
+      error: function(error){
+        showError(error.responseJSON.message);
+      // do something with errors
       }
     })
   }

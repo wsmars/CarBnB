@@ -16,7 +16,7 @@ UserStore.all = function() {
   return _user;
 };
 
-UserStore.is_logged_in = function() {
+UserStore.isLoggedIn = function() {
   if (_user) {
     return true;
   }

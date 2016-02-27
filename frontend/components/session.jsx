@@ -3,9 +3,9 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var SessionActions = require('../actions/session_actions');
 var UserStore = require('../stores/user_store');
-var LogInForm = require('./login_form');
-var SignUpForm = require('./sign_up_form');
-var LogOutButton = require('./log_out_button');
+var LogInForm = require('./session/login_form');
+var SignUpForm = require('./session/sign_up_form');
+var LogOutButton = require('./session/log_out_button');
 
 
 var Session = React.createClass({
@@ -13,48 +13,61 @@ var Session = React.createClass({
 
   getInitialState: function() {
     return {
-      clickStatus: false
+      currentUser: UserStore.all()
     };
   },
 
-  clickSignIn: function() {
-    this.setState({clickStatus: 'SignIn'});
+  componentDidMount: function() {
+    this.token = UserStore.addListener(this.updateCurrentUser);
   },
 
-  clickSignUp: function() {
-    this.setState({clickStatus: 'SignUp'});
+  componentWillUnmount: function() {
+    this.token.remove();
+  }, 
+   
+  updateCurrentUser: function() {
+    this.setState({
+      currentUser: UserStore.all(),
+    });
   },
 
-  clickSignOut: function() {
-    this.setState({clickStatus: false});
+  toSignUpForm: function() {
+    this.props.history.push('signup');
   },
-  logoutButton: function(){
-    debugger
-    return UserStore.is_logged_in() ? <LogOutButton/> : null;
+
+  toSignInForm: function() {
+    this.props.history.push('signin');
+  },
+
+  handleLogOut: function(e) {
+    e.preventDefault();
+    SessionActions.logOut();
+  },
+
+  renderDiv: function() {
+    if (this.state.currentUser) {
+      return (
+        <div>
+          Hello, {this.state.currentUser.username}
+          <button onClick={this.handleLogOut}>Log out</button>
+        </div>
+        );
+    }
+    else {
+      return (
+        <div>
+          <button onClick={this.toSignUpForm}>Sign Up</button>
+          <button onClick={this.toSignInForm}>Sign In</button>
+        </div>
+      );
+    }
   },
 
   render: function() {
     return (
       <div>
-        {this.state.clickStatus === 'SignIn' ?
-            (<div>
-              <button onClick={this.clickSignUp}>Sign Up</button>
-              <LogInForm/>
-            </div>) :
-            (this.state.clickStatus === 'SignUp' ?
-              (<div>
-                <button onClick={this.clickSignIn}>Sign In</button>
-                <SignUpForm/>
-              </div>) :
-                (<div>
-                  <button onClick={this.clickSignUp}>Sign Up</button>
-                  <button onClick={this.clickSignIn}>Sign In</button>
-                </div>
-                )
-              )
-        }
-        {this.logoutButton()}
-        </div>
+        {this.renderDiv()}
+      </div>
     );
   }
 });
