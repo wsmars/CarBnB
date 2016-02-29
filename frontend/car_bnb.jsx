@@ -7,17 +7,13 @@ var IndexRoute = ReactRouter.IndexRoute;
 var History = require('history');
 
 var App = require('./components/app');
-var Session = require('./components/session.jsx');
-var SignUp = require('./components/session/sign_up_form');
-var SignIn = require('./components/session/login_form');
-var Search = require('./components/search');
+var LandingPage = require('./components/landing_page.jsx');
+
 
 var routes = (
 	<Router history={History.HashHistory}>
 	  <Route path='/' component={App}>
-	  	<IndexRoute component={Session}/>
-	  	<Route path='signup' component={SignUp}/>
-	  	<Route path='signin' component={SignIn}/>
+	  	<IndexRoute component={LandingPage}/>
 	  </Route>
 	</Router>)
 

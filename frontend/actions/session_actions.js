@@ -35,16 +35,16 @@ var SessionActions = {
     });
   },
 
-  logIn: function(credential, backRootPage) {
-    ApiUtil.createSession(credential, this.receiveCurrentUser, backRootPage, this.cleanError, this.showError);
+  logIn: function(credential) {
+    ApiUtil.createSession(credential, this.receiveCurrentUser, this.cleanError, this.showError);
   },
 
   logOut: function() {
     ApiUtil.deleteSession(this.removeCurrentUser);
   },
 
-  signUp: function(userAttributes, backRootPage) {
-    ApiUtil.createUser(userAttributes, this.receiveNewUser, backRootPage, this.cleanError, this.showError)
+  signUp: function(userAttributes) {
+    ApiUtil.createUser(userAttributes, this.receiveNewUser, this.cleanError, this.showError)
   }
 };
 

@@ -22,14 +22,13 @@ var ApiUtil = {
       })
   },
 
-  createSession: function(credential, receiveCurrentUser, backRootPage, cleanError, showError) {
+  createSession: function(credential, receiveCurrentUser, cleanError, showError) {
     $.ajax ({
       url: '/api/session',
       data: {user: credential},
       type: 'POST',
       success: function(user) {
         cleanError();
-        backRootPage();
         receiveCurrentUser(user);
       },
       error: function(error){
@@ -49,14 +48,13 @@ var ApiUtil = {
     })
   },
 
-  createUser: function(userAttributes, receiveNewUser, backRootPage, cleanError, showError) {
+  createUser: function(userAttributes, receiveNewUser, cleanError, showError) {
     $.ajax ({
       url: '/api/users',
       data: {user: userAttributes},
       type: 'POST',
       success: function(user) {
         cleanError();
-        backRootPage();
         receiveNewUser(user);
       },
       error: function(error){

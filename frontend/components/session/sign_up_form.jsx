@@ -3,6 +3,7 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var SessionActions = require('../../actions/session_actions');
 var UserStore = require('../../stores/user_store');
+var MessageStore = require('../../stores/message_store');
 
 var SignUpForm = React.createClass({
   mixins: [LinkedStateMixin],
@@ -10,6 +11,7 @@ var SignUpForm = React.createClass({
   getInitialState: function() {
     return ({
       user: undefined,
+      error: MessageStore.error(),
       username: '',
       password: '',
       passwordConfirmation: '',
@@ -18,15 +20,34 @@ var SignUpForm = React.createClass({
   },
 
   componentDidMount: function() {
-    this.token = UserStore.addListener(this.updateUser);
+    this.token1 = UserStore.addListener(this.updateUser);
+    this.token2 = MessageStore.addListener(this.updateMessage);
   },
   
   componentWillUnmount: function() {
-    this.token.remove();
+    this.token1.remove();
+    this.token2.remove();
   },
 
   updateUser: function() {
     this.setState({user: UserStore.all()});
+  },
+
+  updateMessage: function() {
+    this.setState({error: MessageStore.error()});
+  },
+
+  renderError: function(error) {
+    if (error.length > 0) {
+      var returnArray = [];
+      error.forEach(function(message) {
+        returnArray.push(<li>{message}</li>);
+      });
+      return returnArray;
+    }
+    else {
+      return null;
+    }
   },
 
   handleSubmit: function(e) {
@@ -36,19 +57,9 @@ var SignUpForm = React.createClass({
       password: this.state.password,
       password_confirmation: this.state.passwordConfirmation,
       email: this.state.email
-    }, this.backRootPage);
+    });
   },
-
-  backRootPage: function() {
-    this.props.history.push('/');
-  },
-
-  handleCancel: function() {
-    this.setState({username: '', password: '', passwordConfirmation: '', email: ''});
-    SessionActions.cleanError();
-    this.props.history.push('/');
-  },
-
+  
   render: function() {
     return (
       <div>
@@ -72,7 +83,8 @@ var SignUpForm = React.createClass({
 
         <input type="submit" value="Sign Up"/>
         </form>
-        <button onClick={this.handleCancel}>Cancel</button>
+
+        {this.renderError(this.state.error)}
       </div>
     );
   }

@@ -1,19 +1,18 @@
 var React = require('react');
-var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var Link = require('react-router').Link;
 
 var SessionActions = require('../actions/session_actions');
 var UserStore = require('../stores/user_store');
 var LogInForm = require('./session/login_form');
 var SignUpForm = require('./session/sign_up_form');
-var LogOutButton = require('./session/log_out_button');
 
 
 var Session = React.createClass({
-  mixins: [LinkedStateMixin],
 
   getInitialState: function() {
     return {
-      currentUser: UserStore.all()
+      currentUser: UserStore.all(),
+      button: ''
     };
   },
 
@@ -32,32 +31,62 @@ var Session = React.createClass({
   },
 
   toSignUpForm: function() {
-    this.props.history.push('signup');
+    this.setState({button: 'signup'})
   },
 
   toSignInForm: function() {
-    this.props.history.push('signin');
+    this.setState({button: 'signin'})
   },
 
   handleLogOut: function(e) {
     e.preventDefault();
+    this.setState({button: ''});
     SessionActions.logOut();
   },
 
-  renderDiv: function() {
+  handleCancel: function() {
+    SessionActions.cleanError();
+    this.setState({button: ''})
+  },
+
+  renderForm: function() {
+    if (this.state.button === '') { return null; }
+    else if (this.state.button === 'signup') { 
+      return (
+        <div className='sign-up-form'>
+          <SignUpForm />        
+          <button onClick={this.handleCancel}>Cancel</button>
+        </div>
+        );
+    }
+    else if (this.state.button === 'signin') { 
+      return (
+        <div className='log-in-form'>
+          <LogInForm />
+          <button onClick={this.handleCancel}>Cancel</button>
+        </div>);
+    }
+  },
+
+  switchButton: function() {
     if (this.state.currentUser) {
       return (
-        <div>
+        <div className='logged-in-user-profile'>
           Hello, {this.state.currentUser.username}
-          <button onClick={this.handleLogOut}>Log out</button>
+          <button onClick={this.handleLogOut} className='log-out-button'>Log out</button>
         </div>
         );
     }
     else {
       return (
-        <div>
-          <button onClick={this.toSignUpForm}>Sign Up</button>
-          <button onClick={this.toSignInForm}>Sign In</button>
+        <div className='login-signup-button'>
+          <div className='log-in-container'>
+            <button onClick={this.toSignInForm} className='log-in-btn'>Sign In</button>
+          </div>
+          <div className='sign-up-container'>
+            <button onClick={this.toSignUpForm} className='sign-up-btn'>Sign Up</button>
+          </div>
+          {this.renderForm()}
         </div>
       );
     }
@@ -65,8 +94,8 @@ var Session = React.createClass({
 
   render: function() {
     return (
-      <div>
-        {this.renderDiv()}
+      <div className='session-container'>
+        {this.switchButton()}
       </div>
     );
   }

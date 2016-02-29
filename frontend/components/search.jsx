@@ -42,11 +42,11 @@ var Search = React.createClass({
   render: function() {
 
     return (
-      <div>
-        <h1>Search City</h1>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" valueLink={this.linkState('searchValue')} />
-          <input type="submit" value="Search"/>
+      <div className='searchbar-container'>
+        <form onSubmit={this.handleSubmit} className='search-bar'>
+          <span className='search-bar-span screen-reader-only'>Where do you want to go?</span>
+          <input type="text" placeholder="Where do you want to go?" className='search-bar-input' valueLink={this.linkState('searchValue')} />
+          <input type="submit" className='search-bar-submit-btn btn-primary' value="Search"/>
         </form>
         {this.parseCars(this.state.cars)}
       </div>

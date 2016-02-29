@@ -12,17 +12,20 @@ var LogInForm = React.createClass({
   getInitialState: function() {
     return ({
       user: undefined,
+      error: MessageStore.error(),
       username: '',
       password: ''
     });
   },
 
   componentDidMount: function() {
-    this.token = UserStore.addListener(this.updateUser);
+    this.token1 = UserStore.addListener(this.updateUser);
+    this.token2 = MessageStore.addListener(this.updateMessage);
   },
 
   componentWillUnmount: function() {
-    this.token.remove();
+    this.token1.remove();
+    this.token2.remove();
   },
 
   updateUser: function() {
@@ -31,22 +34,29 @@ var LogInForm = React.createClass({
     this.setState({password: ''});
   },
 
+  updateMessage: function() {
+    this.setState({error: MessageStore.error()});
+  },
+
+  renderError: function(error) {
+    if (error.length > 0) {
+      var returnArray = [];
+      error.forEach(function(message) {
+        returnArray.push(<li>{message}</li>);
+      });
+      return returnArray;
+    }
+    else {
+      return null;
+    }
+  },
+
   handleSubmit: function(e) {
     e.preventDefault();
     SessionActions.logIn({
       username: this.state.username,
       password: this.state.password
-    }, this.backRootPage);
-  },
-
-  backRootPage: function() {
-    this.props.history.push('/');
-  },
-
-  handleCancel: function() {
-    this.setState({username: '', password: ''});
-    SessionActions.cleanError();
-    this.props.history.push('/');
+    });
   },
 
   render: function() {
@@ -63,7 +73,8 @@ var LogInForm = React.createClass({
 
           <input type="submit" value="Sign In"/>
         </form>
-        <button onClick={this.handleCancel}>Cancel</button>
+
+        {this.renderError(this.state.error)}
       </div>
 
     );
