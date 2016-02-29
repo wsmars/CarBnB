@@ -1,14 +1,14 @@
 var React = require('react');
 var Link = require('react-router').Link;
 
-var Session = require('./session');
+var Session = require('./session/session');
 
 var Header = React.createClass({
 
   renderLogo: function() {
     return (
       <div className='logo-container'>
-        <h1 className='logo'><Link to='/'>Logo is Here</Link></h1>
+        <h1 className='logo'><Link to='/'>carbnb</Link></h1>
       </div>
     );
   },

@@ -6,7 +6,7 @@ var _cars = [];
 CarStore.__onDispatch = function (payload) {
 switch(payload.actionType) {
   case "RECEIVE_CARS":
-    this.resetCars(payload.cars);
+    this.receiveCars(payload.cars);
     CarStore.__emitChange();
     break;
   }
@@ -16,7 +16,7 @@ CarStore.all = function () {
   return _cars.slice(0);
 };
 
-CarStore.resetCars = function (cars) {
+CarStore.receiveCars = function (cars) {
   _cars = cars;
 };
 

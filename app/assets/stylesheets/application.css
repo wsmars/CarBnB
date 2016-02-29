@@ -57,6 +57,11 @@ h4 {
   font-weight: bold;
 }
 
+a, a:visited, a:hover, a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
 input, textarea {
   font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
   line-height: normal;
@@ -76,24 +81,13 @@ input, textarea, keygen, select, button {
   font: 13px BlinkMacSystemFont;
 }
 
-.land-page {
-	font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
-  background-color: #f5f5f5;
-  -webkit-font-smoothing: antialiased;
-  background-image: url(home_page_background);
-  background-size: cover;
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 1080px;
-  vertical-align: middle;
-  top: 0;
-  bottom: 0;
-}
-
 .header-container {
   display: block;
   height: 61px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 5;
 }
 
 
@@ -103,11 +97,19 @@ input, textarea, keygen, select, button {
   line-height: 61px;
   position: relative;
   float: left;
+  padding: 0 19px;
 }
 
 .logo {
   margin-top: 0;
   margin-bottom: 0;
+  font-size: 24px;
+  top: 17px;
+  position: relative;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  color: #565a5c;
 }
 
 .help-container {
@@ -180,20 +182,57 @@ input, textarea, keygen, select, button {
   box-shadow: none !important;
 }
 
-.logged-in-user-profile {
-
+.logged-user-container {
+  border-left: 0;
+  height: 61px;
+  line-height: 61px;
+  position: relative;
+  float: right;
 }
 
-.log-out-button {
+.log-out-btn-container {
+  border-left: 0;
+  height: 61px;
+  line-height: 61px;
+  position: relative;
+  float: right;
+}
 
+.log-out-btn {
+  display: block;
+  padding: 0 19px;
+  outline: none;
+  text-decoration: none;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  line-height: 61px;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .login-signup-button {
 
 }
 
+.land-page {
+	font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  background-color: #f5f5f5;
+  -webkit-font-smoothing: antialiased;
+  background-image: url(home_page_background);
+  background-size: cover;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1080px;
+  vertical-align: middle;
+  top: 0;
+  bottom: 0;
+}
+
+
 .bottom-container {
-  height: 550px;
+  height: 450px;
   top: 50px;
   width: auto;
   position: relative;
@@ -207,6 +246,7 @@ input, textarea, keygen, select, button {
   vertical-align: middle;
   width: 100%;
   height: 21%;
+  top: 100px;
   box-sizing: border-box;
   text-align: center;
   position: relative;
@@ -232,7 +272,7 @@ input, textarea, keygen, select, button {
 
 .searchbar-container {
   height: 44px;
-  top: 50px;
+  top: 110px;
   left: 0;
   right: 0;
   padding-bottom: 30px;
@@ -254,13 +294,13 @@ input, textarea, keygen, select, button {
 .search-bar-input {
   position: relative;
   display: inline-block;
-  width: 380px;
+  width: 435px;
   float: left;
   margin: 0 -1px 0 0;
   padding-bottom: 0;
   padding-top: 0;
   vertical-align: middle;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #A29999;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
@@ -325,4 +365,85 @@ input, textarea, keygen, select, button {
   text-transform: none;
 }
 
+.footer-container {
+  display: block;
+  background-color: rgba(0,0,0,0.6);
+  width: 100%;
+  height: 45px;
+  bottom: 0;
+  position: fixed;
+}
 
+.footer-home-container {
+  border-left: 0;
+  height: 45px;
+  line-height: 45px;
+  position: relative;
+  float: right;
+}
+
+.footer-home {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: block;
+  padding: 0 19px;
+  outline: none;
+  text-decoration: none;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  line-height: 45px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+
+.about-container {
+  border-left: 0;
+  height: 45px;
+  line-height: 45px;
+  position: relative;
+  float: right;
+}
+
+.about {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: block;
+  padding: 0 19px;
+  outline: none;
+  text-decoration: none;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  line-height: 45px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.footer-help-container {
+  border-left: 0;
+  height: 45px;
+  line-height: 45px;
+  position: relative;
+  float: right;
+}
+
+.footer-help {
+  margin-top: 0;
+  margin-bottom: 0;
+  display: block;
+  padding: 0 19px;
+  outline: none;
+  text-decoration: none;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  line-height: 45px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.parse-cars-container {
+  
+}

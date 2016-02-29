@@ -9,6 +9,7 @@ var SearchActions = {
       cars: cars
     });
   },
+
   fetchCarsInCity: function(city) {
     ApiUtil.fetchCarsInCity(city, this.receiveCars);
   }

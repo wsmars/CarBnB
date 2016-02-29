@@ -8,12 +8,14 @@ var History = require('history');
 
 var App = require('./components/app');
 var LandingPage = require('./components/landing_page.jsx');
+var Cars = require('./components/cars');
 
 
 var routes = (
 	<Router history={History.HashHistory}>
 	  <Route path='/' component={App}>
 	  	<IndexRoute component={LandingPage}/>
+			<Route path='cars' component={Cars}/>
 	  </Route>
 	</Router>)
 

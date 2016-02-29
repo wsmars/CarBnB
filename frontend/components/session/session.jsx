@@ -1,10 +1,9 @@
 var React = require('react');
-var Link = require('react-router').Link;
 
-var SessionActions = require('../actions/session_actions');
-var UserStore = require('../stores/user_store');
-var LogInForm = require('./session/login_form');
-var SignUpForm = require('./session/sign_up_form');
+var SessionActions = require('../../actions/session_actions');
+var UserStore = require('../../stores/user_store');
+var LogInForm = require('./login_form');
+var SignUpForm = require('./sign_up_form');
 
 
 var Session = React.createClass({
@@ -22,8 +21,8 @@ var Session = React.createClass({
 
   componentWillUnmount: function() {
     this.token.remove();
-  }, 
-   
+  },
+
   updateCurrentUser: function() {
     this.setState({
       currentUser: UserStore.all(),
@@ -51,15 +50,15 @@ var Session = React.createClass({
 
   renderForm: function() {
     if (this.state.button === '') { return null; }
-    else if (this.state.button === 'signup') { 
+    else if (this.state.button === 'signup') {
       return (
         <div className='sign-up-form'>
-          <SignUpForm />        
+          <SignUpForm />
           <button onClick={this.handleCancel}>Cancel</button>
         </div>
         );
     }
-    else if (this.state.button === 'signin') { 
+    else if (this.state.button === 'signin') {
       return (
         <div className='log-in-form'>
           <LogInForm />
@@ -71,9 +70,11 @@ var Session = React.createClass({
   switchButton: function() {
     if (this.state.currentUser) {
       return (
-        <div className='logged-in-user-profile'>
-          Hello, {this.state.currentUser.username}
-          <button onClick={this.handleLogOut} className='log-out-button'>Log out</button>
+        <div className='logged-user-container'>
+          <div className='log-out-btn-container'>
+            <button onClick={this.handleLogOut} className='log-out-btn'>Log out</button>
+          </div>
+          <h4>Hello, {this.state.currentUser.username}</h4>
         </div>
         );
     }

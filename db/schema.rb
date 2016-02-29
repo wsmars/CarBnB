@@ -11,27 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160224174250) do
+ActiveRecord::Schema.define(version: 20160229214108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "cars", force: :cascade do |t|
-    t.string   "make",                              null: false
-    t.string   "model",                             null: false
-    t.integer  "year",                              null: false
-    t.integer  "milage",                            null: false
-    t.float    "price",                             null: false
-    t.string   "car_type",                          null: false
-    t.text     "description",                       null: false
-    t.string   "status",      default: "available", null: false
-    t.string   "street",                            null: false
-    t.string   "city",                              null: false
-    t.string   "state",                             null: false
-    t.string   "zip_code",                          null: false
-    t.integer  "user_id",                           null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.string   "make",                                    null: false
+    t.string   "model",                                   null: false
+    t.integer  "year",                                    null: false
+    t.integer  "milage",                                  null: false
+    t.float    "price",                                   null: false
+    t.string   "car_type",                                null: false
+    t.text     "description",                             null: false
+    t.string   "status",      default: "available",       null: false
+    t.string   "street",                                  null: false
+    t.string   "city",                                    null: false
+    t.string   "state",                                   null: false
+    t.string   "zip_code",                                null: false
+    t.integer  "user_id",                                 null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.string   "img_url",     default: "default_car.png"
   end
 
   add_index "cars", ["user_id"], name: "index_cars_on_user_id", using: :btree

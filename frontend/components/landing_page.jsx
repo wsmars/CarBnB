@@ -1,8 +1,7 @@
 var React = require('react');
 
-var Search = require('./search');
-var Header = require('./header');
-
+var Search = require('./landing_component/search');
+var Footer = require('./landing_component/footer')
 
 var LandingPage = React.createClass({
 
@@ -20,11 +19,11 @@ var LandingPage = React.createClass({
   render: function() {
     return (
       <div className='land-page'>
-        <Header />
         <div className='bottom-container'>
           {this.renderSlogan()}
-          <Search />
+          <Search history={this.props.history}/>
         </div>
+        <Footer />
       </div>
     );
   }
