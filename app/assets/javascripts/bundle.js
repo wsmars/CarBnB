@@ -24562,22 +24562,22 @@
 	    } else if (this.state.button === 'signup') {
 	      return React.createElement(
 	        'div',
-	        { className: 'sign-up-form' },
+	        { className: 'sign-up-page-container' },
 	        React.createElement(SignUpForm, null),
 	        React.createElement(
 	          'button',
-	          { onClick: this.handleCancel },
+	          { className: 'session-sign-up-cancel-button', onClick: this.handleCancel },
 	          'Cancel'
 	        )
 	      );
 	    } else if (this.state.button === 'signin') {
 	      return React.createElement(
 	        'div',
-	        { className: 'log-in-form' },
+	        { className: 'log-in-page-container' },
 	        React.createElement(LogInForm, null),
 	        React.createElement(
 	          'button',
-	          { onClick: this.handleCancel },
+	          { className: 'session-log-in-cancel-button', onClick: this.handleCancel },
 	          'Cancel'
 	        )
 	      );
@@ -31664,25 +31664,34 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'log-in-form-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'log-in-title' },
+	        'Log In'
+	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.handleSubmit },
+	        { className: 'log-in-form', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'label',
-	          null,
+	          { className: 'log-in-username-lable' },
 	          'Username',
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('username') })
+	          React.createElement('input', { className: 'log-in-username-input', type: 'text', valueLink: this.linkState('username') })
 	        ),
 	        React.createElement(
 	          'lable',
-	          null,
+	          { className: 'log-in-password-lable' },
 	          'Password',
-	          React.createElement('input', { type: 'password', valueLink: this.linkState('password') })
+	          React.createElement('input', { className: 'log-in-password-input', type: 'password', valueLink: this.linkState('password') })
 	        ),
-	        React.createElement('input', { type: 'submit', value: 'Sign In' })
+	        React.createElement('input', { className: 'log-in-submit-btn', type: 'submit', value: 'Sign In' })
 	      ),
-	      this.renderError(this.state.error)
+	      React.createElement(
+	        'div',
+	        { className: 'log-in-form-error' },
+	        this.renderError(this.state.error)
+	      )
 	    );
 	  }
 	});
@@ -32030,37 +32039,46 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'sign-up-form-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'sign-up-title' },
+	        'Sign Up'
+	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.handleSubmit },
+	        { className: 'sign-up-form', onSubmit: this.handleSubmit },
 	        React.createElement(
 	          'label',
-	          null,
+	          { className: 'sign-up-username-lable' },
 	          'Username',
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('username') })
+	          React.createElement('input', { className: 'sign-up-username-input', type: 'text', valueLink: this.linkState('username') })
 	        ),
 	        React.createElement(
 	          'lable',
-	          null,
+	          { className: 'sign-up-password-lable' },
 	          'Password',
-	          React.createElement('input', { type: 'password', valueLink: this.linkState('password') })
+	          React.createElement('input', { className: 'sign-up-password-input', type: 'password', valueLink: this.linkState('password') })
 	        ),
 	        React.createElement(
 	          'lable',
-	          null,
+	          { className: 'sign-up-password-confirmation-lable' },
 	          'Password Confirmation',
-	          React.createElement('input', { type: 'password', valueLink: this.linkState('passwordConfirmation') })
+	          React.createElement('input', { className: 'sign-up-password-confirmation-input', type: 'password', valueLink: this.linkState('passwordConfirmation') })
 	        ),
 	        React.createElement(
 	          'lable',
-	          null,
+	          { className: 'sign-up-email-lable' },
 	          'Email',
-	          React.createElement('input', { type: 'text', valueLink: this.linkState('email') })
+	          React.createElement('input', { className: 'sign-up-email-input', type: 'text', valueLink: this.linkState('email') })
 	        ),
-	        React.createElement('input', { type: 'submit', value: 'Sign Up' })
+	        React.createElement('input', { className: 'sign-up-submit-btn', type: 'submit', value: 'Sign Up' })
 	      ),
-	      this.renderError(this.state.error)
+	      React.createElement(
+	        'div',
+	        { className: 'sign-up-form-error' },
+	        this.renderError(this.state.error)
+	      )
 	    );
 	  }
 	});
@@ -32328,19 +32346,28 @@
 	      jsonCars.forEach(function (car) {
 	        renderArray.push(React.createElement(
 	          'ul',
-	          null,
+	          { className: 'car-list-element-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'img-container' },
+	            React.createElement('img', { className: 'car-img', src: '/assets/' + car.img_url })
+	          ),
 	          React.createElement(
 	            'li',
-	            null,
+	            { className: 'car-list-element' },
 	            car.year,
 	            '  ',
 	            car.make,
 	            '  ',
 	            car.model,
-	            '  $',
-	            car.price
-	          ),
-	          React.createElement('img', { classNmae: 'car-img', src: '/assets/' + car.img_url })
+	            '  ',
+	            React.createElement(
+	              'div',
+	              { className: 'price-container' },
+	              '$',
+	              car.price
+	            )
+	          )
 	        ));
 	      });
 	    } else {
@@ -32411,7 +32438,7 @@
 	
 	  componentDidMount: function () {
 	    console.log('map mounted');
-	    var token = CarStore.addListener(this.updateCars);
+	    this.token = CarStore.addListener(this.updateCars);
 	    var map = ReactDOM.findDOMNode(this.refs.map);
 	    var mapOptions = {
 	      center: this.centerCarCoords(),
@@ -32434,10 +32461,10 @@
 	
 	  updateCars: function () {
 	    this.setState({ cars: CarStore.all() });
-	    this.componentDidMount();
+	    this.map.panTo(this.centerCarCoords());
 	  },
 	
-	  componentDidUpdate: function (oldProps) {
+	  componentDidUpdate: function () {
 	    this._onChange();
 	  },
 	
@@ -32471,9 +32498,12 @@
 	      this.map.setCenter(this.centerCarCoords());
 	    }
 	  },
+	
 	  componentWillUnmount: function () {
 	    console.log("map UNmounted");
+	    this.token.remove();
 	  },
+	
 	  registerListeners: function () {
 	    var that = this;
 	    google.maps.event.addListener(this.map, 'idle', function () {

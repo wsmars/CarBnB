@@ -52,17 +52,17 @@ var Session = React.createClass({
     if (this.state.button === '') { return null; }
     else if (this.state.button === 'signup') {
       return (
-        <div className='sign-up-form'>
+        <div className='sign-up-page-container'>
           <SignUpForm />
-          <button onClick={this.handleCancel}>Cancel</button>
+          <button className='session-sign-up-cancel-button' onClick={this.handleCancel}>Cancel</button>
         </div>
         );
     }
     else if (this.state.button === 'signin') {
       return (
-        <div className='log-in-form'>
+        <div className='log-in-page-container'>
           <LogInForm />
-          <button onClick={this.handleCancel}>Cancel</button>
+          <button className='session-log-in-cancel-button' onClick={this.handleCancel}>Cancel</button>
         </div>);
     }
   },

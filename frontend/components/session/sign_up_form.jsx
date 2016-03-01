@@ -23,7 +23,7 @@ var SignUpForm = React.createClass({
     this.token1 = UserStore.addListener(this.updateUser);
     this.token2 = MessageStore.addListener(this.updateMessage);
   },
-  
+
   componentWillUnmount: function() {
     this.token1.remove();
     this.token2.remove();
@@ -59,32 +59,36 @@ var SignUpForm = React.createClass({
       email: this.state.email
     });
   },
-  
+
   render: function() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
+      <div className='sign-up-form-container'>
 
-        <label>Username
-        <input type="text" valueLink={this.linkState('username')} />
+        <h4 className='sign-up-title'>Sign Up</h4>
+        <form className='sign-up-form' onSubmit={this.handleSubmit}>
+
+        <label className='sign-up-username-lable'>Username
+        <input className='sign-up-username-input' type="text" valueLink={this.linkState('username')} />
         </label>
 
-        <lable>Password
-        <input type="password" valueLink={this.linkState('password')} />
+        <lable className='sign-up-password-lable'>Password
+        <input className='sign-up-password-input' type="password" valueLink={this.linkState('password')} />
         </lable>
 
-        <lable>Password Confirmation
-        <input type="password" valueLink={this.linkState('passwordConfirmation')} />
+        <lable className='sign-up-password-confirmation-lable'>Password Confirmation
+        <input className='sign-up-password-confirmation-input' type="password" valueLink={this.linkState('passwordConfirmation')} />
         </lable>
 
-        <lable>Email
-        <input type="text" valueLink={this.linkState('email')} />
+        <lable className='sign-up-email-lable'>Email
+        <input className='sign-up-email-input' type="text" valueLink={this.linkState('email')} />
         </lable>
 
-        <input type="submit" value="Sign Up"/>
+        <input className='sign-up-submit-btn' type="submit" value="Sign Up"/>
         </form>
 
-        {this.renderError(this.state.error)}
+        <div className='sign-up-form-error'>
+          {this.renderError(this.state.error)}
+        </div>
       </div>
     );
   }

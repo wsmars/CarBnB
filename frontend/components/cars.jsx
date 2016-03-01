@@ -30,9 +30,11 @@ var Cars = React.createClass({
     if (jsonCars.length > 0) {
       jsonCars.forEach(function(car) {
         renderArray.push(
-          <ul>
-            <li>{car.year}  {car.make}  {car.model}  ${car.price}</li>
-            <img classNmae='car-img' src={'/assets/' + car.img_url}/>
+          <ul className='car-list-element-container'>
+            <div className='img-container'>
+              <img className='car-img' src={'/assets/' + car.img_url}/>
+            </div>
+            <li className='car-list-element'>{car.year}  {car.make}  {car.model}  <div className='price-container'>${car.price}</div></li>
           </ul>
         );
       });

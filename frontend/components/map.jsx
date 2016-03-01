@@ -20,7 +20,7 @@ var Map = React.createClass({
 
   componentDidMount: function(){
     console.log('map mounted');
-    var token = CarStore.addListener(this.updateCars);
+    this.token = CarStore.addListener(this.updateCars);
     var map = ReactDOM.findDOMNode(this.refs.map);
     var mapOptions = {
       center: this.centerCarCoords(),
@@ -43,10 +43,10 @@ var Map = React.createClass({
 
   updateCars: function() {
     this.setState({cars: CarStore.all()});
-    this.componentDidMount();
+    this.map.panTo(this.centerCarCoords());
   },
 
-  componentDidUpdate: function (oldProps) {
+  componentDidUpdate: function () {
     this._onChange();
   },
 
@@ -79,9 +79,12 @@ var Map = React.createClass({
       this.map.setCenter(this.centerCarCoords());
     }
   },
+
   componentWillUnmount: function(){
     console.log("map UNmounted");
+    this.token.remove();
   },
+
   registerListeners: function(){
     var that = this;
     google.maps.event.addListener(this.map, 'idle', function() {

@@ -67,6 +67,12 @@ input, textarea {
   line-height: normal;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+
 input, textarea, keygen, select, button {
   text-rendering: auto;
   color: initial;
@@ -147,12 +153,156 @@ input, textarea, keygen, select, button {
   float: right;
 }
 
+.log-in-page-container {
+  height: 100vh;
+  width: 100vh;
+  position: fixed;
+  padding-left: 34%;
+  padding-right: 34%;
+  padding-top: 150px;
+  background-color: rgba(0, 0, 0, 0.54);
+  z-index: 5;
+}
+
+.log-in-form-container {
+  position: relative;
+  height: 300px;
+  width: 260px;
+  margin-left: 23%;
+  background-color: #fff;
+  z-index: 15;
+}
+
+.log-in-form {
+
+}
+
+.log-in-title {
+
+}
+
+.log-in-username-label {
+
+}
+
+.log-in-username-input {
+
+}
+
+.log-in-password-lable{
+
+}
+
+.log-in-password-input {
+
+}
+
+.log-in-submit-btn {
+
+}
+
+.session-log-in-cancel-button {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: none;
+  border: none !important;
+  box-shadow: none !important;
+  color: transparent;
+}
+
+.log-in-form-error {
+
+}
+
 .sign-up-container {
   border-left: 0;
   height: 61px;
   line-height: 61px;
   position: relative;
   float: right;
+}
+
+.sign-up-page-container {
+  height: 100vh;
+  width: 100vh;
+  position: fixed;
+  padding-left: 34%;
+  padding-right: 34%;
+  padding-top: 150px;
+  background-color: rgba(0, 0, 0, 0.54);
+  z-index: 5;
+}
+
+.sign-up-form-container {
+  position: relative;
+  height: 300px;
+  width: 260px;
+  margin-left: 23%;
+  background-color: #fff;
+  z-index: 15;
+}
+
+.sign-up-form {
+
+}
+
+.sign-up-title {
+
+}
+
+.sign-up-username-lable {
+
+}
+
+.sign-up-username-input {
+
+}
+
+.sign-up-password-lable {
+
+}
+
+.sign-up-password-input {
+
+}
+
+.sign-up-password-confirmation-lable {
+
+}
+
+.sign-up-password-confirmation-input {
+
+}
+
+.sign-up-email-lable {
+
+}
+
+.sign-up-email-input {
+
+}
+
+.sign-up-submit-btn {
+
+}
+
+.session-sign-up-cancel-button {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: none;
+  border: none !important;
+  box-shadow: none !important;
+  color: transparent;
+}
+
+.sign-up-form-error {
+
 }
 
 .sign-up-btn {
@@ -181,6 +331,10 @@ input, textarea, keygen, select, button {
   border: none !important;
   box-shadow: none !important;
 }
+
+
+
+
 
 .logged-user-container {
   border-left: 0;
@@ -312,6 +466,7 @@ input, textarea, keygen, select, button {
   padding: 0px 10px;
   background-color: #fff;
   color: #565a5c;
+  outline: none;
 }
 
 .search-bar-span {
@@ -363,6 +518,7 @@ input, textarea, keygen, select, button {
   white-space: nowrap;
   cursor: pointer;
   text-transform: none;
+  outline: none;
 }
 
 .footer-container {
@@ -486,12 +642,89 @@ input, textarea, keygen, select, button {
   z-index: 10;
 }
 
+.cars-page-serach-bar-container .search-bar-submit-btn {
+  padding: 0;
+  height: 47px;
+  width: 49px;
+  left: 1px;
+  top: 30px;
+  position: absolute;
+  background-color: #fff;
+  background: url(search_icon);
+  background-position: center;
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+  color: transparent;
+  border: none;
+  cursor: auto;
+  outline: none;
+}
+.cars-page-serach-bar-container .search-bar-input {
+  left: 50px;
+  height: 60px;
+  top: 22px;
+  position: absolute;
+  border: none;
+  outline: none;
+}
+
 .left-side-container {
+  background-color: #f7f7f7;
   position: absolute;
   display: inline-block;
-  width: 60%;
-  height: 660px;
-  margin-right: 0;
+  width: 58%;
+  height: 880px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+.car-list-element-container {
+  position: relative;
+  min-height: 1px;
+  padding-left: 12.5px;
+  padding-right: 12.5px;
+  height: 30.5%;
+  width: 45.5%;
+  float: left;
+  margin-bottom: 12.5px;
+}
+
+.img-container {
+  top: 0;
+  width: 100%;
+  height: 94%;
+  background-color: #E4E4E4;
+  position: relative;
+}
+
+.car-img {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.car-list-element {
+  margin-bottom: 0;
+  margin-top: 0;
+  font-weight: normal;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 16px;
+}
+
+.price-container {
+  bottom: 30px;
+  left: 0;
+  padding: 7px 10px;
+  background-color: rgba(60,63,64,0.9);
+  color: #fff;
+  position: absolute;
 }
 
 .right-side-container {
