@@ -1,8 +1,10 @@
 var React = require('react');
 var Link = require('react-router').Link;
+
 var CarStore = require('../stores/car_store');
 var SearchActions = require('../actions/search_actions');
 var Search = require('./landing_component/search');
+var Map = require('./map');
 
 var Cars = React.createClass({
 
@@ -49,11 +51,18 @@ var Cars = React.createClass({
     return (
       <div className='cars-page'>
         <div className='cars-page-header-container'>
-          <Search history={this.props.history}/>
+          <div className='logo-border help-border sign-up-border sign-in-border'/>
+          <div className='cars-page-serach-bar-container'>
+            <Search history={this.props.history}/>
+          </div>
         </div>
 
         <div className='left-side-container'>
           {this.parseCars(this.state.cars)}
+        </div>
+
+        <div className='right-side-container'>
+          <Map className='car-page-map'/>
         </div>
       </div>
     );

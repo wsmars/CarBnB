@@ -10,7 +10,15 @@ var ApiUtil = {
         receiveCars(cars);
         }
       })
-  },  
+  },
+
+  fetchLocationCoor: function(address, city, state, zipcode) {
+    var location = address + '+' + city + '+' + state + '+' + zipcode;
+    $.ajax ({
+      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+      type: 'GET'
+    })
+  },
 
   fetchCurrentUser: function(receiveCurrentUser) {
     $.ajax ({
@@ -21,6 +29,7 @@ var ApiUtil = {
         }
       })
   },
+
 
   createSession: function(credential, receiveCurrentUser, cleanError, showError) {
     $.ajax ({

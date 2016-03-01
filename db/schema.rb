@@ -33,6 +33,8 @@ ActiveRecord::Schema.define(version: 20160229214108) do
     t.datetime "created_at",                              null: false
     t.datetime "updated_at",                              null: false
     t.string   "img_url",     default: "default_car.png"
+    t.float    "lat"
+    t.float    "lng"
   end
 
   add_index "cars", ["user_id"], name: "index_cars_on_user_id", using: :btree
