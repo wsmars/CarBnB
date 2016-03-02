@@ -20,4 +20,14 @@ CarStore.receiveCars = function (cars) {
   _cars = cars;
 };
 
+CarStore.findCarById = function (id) {
+  var returnObj;
+  _cars.forEach(function (car) {
+    if (car.id == id) {
+      returnObj = car;
+    }
+  });
+  return returnObj;
+};
+
 module.exports = CarStore;

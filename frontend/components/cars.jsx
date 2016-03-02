@@ -25,14 +25,19 @@ var Cars = React.createClass({
     this.setState({cars: CarStore.all()});
   },
 
+  handleClick: function(e, car) {
+    this.props.history.pushState(null, 'cars/' + car.id);
+  },
+
   parseCars: function(jsonCars) {
     var renderArray = [];
+    var that = this;
     if (jsonCars.length > 0) {
       jsonCars.forEach(function(car) {
         renderArray.push(
           <ul className='car-list-element-container'>
             <div className='img-container'>
-              <img className='car-img' src={'/assets/' + car.img_url}/>
+            <img onClick={that.handleClick.bind(that, null, car)} className='car-img' src={'/assets/' + car.img_url}/>
             </div>
             <li className='car-list-element'>{car.year}  {car.make}  {car.model}  <div className='price-container'>${car.price}</div></li>
           </ul>
@@ -61,7 +66,7 @@ var Cars = React.createClass({
         </div>
 
         <div className='right-side-container'>
-          <Map className='car-page-map'/>
+          <Map history={this.props.history} className='car-page-map'/>
         </div>
       </div>
     );

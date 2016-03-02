@@ -17,6 +17,7 @@ var Session = React.createClass({
 
   componentDidMount: function() {
     this.token = UserStore.addListener(this.updateCurrentUser);
+    SessionActions.fetchCurrentUser();
   },
 
   componentWillUnmount: function() {

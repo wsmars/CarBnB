@@ -24546,6 +24546,7 @@
 	
 	  componentDidMount: function () {
 	    this.token = UserStore.addListener(this.updateCurrentUser);
+	    SessionActions.fetchCurrentUser();
 	  },
 	
 	  componentWillUnmount: function () {
@@ -24703,6 +24704,10 @@
 	    AppDispatcher.dispatch({
 	      actionType: 'CLEAN_ERROR'
 	    });
+	  },
+	
+	  fetchCurrentUser: function () {
+	    ApiUtil.fetchCurrentUser(this.receiveCurrentUser);
 	  },
 	
 	  logIn: function (credential) {
@@ -25047,6 +25052,17 @@
 	    $.ajax({
 	      url: '/api/cars',
 	      data: { car: { city: city } },
+	      type: 'GET',
+	      success: function (cars) {
+	        receiveCars(cars);
+	      }
+	    });
+	  },
+	
+	  fetchCarsByBounds: function (bounds, receiveCars) {
+	    $.ajax({
+	      url: '/api/cars',
+	      data: { car: { bounds: bounds } },
 	      type: 'GET',
 	      success: function (cars) {
 	        receiveCars(cars);
@@ -32180,6 +32196,16 @@
 	  _cars = cars;
 	};
 	
+	CarStore.findCarById = function (id) {
+	  var returnObj;
+	  _cars.forEach(function (car) {
+	    if (car.id == id) {
+	      returnObj = car;
+	    }
+	  });
+	  return returnObj;
+	};
+	
 	module.exports = CarStore;
 
 /***/ },
@@ -32199,6 +32225,10 @@
 	
 	  fetchCarsInCity: function (city) {
 	    ApiUtil.fetchCarsInCity(city, this.receiveCars);
+	  },
+	
+	  fetchCarsByBounds: function (bounds) {
+	    ApiUtil.fetchCarsByBounds(bounds, this.receiveCars);
 	  }
 	};
 	
@@ -32350,8 +32380,13 @@
 	    this.setState({ cars: CarStore.all() });
 	  },
 	
+	  handleClick: function (e, car) {
+	    this.props.history.pushState(null, 'cars/' + car.id);
+	  },
+	
 	  parseCars: function (jsonCars) {
 	    var renderArray = [];
+	    var that = this;
 	    if (jsonCars.length > 0) {
 	      jsonCars.forEach(function (car) {
 	        renderArray.push(React.createElement(
@@ -32360,7 +32395,7 @@
 	          React.createElement(
 	            'div',
 	            { className: 'img-container' },
-	            React.createElement('img', { className: 'car-img', src: '/assets/' + car.img_url })
+	            React.createElement('img', { onClick: that.handleClick.bind(that, null, car), className: 'car-img', src: '/assets/' + car.img_url })
 	          ),
 	          React.createElement(
 	            'li',
@@ -32407,7 +32442,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'right-side-container' },
-	        React.createElement(Map, { className: 'car-page-map' })
+	        React.createElement(Map, { history: this.props.history, className: 'car-page-map' })
 	      )
 	    );
 	  }
@@ -32422,6 +32457,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var CarStore = __webpack_require__(246);
+	var SearchActions = __webpack_require__(247);
 	// var FilterActions = require('../actions/filter_actions');
 	
 	function _getCoordsObj(latLng) {
@@ -32432,6 +32468,7 @@
 	}
 	
 	var CENTER = { lat: 37.7758, lng: -122.435 };
+	var mapMoved = false;
 	
 	var Map = React.createClass({
 	  displayName: 'Map',
@@ -32466,7 +32503,10 @@
 	
 	  updateCars: function () {
 	    this.setState({ cars: CarStore.all() });
-	    this.map.panTo(this.centerCarCoords());
+	    if (!mapMoved) {
+	      this.map.panTo(this.centerCarCoords());
+	    }
+	    mapMoved = false;
 	  },
 	
 	  componentDidUpdate: function () {
@@ -32512,6 +32552,7 @@
 	  registerListeners: function () {
 	    var that = this;
 	    google.maps.event.addListener(this.map, 'idle', function () {
+	      mapMoved = true;
 	      var bounds = that.map.getBounds();
 	      var northEast = _getCoordsObj(bounds.getNorthEast());
 	      var southWest = _getCoordsObj(bounds.getSouthWest());
@@ -32520,7 +32561,8 @@
 	        northEast: northEast,
 	        southWest: southWest
 	      };
-	      // FilterActions.updateBounds(bounds);
+	      console.log(bounds);
+	      SearchActions.fetchCarsByBounds(bounds);
 	    });
 	    google.maps.event.addListener(this.map, 'click', function (event) {
 	      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
@@ -32536,7 +32578,7 @@
 	      carId: car.id
 	    });
 	    marker.addListener('click', function () {
-	      that.props.onMarkerClick(car);
+	      that.props.history.pushState(null, 'cars/' + this.carId);
 	    });
 	    this.markers.push(marker);
 	  },
@@ -32566,16 +32608,53 @@
 
 	var React = __webpack_require__(1);
 	
+	var CarStore = __webpack_require__(246);
+	var SearchActions = __webpack_require__(247);
+	
 	var CarShow = React.createClass({
 	  displayName: 'CarShow',
 	
 	
-	  render: function () {
-	    React.createElement(
+	  getInitialState: function () {
+	    var carId = this.props.params.carId;
+	    var car = CarStore.findCarById(carId);
+	    return {
+	      car: car
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token = CarStore.addListener(this._carChanged);
+	  },
+	
+	  _carChanged: function () {
+	    var carId = this.props.params.carId;
+	    var car = CarStore.findCarById(carId);
+	    this.setState({ car: car });
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	
+	  renderCar: function () {
+	    return React.createElement(
 	      'div',
 	      null,
-	      'Hello'
+	      this.state.car.make
 	    );
+	  },
+	
+	  render: function () {
+	    if (this.state.car) {
+	      return this.renderCar();
+	    } else {
+	      return React.createElement(
+	        'h4',
+	        null,
+	        'There is no car found!'
+	      );
+	    }
 	  }
 	});
 	

@@ -24,7 +24,15 @@ class Api::CarsController < ApplicationController
   before_filter :require_signed_in, only: [:create, :edit, :update, :destroy]
 
   def index
-    @cars = Car.where(city: params[:car][:city], status: 'available').to_a
+    if params[:car][:city]
+      @cars = Car.where(city: params[:car][:city], status: 'available').to_a
+    elsif params[:car][:bounds]
+      ne = params[:car][:bounds][:northEast]
+      sw = params[:car][:bounds][:southWest]
+      @cars = Car.where(lat: sw[:lat].to_f..ne[:lat].to_f).where(lng: sw[:lng].to_f..ne[:lng].to_f).to_a
+    else
+      @cars = Car.all
+    end
   end
 
   def show

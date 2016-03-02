@@ -27,12 +27,16 @@ var SessionActions = {
       actionType: 'ERROR',
       error: error
     });
-  }, 
+  },
 
   cleanError: function() {
     AppDispatcher.dispatch({
       actionType: 'CLEAN_ERROR',
     });
+  },
+
+  fetchCurrentUser: function() {
+    ApiUtil.fetchCurrentUser(this.receiveCurrentUser);
   },
 
   logIn: function(credential) {

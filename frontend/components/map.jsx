@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var CarStore = require('../stores/car_store');
+var SearchActions = require('../actions/search_actions');
 // var FilterActions = require('../actions/filter_actions');
 
 function _getCoordsObj(latLng) {
@@ -11,6 +12,7 @@ function _getCoordsObj(latLng) {
 }
 
 var CENTER = {lat: 37.7758, lng: -122.435};
+var mapMoved = false;
 
 var Map = React.createClass({
 
@@ -43,7 +45,10 @@ var Map = React.createClass({
 
   updateCars: function() {
     this.setState({cars: CarStore.all()});
-    this.map.panTo(this.centerCarCoords());
+    if (!mapMoved) {
+      this.map.panTo(this.centerCarCoords());
+    }
+    mapMoved = false;
   },
 
   componentDidUpdate: function () {
@@ -88,6 +93,7 @@ var Map = React.createClass({
   registerListeners: function(){
     var that = this;
     google.maps.event.addListener(this.map, 'idle', function() {
+      mapMoved = true;
       var bounds = that.map.getBounds();
       var northEast = _getCoordsObj(bounds.getNorthEast());
       var southWest = _getCoordsObj(bounds.getSouthWest());
@@ -96,7 +102,8 @@ var Map = React.createClass({
         northEast: northEast,
         southWest: southWest
       };
-      // FilterActions.updateBounds(bounds);
+      console.log(bounds);
+      SearchActions.fetchCarsByBounds(bounds);
     });
     google.maps.event.addListener(this.map, 'click', function(event) {
       var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
@@ -112,7 +119,7 @@ var Map = React.createClass({
       carId: car.id
     });
     marker.addListener('click', function () {
-      that.props.onMarkerClick(car)
+      that.props.history.pushState(null, 'cars/' + this.carId);
     });
     this.markers.push(marker);
   },
