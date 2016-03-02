@@ -41,7 +41,7 @@ var SignUpForm = React.createClass({
     if (error.length > 0) {
       var returnArray = [];
       error.forEach(function(message) {
-        returnArray.push(<li>{message}</li>);
+        returnArray.push(<li className='error-message'>- {message}</li>);
       });
       return returnArray;
     }
@@ -65,28 +65,21 @@ var SignUpForm = React.createClass({
       <div className='sign-up-form-container'>
 
         <h4 className='sign-up-title'>Sign Up</h4>
+        <div className='sign-up-form-title-border'> </div>
         <form className='sign-up-form' onSubmit={this.handleSubmit}>
 
-        <label className='sign-up-username-lable'>Username
-        <input className='sign-up-username-input' type="text" valueLink={this.linkState('username')} />
-        </label>
+        <input className='sign-up-username-input' placeholder="Username" type="text" valueLink={this.linkState('username')} />
 
-        <lable className='sign-up-password-lable'>Password
-        <input className='sign-up-password-input' type="password" valueLink={this.linkState('password')} />
-        </lable>
+        <input className='sign-up-password-input' placeholder="Password" type="password" valueLink={this.linkState('password')} />
 
-        <lable className='sign-up-password-confirmation-lable'>Password Confirmation
-        <input className='sign-up-password-confirmation-input' type="password" valueLink={this.linkState('passwordConfirmation')} />
-        </lable>
+        <input className='sign-up-password-confirmation-input' placeholder="Confirm Password" type="password" valueLink={this.linkState('passwordConfirmation')} />
 
-        <lable className='sign-up-email-lable'>Email
-        <input className='sign-up-email-input' type="text" valueLink={this.linkState('email')} />
-        </lable>
-
+        <input className='sign-up-email-input' placeholder="Email" type="text" valueLink={this.linkState('email')} />
+        <div className='sign-up-form-btn-border'>  </div>
         <input className='sign-up-submit-btn' type="submit" value="Sign Up"/>
         </form>
 
-        <div className='sign-up-form-error'>
+        <div>
           {this.renderError(this.state.error)}
         </div>
       </div>

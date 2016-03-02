@@ -6,7 +6,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <Header/>
+        <Header history={this.props.history} path={this.props.location.pathname}/>
         {this.props.children}
       </div>
     );

@@ -53,8 +53,9 @@
 	var History = __webpack_require__(206);
 	
 	var App = __webpack_require__(211);
-	var LandingPage = __webpack_require__(245);
+	var LandingPage = __webpack_require__(248);
 	var Cars = __webpack_require__(250);
+	var CarShow = __webpack_require__(252);
 	
 	var routes = React.createElement(
 			Router,
@@ -63,7 +64,8 @@
 					Route,
 					{ path: '/', component: App },
 					React.createElement(IndexRoute, { component: LandingPage }),
-					React.createElement(Route, { path: 'cars', component: Cars })
+					React.createElement(Route, { path: 'cars', component: Cars }),
+					React.createElement(Route, { path: 'cars/:carId', component: CarShow })
 			)
 	);
 	
@@ -24439,7 +24441,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Header, null),
+	      React.createElement(Header, { history: this.props.history, path: this.props.location.pathname }),
 	      this.props.children
 	    );
 	  }
@@ -24455,6 +24457,7 @@
 	var Link = __webpack_require__(159).Link;
 	
 	var Session = __webpack_require__(213);
+	var Search = __webpack_require__(245);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -24488,11 +24491,29 @@
 	    );
 	  },
 	
+	  renderSearch: function () {
+	    var path = this.props.path;
+	    if (path === '/') {
+	      return React.createElement(
+	        'div',
+	        { className: 'home-page-search-bar' },
+	        React.createElement(Search, { history: this.props.history })
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'cars-page-serach-bar-container' },
+	        React.createElement(Search, { history: this.props.history })
+	      );
+	    }
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { className: 'header-container' },
 	      this.renderLogo(),
+	      this.renderSearch(),
 	      React.createElement(Session, null),
 	      this.renderHelp()
 	    );
@@ -24600,7 +24621,7 @@
 	        ),
 	        React.createElement(
 	          'h4',
-	          null,
+	          { className: 'username-container' },
 	          'Hello, ',
 	          this.state.currentUser.username
 	        )
@@ -31643,7 +31664,7 @@
 	      error.forEach(function (message) {
 	        returnArray.push(React.createElement(
 	          'li',
-	          null,
+	          { className: 'error-message' },
 	          message
 	        ));
 	      });
@@ -31671,25 +31692,25 @@
 	        'Log In'
 	      ),
 	      React.createElement(
+	        'div',
+	        { className: 'log-in-form-title-border' },
+	        ' '
+	      ),
+	      React.createElement(
 	        'form',
 	        { className: 'log-in-form', onSubmit: this.handleSubmit },
+	        React.createElement('input', { className: 'log-in-username-input', placeholder: 'Username', type: 'text', valueLink: this.linkState('username') }),
+	        React.createElement('input', { className: 'log-in-password-input', placeholder: 'Password', type: 'password', valueLink: this.linkState('password') }),
 	        React.createElement(
-	          'label',
-	          { className: 'log-in-username-lable' },
-	          'Username',
-	          React.createElement('input', { className: 'log-in-username-input', type: 'text', valueLink: this.linkState('username') })
-	        ),
-	        React.createElement(
-	          'lable',
-	          { className: 'log-in-password-lable' },
-	          'Password',
-	          React.createElement('input', { className: 'log-in-password-input', type: 'password', valueLink: this.linkState('password') })
+	          'div',
+	          { className: 'log-in-form-btn-border' },
+	          '  '
 	        ),
 	        React.createElement('input', { className: 'log-in-submit-btn', type: 'submit', value: 'Sign In' })
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'log-in-form-error' },
+	        null,
 	        this.renderError(this.state.error)
 	      )
 	    );
@@ -32016,7 +32037,8 @@
 	      error.forEach(function (message) {
 	        returnArray.push(React.createElement(
 	          'li',
-	          null,
+	          { className: 'error-message' },
+	          '- ',
 	          message
 	        ));
 	      });
@@ -32046,37 +32068,27 @@
 	        'Sign Up'
 	      ),
 	      React.createElement(
+	        'div',
+	        { className: 'sign-up-form-title-border' },
+	        ' '
+	      ),
+	      React.createElement(
 	        'form',
 	        { className: 'sign-up-form', onSubmit: this.handleSubmit },
+	        React.createElement('input', { className: 'sign-up-username-input', placeholder: 'Username', type: 'text', valueLink: this.linkState('username') }),
+	        React.createElement('input', { className: 'sign-up-password-input', placeholder: 'Password', type: 'password', valueLink: this.linkState('password') }),
+	        React.createElement('input', { className: 'sign-up-password-confirmation-input', placeholder: 'Confirm Password', type: 'password', valueLink: this.linkState('passwordConfirmation') }),
+	        React.createElement('input', { className: 'sign-up-email-input', placeholder: 'Email', type: 'text', valueLink: this.linkState('email') }),
 	        React.createElement(
-	          'label',
-	          { className: 'sign-up-username-lable' },
-	          'Username',
-	          React.createElement('input', { className: 'sign-up-username-input', type: 'text', valueLink: this.linkState('username') })
-	        ),
-	        React.createElement(
-	          'lable',
-	          { className: 'sign-up-password-lable' },
-	          'Password',
-	          React.createElement('input', { className: 'sign-up-password-input', type: 'password', valueLink: this.linkState('password') })
-	        ),
-	        React.createElement(
-	          'lable',
-	          { className: 'sign-up-password-confirmation-lable' },
-	          'Password Confirmation',
-	          React.createElement('input', { className: 'sign-up-password-confirmation-input', type: 'password', valueLink: this.linkState('passwordConfirmation') })
-	        ),
-	        React.createElement(
-	          'lable',
-	          { className: 'sign-up-email-lable' },
-	          'Email',
-	          React.createElement('input', { className: 'sign-up-email-input', type: 'text', valueLink: this.linkState('email') })
+	          'div',
+	          { className: 'sign-up-form-btn-border' },
+	          '  '
 	        ),
 	        React.createElement('input', { className: 'sign-up-submit-btn', type: 'submit', value: 'Sign Up' })
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'sign-up-form-error' },
+	        null,
 	        this.renderError(this.state.error)
 	      )
 	    );
@@ -32090,58 +32102,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	
-	var Search = __webpack_require__(246);
-	var Footer = __webpack_require__(249);
-	
-	var LandingPage = React.createClass({
-	  displayName: 'LandingPage',
-	
-	
-	  renderSlogan: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'middle-container' },
-	      React.createElement(
-	        'h2',
-	        { className: 'home-page-slogan' },
-	        'Love the road'
-	      ),
-	      React.createElement(
-	        'h4',
-	        { className: 'home-page-statement' },
-	        'Rent unique cars to travel from local hosts.'
-	      )
-	    );
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'land-page' },
-	      React.createElement(
-	        'div',
-	        { className: 'bottom-container' },
-	        this.renderSlogan(),
-	        React.createElement(Search, { history: this.props.history })
-	      ),
-	      React.createElement(Footer, null)
-	    );
-	  }
-	});
-	
-	module.exports = LandingPage;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	var LinkedStateMixin = __webpack_require__(239);
 	
-	var CarStore = __webpack_require__(247);
-	var SearchActions = __webpack_require__(248);
+	var CarStore = __webpack_require__(246);
+	var SearchActions = __webpack_require__(247);
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -32190,7 +32155,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 247 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(221).Store;
@@ -32218,7 +32183,7 @@
 	module.exports = CarStore;
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(215);
@@ -32238,6 +32203,51 @@
 	};
 	
 	module.exports = SearchActions;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Footer = __webpack_require__(249);
+	
+	var LandingPage = React.createClass({
+	  displayName: 'LandingPage',
+	
+	
+	  renderSlogan: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'middle-container' },
+	      React.createElement(
+	        'h2',
+	        { className: 'home-page-slogan' },
+	        'Love the road'
+	      ),
+	      React.createElement(
+	        'h4',
+	        { className: 'home-page-statement' },
+	        'Rent unique cars to travel from local hosts.'
+	      )
+	    );
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'land-page' },
+	      React.createElement(
+	        'div',
+	        { className: 'bottom-container' },
+	        this.renderSlogan()
+	      ),
+	      React.createElement(Footer, null)
+	    );
+	  }
+	});
+	
+	module.exports = LandingPage;
 
 /***/ },
 /* 249 */
@@ -32314,9 +32324,9 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	
-	var CarStore = __webpack_require__(247);
-	var SearchActions = __webpack_require__(248);
-	var Search = __webpack_require__(246);
+	var CarStore = __webpack_require__(246);
+	var SearchActions = __webpack_require__(247);
+	var Search = __webpack_require__(245);
 	var Map = __webpack_require__(251);
 	
 	var Cars = React.createClass({
@@ -32387,12 +32397,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'cars-page-header-container' },
-	        React.createElement('div', { className: 'logo-border help-border sign-up-border sign-in-border' }),
-	        React.createElement(
-	          'div',
-	          { className: 'cars-page-serach-bar-container' },
-	          React.createElement(Search, { history: this.props.history })
-	        )
+	        React.createElement('div', { className: 'logo-border help-border sign-up-border sign-in-border' })
 	      ),
 	      React.createElement(
 	        'div',
@@ -32416,7 +32421,7 @@
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var CarStore = __webpack_require__(247);
+	var CarStore = __webpack_require__(246);
 	// var FilterActions = require('../actions/filter_actions');
 	
 	function _getCoordsObj(latLng) {
@@ -32554,6 +32559,27 @@
 	});
 	
 	module.exports = Map;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var CarShow = React.createClass({
+	  displayName: 'CarShow',
+	
+	
+	  render: function () {
+	    React.createElement(
+	      'div',
+	      null,
+	      'Hello'
+	    );
+	  }
+	});
+	
+	module.exports = CarShow;
 
 /***/ }
 /******/ ]);

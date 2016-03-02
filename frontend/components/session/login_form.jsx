@@ -42,7 +42,7 @@ var LogInForm = React.createClass({
     if (error.length > 0) {
       var returnArray = [];
       error.forEach(function(message) {
-        returnArray.push(<li>{message}</li>);
+        returnArray.push(<li className='error-message'>{message}</li>);
       });
       return returnArray;
     }
@@ -63,19 +63,17 @@ var LogInForm = React.createClass({
     return (
       <div className='log-in-form-container'>
         <h4 className='log-in-title'>Log In</h4>
+        <div className='log-in-form-title-border'> </div>
         <form className='log-in-form' onSubmit={this.handleSubmit}>
-          <label className='log-in-username-lable'>Username
-          <input className='log-in-username-input' type="text" valueLink={this.linkState('username')} />
-          </label>
+          <input className='log-in-username-input' placeholder="Username" type="text" valueLink={this.linkState('username')} />
 
-          <lable className='log-in-password-lable'>Password
-          <input className='log-in-password-input' type="password" valueLink={this.linkState('password')} />
-          </lable>
+          <input className='log-in-password-input' placeholder="Password" type="password" valueLink={this.linkState('password')} />
 
+          <div className='log-in-form-btn-border'>  </div>
           <input className='log-in-submit-btn' type="submit" value="Sign In"/>
         </form>
 
-        <div className='log-in-form-error'>
+        <div>
           {this.renderError(this.state.error)}
         </div>
       </div>

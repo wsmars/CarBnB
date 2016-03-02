@@ -54,9 +54,6 @@ var Cars = React.createClass({
       <div className='cars-page'>
         <div className='cars-page-header-container'>
           <div className='logo-border help-border sign-up-border sign-in-border'/>
-          <div className='cars-page-serach-bar-container'>
-            <Search history={this.props.history}/>
-          </div>
         </div>
 
         <div className='left-side-container'>

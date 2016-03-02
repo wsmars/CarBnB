@@ -74,7 +74,7 @@ var Session = React.createClass({
           <div className='log-out-btn-container'>
             <button onClick={this.handleLogOut} className='log-out-btn'>Log out</button>
           </div>
-          <h4>Hello, {this.state.currentUser.username}</h4>
+          <h4 className='username-container'>Hello, {this.state.currentUser.username}</h4>
         </div>
         );
     }
