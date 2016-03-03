@@ -32512,7 +32512,6 @@
 	var ReactDOM = __webpack_require__(158);
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
-	// var FilterActions = require('../actions/filter_actions');
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -32617,10 +32616,10 @@
 	      };
 	      SearchActions.fetchCarsByBounds(bounds);
 	    });
-	    google.maps.event.addListener(this.map, 'click', function (event) {
-	      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-	      that.props.onMapClick(coords);
-	    });
+	    // google.maps.event.addListener(this.map, 'click', function(event) {
+	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+	    //   that.props.onMapClick(coords);
+	    // });
 	  },
 	  createMarkerFromCar: function (car) {
 	    var that = this;
@@ -32699,59 +32698,92 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'car-show-page-list-container' },
-	      React.createElement('img', { className: 'car-show-page-img', src: '/assets/' + car.img_url }),
 	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-price' },
-	        '$',
-	        car.price
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-year' },
-	        'Year: ',
-	        car.year
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-model' },
-	        'Model: ',
-	        car.model
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-make' },
-	        'Make: ',
-	        car.make
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-milage' },
-	        'Milage: ',
-	        car.milage
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-type' },
-	        'Type: ',
-	        car.car_type
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-location' },
-	        'Location: ',
-	        car.street,
-	        React.createElement('br', null),
-	        car.city,
-	        ', ',
-	        car.state,
-	        ' ',
-	        car.zip_code
-	      ),
-	      React.createElement(
-	        'li',
-	        { className: 'car-show-page-description' },
-	        car.description
+	        'ul',
+	        null,
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-price' },
+	          '$',
+	          car.price,
+	          ' Per Day'
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-list' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Year: '
+	          ),
+	          car.year
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-list' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Model: '
+	          ),
+	          car.model
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-list' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Make: '
+	          ),
+	          car.make
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-list' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Milage: '
+	          ),
+	          car.milage
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-list' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Type: '
+	          ),
+	          car.car_type
+	        ),
+	        React.createElement(
+	          'li',
+	          { className: 'car-show-page-list' },
+	          React.createElement(
+	            'h3',
+	            null,
+	            'Location:'
+	          ),
+	          car.street,
+	          React.createElement('br', null),
+	          car.city,
+	          ', ',
+	          car.state,
+	          ' ',
+	          car.zip_code
+	        ),
+	        React.createElement(
+	          'h2',
+	          null,
+	          'Description: '
+	        ),
+	        React.createElement(
+	          'p',
+	          { className: 'car-show-page-description' },
+	          car.description
+	        )
 	      )
 	    );
 	  },
@@ -32761,6 +32793,8 @@
 	      return React.createElement(
 	        'div',
 	        { className: 'car-show-page-container' },
+	        React.createElement('div', { className: 'car-show-page-header' }),
+	        React.createElement('img', { className: 'car-show-page-img', src: '/assets/' + this.state.car.img_url }),
 	        React.createElement(
 	          'div',
 	          { className: 'car-show-page-left-container' },
@@ -32830,7 +32864,8 @@
 	  },
 	
 	  componentWillUnmount: function () {
-	    this.token.remove();
+	    this.token1.remove();
+	    this.token2.remove();
 	  },
 	
 	  updateMessage: function () {

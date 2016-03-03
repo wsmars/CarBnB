@@ -34,7 +34,8 @@ var RequestForm = CarShow = React.createClass({
   },
 
   componentWillUnmount: function() {
-    this.token.remove();
+    this.token1.remove();
+    this.token2.remove();
   },
 
   updateMessage: function() {
@@ -78,7 +79,7 @@ var RequestForm = CarShow = React.createClass({
         <form onSubmit={this.handleSubmit}>
           <input type="date" defaultValue={this.state.startDate} valueLink={this.linkState('startDate')} />
           <input type="date" valueLink={this.linkState('endDate')} />
-          
+
           <input type="submit" value="Send Request"/>
         </form>
 

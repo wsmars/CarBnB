@@ -36,18 +36,21 @@ var CarShow = React.createClass({
     var car = this.state.car;
     return (
       <div  className='car-show-page-list-container'>
-        <img className='car-show-page-img' src={'/assets/' + car.img_url}/>
-        <li className='car-show-page-price'>${car.price}</li>
-        <li className='car-show-page-year'>Year: {car.year}</li>
-        <li className='car-show-page-model'>Model: {car.model}</li>
-        <li className='car-show-page-make'>Make: {car.make}</li>
-        <li className='car-show-page-milage'>Milage: {car.milage}</li>
-        <li className='car-show-page-type'>Type: {car.car_type}</li>
-        <li className='car-show-page-location'>Location: {car.street}
-          <br/>
-          {car.city}, {car.state} {car.zip_code}
-        </li>
-        <li className='car-show-page-description'>{car.description}</li>
+        <ul>
+          <li className='car-show-page-price'>${car.price} Per Day</li>
+          <li className='car-show-page-list'><h3>Year: </h3>{car.year}</li>
+          <li className='car-show-page-list'><h3>Model: </h3>{car.model}</li>
+          <li className='car-show-page-list'><h3>Make: </h3>{car.make}</li>
+          <li className='car-show-page-list'><h3>Milage: </h3>{car.milage}</li>
+          <li className='car-show-page-list'><h3>Type: </h3>{car.car_type}</li>
+          <li className='car-show-page-list'><h3>Location:</h3>
+            {car.street}
+            <br/>
+            {car.city}, {car.state} {car.zip_code}
+            </li>
+          <h2>Description: </h2>
+          <p className='car-show-page-description'>{car.description}</p>
+        </ul>
       </div>
     );
   },
@@ -56,6 +59,8 @@ var CarShow = React.createClass({
     if (this.state.car) {
       return (
         <div  className='car-show-page-container'>
+          <div className='car-show-page-header'></div>
+          <img className='car-show-page-img' src={'/assets/' + this.state.car.img_url}/>
           <div  className='car-show-page-left-container'>
             {this.renderCar()}
           </div>

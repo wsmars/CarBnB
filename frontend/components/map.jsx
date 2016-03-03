@@ -2,7 +2,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var CarStore = require('../stores/car_store');
 var SearchActions = require('../actions/search_actions');
-// var FilterActions = require('../actions/filter_actions');
 
 function _getCoordsObj(latLng) {
   return {
@@ -104,10 +103,10 @@ var Map = React.createClass({
       };
       SearchActions.fetchCarsByBounds(bounds);
     });
-    google.maps.event.addListener(this.map, 'click', function(event) {
-      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-      that.props.onMapClick(coords);
-    });
+    // google.maps.event.addListener(this.map, 'click', function(event) {
+    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+    //   that.props.onMapClick(coords);
+    // });
   },
   createMarkerFromCar: function (car) {
     var that = this;
