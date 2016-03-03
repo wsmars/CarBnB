@@ -24,14 +24,14 @@ class Api::CarsController < ApplicationController
   before_filter :require_signed_in, only: [:create, :edit, :update, :destroy]
 
   def index
-    if params[:car][:city]
-      @cars = Car.where(city: params[:car][:city], status: 'available').to_a
+    if !params[:car]
+      @cars = Car.all
+    elsif params[:car][:city]
+      @cars = Car.where(city: params[:car][:city], status: 'available')
     elsif params[:car][:bounds]
       ne = params[:car][:bounds][:northEast]
       sw = params[:car][:bounds][:southWest]
-      @cars = Car.where(lat: sw[:lat].to_f..ne[:lat].to_f).where(lng: sw[:lng].to_f..ne[:lng].to_f).to_a
-    else
-      @cars = Car.all
+      @cars = Car.where(lat: sw[:lat].to_f..ne[:lat].to_f).where(lng: sw[:lng].to_f..ne[:lng].to_f)
     end
   end
 
@@ -43,7 +43,7 @@ class Api::CarsController < ApplicationController
     @car = current_user.cars.new(car_params)
     @car.user_id = current_user.id
     if @car.save
-      redirect_to car_url(@car)
+      render :show
     else
       render json: {message: @car.errors.full_messages}, status: 422
     end

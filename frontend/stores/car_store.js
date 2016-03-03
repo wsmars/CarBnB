@@ -9,6 +9,10 @@ switch(payload.actionType) {
     this.receiveCars(payload.cars);
     CarStore.__emitChange();
     break;
+  case "RECEIVE_SINGLE_CAR":
+    this.receiveSingleCar(payload.car);
+    CarStore.__emitChange();
+    break;
   }
 };
 
@@ -18,6 +22,10 @@ CarStore.all = function () {
 
 CarStore.receiveCars = function (cars) {
   _cars = cars;
+};
+
+CarStore.receiveSingleCar = function (car) {
+  _cars = [car]
 };
 
 CarStore.findCarById = function (id) {

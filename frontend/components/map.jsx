@@ -102,7 +102,6 @@ var Map = React.createClass({
         northEast: northEast,
         southWest: southWest
       };
-      console.log(bounds);
       SearchActions.fetchCarsByBounds(bounds);
     });
     google.maps.event.addListener(this.map, 'click', function(event) {

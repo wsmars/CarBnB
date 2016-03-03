@@ -1,1 +1,2 @@
-json.merge! @cars
+# json.merge! @cars
+json.array! @cars

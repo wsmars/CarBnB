@@ -25070,6 +25070,27 @@
 	    });
 	  },
 	
+	  fetchCarById: function (carId, receiveSingleCar) {
+	    $.ajax({
+	      url: '/api/cars/' + carId,
+	      type: 'GET',
+	      success: function (car) {
+	        receiveSingleCar(car);
+	      }
+	    });
+	  },
+	
+	  makeRequest: function (startDate, endDate, carId, receiveMessage) {
+	    $.ajax({
+	      url: '/api/requests',
+	      data: { request: { start_date: startDate, end_date: endDate, car_id: carId } },
+	      type: 'POST',
+	      success: function (message) {
+	        receiveMessage(message);
+	      }
+	    });
+	  },
+	
 	  fetchLocationCoor: function (address, city, state, zipcode) {
 	    var location = address + '+' + city + '+' + state + '+' + zipcode;
 	    $.ajax({
@@ -31973,17 +31994,27 @@
 	var AppDispatcher = __webpack_require__(215);
 	var MessageStore = new Store(AppDispatcher);
 	
+	var _error = [];
 	var _message = [];
 	
 	MessageStore.error = function () {
+	  return _error.slice(0);
+	};
+	
+	MessageStore.message = function () {
 	  return _message.slice(0);
 	};
 	
-	MessageStore.receiveError = function (message) {
+	MessageStore.receiveError = function (error) {
+	  _error = error;
+	};
+	
+	MessageStore.receiveMessage = function (message) {
 	  _message = message;
 	};
 	
 	MessageStore.cleanMessage = function () {
+	  _error = [];
 	  _message = [];
 	};
 	
@@ -31995,6 +32026,10 @@
 	      break;
 	    case "CLEAN_ERROR":
 	      this.cleanMessage();
+	      MessageStore.__emitChange();
+	      break;
+	    case "RECEIVE_MESSAGE":
+	      this.receiveMessage(payload.message);
 	      MessageStore.__emitChange();
 	      break;
 	  }
@@ -32185,6 +32220,10 @@
 	      this.receiveCars(payload.cars);
 	      CarStore.__emitChange();
 	      break;
+	    case "RECEIVE_SINGLE_CAR":
+	      this.receiveSingleCar(payload.car);
+	      CarStore.__emitChange();
+	      break;
 	  }
 	};
 	
@@ -32194,6 +32233,10 @@
 	
 	CarStore.receiveCars = function (cars) {
 	  _cars = cars;
+	};
+	
+	CarStore.receiveSingleCar = function (car) {
+	  _cars = [car];
 	};
 	
 	CarStore.findCarById = function (id) {
@@ -32223,12 +32266,23 @@
 	    });
 	  },
 	
+	  receiveSingleCar: function (car) {
+	    AppDispatcher.dispatch({
+	      actionType: 'RECEIVE_SINGLE_CAR',
+	      car: car
+	    });
+	  },
+	
 	  fetchCarsInCity: function (city) {
 	    ApiUtil.fetchCarsInCity(city, this.receiveCars);
 	  },
 	
 	  fetchCarsByBounds: function (bounds) {
 	    ApiUtil.fetchCarsByBounds(bounds, this.receiveCars);
+	  },
+	
+	  fetchCarById: function (carId) {
+	    ApiUtil.fetchCarById(carId, this.receiveSingleCar);
 	  }
 	};
 	
@@ -32561,7 +32615,6 @@
 	        northEast: northEast,
 	        southWest: southWest
 	      };
-	      console.log(bounds);
 	      SearchActions.fetchCarsByBounds(bounds);
 	    });
 	    google.maps.event.addListener(this.map, 'click', function (event) {
@@ -32610,6 +32663,7 @@
 	
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
+	var RequestForm = __webpack_require__(253);
 	
 	var CarShow = React.createClass({
 	  displayName: 'CarShow',
@@ -32625,6 +32679,9 @@
 	
 	  componentDidMount: function () {
 	    this.token = CarStore.addListener(this._carChanged);
+	    if (!this.state.car) {
+	      SearchActions.fetchCarById(this.props.params.carId);
+	    }
 	  },
 	
 	  _carChanged: function () {
@@ -32638,27 +32695,224 @@
 	  },
 	
 	  renderCar: function () {
+	    var car = this.state.car;
 	    return React.createElement(
 	      'div',
-	      null,
-	      this.state.car.make
+	      { className: 'car-show-page-list-container' },
+	      React.createElement('img', { className: 'car-show-page-img', src: '/assets/' + car.img_url }),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-price' },
+	        '$',
+	        car.price
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-year' },
+	        'Year: ',
+	        car.year
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-model' },
+	        'Model: ',
+	        car.model
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-make' },
+	        'Make: ',
+	        car.make
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-milage' },
+	        'Milage: ',
+	        car.milage
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-type' },
+	        'Type: ',
+	        car.car_type
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-location' },
+	        'Location: ',
+	        car.street,
+	        React.createElement('br', null),
+	        car.city,
+	        ', ',
+	        car.state,
+	        ' ',
+	        car.zip_code
+	      ),
+	      React.createElement(
+	        'li',
+	        { className: 'car-show-page-description' },
+	        car.description
+	      )
 	    );
 	  },
 	
 	  render: function () {
 	    if (this.state.car) {
-	      return this.renderCar();
+	      return React.createElement(
+	        'div',
+	        { className: 'car-show-page-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'car-show-page-left-container' },
+	          this.renderCar()
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'car-show-page-right-container' },
+	          React.createElement(RequestForm, { carId: this.props.params.carId })
+	        )
+	      );
 	    } else {
 	      return React.createElement(
-	        'h4',
-	        null,
-	        'There is no car found!'
+	        'div',
+	        { className: 'car-show-page-container' },
+	        React.createElement(
+	          'h4',
+	          { className: 'car-show-no-car-found' },
+	          'There is no car found!'
+	        )
 	      );
 	    }
 	  }
 	});
 	
 	module.exports = CarShow;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(239);
+	// var DateTime = require('react-datetime');
+	
+	var RequestActions = __webpack_require__(254);
+	var UserStore = __webpack_require__(220);
+	var MessageStore = __webpack_require__(243);
+	
+	Date.prototype.yyyymmdd = function () {
+	  var yyyy = this.getFullYear().toString();
+	  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+	  var dd = this.getDate().toString();
+	  return yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]); // padding
+	};
+	
+	var RequestForm = CarShow = React.createClass({
+	  displayName: 'CarShow',
+	
+	
+	  mixins: [LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    var date = new Date();
+	    var tomorrow = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+	    return {
+	      startDate: date.yyyymmdd(),
+	      endDate: tomorrow.yyyymmdd(),
+	      currentUser: UserStore.all(),
+	      message: []
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token1 = MessageStore.addListener(this.updateMessage);
+	    this.token2 = UserStore.addListener(this.updateCurrentUser);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	
+	  updateMessage: function () {
+	    this.setState({ message: MessageStore.message() });
+	  },
+	
+	  updateCurrentUser: function () {
+	    this.setState({ currentUser: UserStore.all() });
+	  },
+	
+	  renderMessage: function (message) {
+	    if (message.length > 0) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'li',
+	          null,
+	          message[0]
+	        )
+	      );
+	    } else {
+	      return null;
+	    }
+	  },
+	
+	  handleSubmit: function (e) {
+	    if (this.state.currentUser) {
+	      e.preventDefault();
+	      var startDate = this.state.startDate;
+	      var endDate = this.state.endDate;
+	      var carId = parseInt(this.props.carId);
+	      RequestActions.makeRequest(startDate, endDate, carId);
+	    } else {
+	      e.preventDefault();
+	      alert('Log in first');
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit },
+	        React.createElement('input', { type: 'date', defaultValue: this.state.startDate, valueLink: this.linkState('startDate') }),
+	        React.createElement('input', { type: 'date', valueLink: this.linkState('endDate') }),
+	        React.createElement('input', { type: 'submit', value: 'Send Request' })
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        this.renderMessage(this.state.message)
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = RequestForm;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(215);
+	var ApiUtil = __webpack_require__(219);
+	
+	var RequestActions = {
+	  receiveMessage: function (message) {
+	    AppDispatcher.dispatch({
+	      actionType: 'RECEIVE_MESSAGE',
+	      message: message
+	    });
+	  },
+	
+	  makeRequest: function (startDate, endDate, carId) {
+	    ApiUtil.makeRequest(startDate, endDate, carId, this.receiveMessage);
+	  }
+	};
+	
+	module.exports = RequestActions;
 
 /***/ }
 /******/ ]);

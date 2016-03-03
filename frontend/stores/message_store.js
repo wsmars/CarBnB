@@ -2,18 +2,28 @@ var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher');
 var MessageStore = new Store(AppDispatcher);
 
+var _error = [];
 var _message = [];
 
 MessageStore.error = function() {
+  return _error.slice(0);
+};
+
+MessageStore.message = function() {
   return _message.slice(0);
 };
 
-MessageStore.receiveError = function(message) {
+MessageStore.receiveError = function(error) {
+  _error = error;
+};
+
+MessageStore.receiveMessage = function(message) {
   _message = message;
 };
 
 MessageStore.cleanMessage = function() {
-	_message = [];
+	_error = [];
+  _message = [];
 };
 
 MessageStore.__onDispatch = function(payload) {
@@ -26,6 +36,10 @@ MessageStore.__onDispatch = function(payload) {
     	this.cleanMessage();
     	MessageStore.__emitChange();
     	break;
+    case "RECEIVE_MESSAGE":
+      this.receiveMessage(payload.message);
+      MessageStore.__emitChange();
+      break;
   }
 };
 

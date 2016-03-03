@@ -36,19 +36,15 @@ class Api::RequestsController < ApplicationController
     @request = Request.new(request_params)
     @request.user_id = current_user.id
     if @request.save
-      redirect_to car_url(current_car)
+      render json: ['Request sended']
     else
-      flash.now[:errors] = @request.errors.full_messages
+      render json: {message: @request.errors.full_messages}, status: 422
       #TODO: render
     end
   end
 
   private
   def request_params
-    params.require(:request).permit(:start_date, :end_date)
-  end
-
-  def current_car
-    @current_car = Car.find_by_id(@request.car_id)
+    params.require(:request).permit(:start_date, :end_date, :car_id)
   end
 end

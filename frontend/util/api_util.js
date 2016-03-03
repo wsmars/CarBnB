@@ -23,6 +23,27 @@ var ApiUtil = {
       })
   },
 
+  fetchCarById: function(carId, receiveSingleCar) {
+    $.ajax ({
+      url: '/api/cars/' + carId,
+      type: 'GET',
+      success: function(car) {
+        receiveSingleCar(car);
+        }
+      })
+  },
+
+  makeRequest: function(startDate, endDate, carId, receiveMessage) {
+    $.ajax ({
+      url: '/api/requests',
+      data: {request: {start_date: startDate, end_date: endDate, car_id: carId}},
+      type: 'POST',
+      success: function(message) {
+        receiveMessage(message);
+      }
+    })
+  },
+
   fetchLocationCoor: function(address, city, state, zipcode) {
     var location = address + '+' + city + '+' + state + '+' + zipcode;
     $.ajax ({
