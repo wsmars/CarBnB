@@ -17,11 +17,16 @@ class Request < ActiveRecord::Base
 
   belongs_to :car
   belongs_to :user
+  has_one :owner,
+    through: :car,
+    source: :owner
 
   validates :car_id, :user_id, :start_date, :end_date, :status, presence: true
   validates :status, inclusion: STATUS
   validate :does_not_over_lapping_approve_request
   validate :start_day_must_before_end_date
+  validate :owner_cannot_make_request
+  validate :one_requester_cannot_send_multiple_requests_at_same_time
 
   def pending?
     self.status == 'pending'
@@ -149,6 +154,19 @@ SQL
       errors[:base] <<
       "Request conflicts with existing approved request"
     end
+  end
+
+
+  def one_requester_cannot_send_multiple_requests_at_same_time
+    return unless !overlapping_pending_requests.where(user_id: self.user_id).empty?
+    errors[:you] <<
+    "have sent request in the selected time range!"
+  end
+
+  def owner_cannot_make_request
+    return unless owner.id == user.id
+    errors[:owner] <<
+    "cannot request to rent own car!"
   end
 
   def start_day_must_before_end_date

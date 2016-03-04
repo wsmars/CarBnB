@@ -32,14 +32,21 @@ class Api::RequestsController < ApplicationController
 
   end
 
+  def show
+    @request = Request.find(params[:id])
+    @requester = @request.user
+    @owner = @request.owner
+  end
+
   def create
     @request = Request.new(request_params)
     @request.user_id = current_user.id
     if @request.save
-      render json: ['Request sended']
+      @requester = @request.user
+      @owner = @request.owner
+      render :show
     else
       render json: {message: @request.errors.full_messages}, status: 422
-      #TODO: render
     end
   end
 

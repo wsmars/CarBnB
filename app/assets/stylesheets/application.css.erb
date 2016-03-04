@@ -835,25 +835,17 @@ input, textarea, keygen, select, button {
   position: relative;
   width: 70%;
   height: auto;
-  float: left;
-}
-
-.car-show-page-right-container {
-  position: relative;
-  width: 29%;
-  height: auto;
-  float: right;
-  border-left: 1px solid #000;
+  display: inline-block;
 }
 
 .car-show-page-price {
-  top: -61px;
-  left: 101.2%;
+  top: -60px;
+  left: 101.4%;
   padding: 7px 10px;
   background-color: rgba(60,63,64,0.9);
   color: #fff;
   position: absolute;
-  width: 190px;
+  width: 272px;
   font-size: 20px;
 }
 
@@ -892,4 +884,118 @@ input, textarea, keygen, select, button {
   width: auto;
   height: auto;
   padding-bottom: 50px;
+}
+
+.car-show-no-car-found {
+  position: relative;
+  top: 61px;
+  left: 10px;
+}
+
+.car-show-page-right-container {
+  position: relative;
+  display: block;
+  width: 29%;
+  height: 100%;
+  top: -5px;
+  float: right;
+}
+
+.request-form-container {
+  position: relative;
+  height: 160px;
+  width: 290px;
+  background-color: #F5F5F5;
+  border-radius: 1px;
+  border: 1px solid rgba(158, 156, 156, 0.5);
+  border-top: 0px;
+  z-index: 4;
+  margin: 0;
+  float: left;
+}
+
+.car-show-page-right-container .request-form {
+  height: 160px;
+  position: relative;
+}
+
+.request-form h6 {
+  font-size: 14px;
+  margin: 0;
+  width: 95px;
+  display: inline-block;
+  margin-top: 25px;
+  left: 12px;
+  position: relative;
+}
+
+.request-form-date {
+  border: 1px solid #CAC9C9;
+  border-radius: 2px;
+  font-size: 13px;
+  padding: 9px 6px;
+}
+
+.car-show-page-right-container .request-form-submit-btn {
+  position: absolute;
+  width: 100.5%;
+  padding: 9px 27px;
+  font-size: 15px;
+  border-radius: 1px;
+  border: 1.5px solid #ff5a5f;
+  color: #fff;
+  background-color: #ff5a5f;
+  text-align: center;
+  font-weight: bold;
+  line-height: 1.45;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  cursor: pointer;
+  text-transform: none;
+  outline: none;
+  left: -1px;
+  bottom: 0;
+}
+
+.request-form-submit-btn:hover {
+  background-color: #FF9598;
+}
+
+.request-form-error-message .error-message {
+  padding-left: 10px;
+  font-size: 17px;
+  padding-top: 15px;
+}
+
+.request-detail {
+  position: absolute;
+  left: 5px;
+  top: -6px;
+}
+
+.request-detail h3 {
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.request-detail ul{
+  padding: 0;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.request-detail h6 {
+  font-size: 14px;
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  left: 10px;
+  width: 125px;
+  margin-top: 15px;
+}
+
+.request-detail li {
+  font-weight: 500;
+  font-size: large;
+  color: #E6072D;
 }

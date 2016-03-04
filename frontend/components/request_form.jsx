@@ -1,6 +1,5 @@
 var React = require('react');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
-// var DateTime = require('react-datetime');
 
 var RequestActions = require('../actions/request_actions');
 var UserStore = require('../stores/user_store');
@@ -24,7 +23,8 @@ var RequestForm = CarShow = React.createClass({
       startDate: date.yyyymmdd(),
       endDate: tomorrow.yyyymmdd(),
       currentUser: UserStore.all(),
-      message: []
+      error: [],
+      request: undefined
     });
   },
 
@@ -39,24 +39,15 @@ var RequestForm = CarShow = React.createClass({
   },
 
   updateMessage: function() {
-    this.setState({message: MessageStore.message()});
+    this.setState({error: MessageStore.message()});
   },
 
   updateCurrentUser: function() {
     this.setState({currentUser: UserStore.all()});
   },
 
-  renderMessage: function(message) {
-    if (message.length > 0) {
-      return (
-        <div>
-          <li>{message[0]}</li>
-        </div>
-      );
-    }
-    else {
-      return null;
-    }
+  updateRequest: function (request) {
+    this.setState({request: request});
   },
 
   handleSubmit: function(e) {
@@ -65,7 +56,7 @@ var RequestForm = CarShow = React.createClass({
       var startDate = this.state.startDate;
       var endDate = this.state.endDate;
       var carId = parseInt(this.props.carId);
-      RequestActions.makeRequest(startDate, endDate, carId);
+      RequestActions.makeRequest(startDate, endDate, carId, this.updateRequest);
     }
     else {
       e.preventDefault();
@@ -73,19 +64,71 @@ var RequestForm = CarShow = React.createClass({
     }
   },
 
+
+  renderRequest: function() {
+    if (this.state.request) {
+      var request = this.state.request;
+      return(
+        <div className='request-detail'>
+          <h3>Request Detail</h3>
+          <ul>
+            <h6>Request By:
+              <li>{request.requester.username}</li>
+            </h6>
+            <h6>Status:
+            <li>{request.status}</li>
+            </h6>
+            <h6>Start Date:
+              <li>{request.start_date}</li>
+            </h6>
+            <h6>End Date:
+              <li>{request.end_date}</li>
+            </h6>
+          </ul>
+        </div>
+      );
+    }
+    else {
+      return(
+        <div>
+          <form className='request-form' onSubmit={this.handleSubmit}>
+            <h6>Check in</h6>
+            <input className='request-form-date' type="date" defaultValue={this.state.startDate} valueLink={this.linkState('startDate')} />
+            <h6>Check out</h6>
+            <input className='request-form-date' type="date" valueLink={this.linkState('endDate')} />
+
+            <input className='request-form-submit-btn' type="submit" value="Send Request"/>
+          </form>
+
+          <div className='request-form-error-message'>
+            {this.renderError(this.state.error)}
+          </div>
+        </div>
+      );
+    }
+  },
+
+  excuteCleanError: function() {
+    setTimeout(RequestActions.cleanError(), 5000)
+  },
+
+  renderError: function(error) {
+    if (error.length > 0) {
+      var returnArray = [];
+      error.forEach(function(message) {
+        returnArray.push(<li className='error-message'>{message}</li>);
+      });
+      return returnArray;
+    }
+    else {
+      return null;
+    }
+  },
+
   render: function() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <input type="date" defaultValue={this.state.startDate} valueLink={this.linkState('startDate')} />
-          <input type="date" valueLink={this.linkState('endDate')} />
-
-          <input type="submit" value="Send Request"/>
-        </form>
-
-        <div>
-          {this.renderMessage(this.state.message)}
-        </div>
+      <div className='request-form-container'>
+        {this.renderRequest()}
       </div>
     );
   }

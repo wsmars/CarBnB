@@ -33,13 +33,16 @@ var ApiUtil = {
       })
   },
 
-  makeRequest: function(startDate, endDate, carId, receiveMessage) {
+  makeRequest: function(startDate, endDate, carId, receiveRequest, showMessage) {
     $.ajax ({
       url: '/api/requests',
       data: {request: {start_date: startDate, end_date: endDate, car_id: carId}},
       type: 'POST',
-      success: function(message) {
-        receiveMessage(message);
+      success: function(request) {
+        receiveRequest(request);
+      },
+      error: function(error){
+        showMessage(error.responseJSON.message);
       }
     })
   },

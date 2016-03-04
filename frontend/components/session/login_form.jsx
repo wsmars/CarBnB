@@ -12,7 +12,7 @@ var LogInForm = React.createClass({
   getInitialState: function() {
     return ({
       user: undefined,
-      error: MessageStore.error(),
+      error: [],
       username: '',
       password: ''
     });

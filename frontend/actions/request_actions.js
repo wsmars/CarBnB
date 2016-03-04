@@ -2,15 +2,15 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var ApiUtil = require('../util/api_util');
 
 var RequestActions = {
-  receiveMessage: function(message) {
+  showMessage: function(message) {
     AppDispatcher.dispatch({
-      actionType: 'RECEIVE_MESSAGE',
+      actionType: 'MESSAGE',
       message: message
     });
   },
 
-  makeRequest: function(startDate, endDate, carId) {
-    ApiUtil.makeRequest(startDate, endDate, carId, this.receiveMessage);
+  makeRequest: function(startDate, endDate, carId, callback) {
+    ApiUtil.makeRequest(startDate, endDate, carId, callback, this.showMessage);
   }
 };
 

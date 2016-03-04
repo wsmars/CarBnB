@@ -25080,13 +25080,16 @@
 	    });
 	  },
 	
-	  makeRequest: function (startDate, endDate, carId, receiveMessage) {
+	  makeRequest: function (startDate, endDate, carId, receiveRequest, showMessage) {
 	    $.ajax({
 	      url: '/api/requests',
 	      data: { request: { start_date: startDate, end_date: endDate, car_id: carId } },
 	      type: 'POST',
-	      success: function (message) {
-	        receiveMessage(message);
+	      success: function (request) {
+	        receiveRequest(request);
+	      },
+	      error: function (error) {
+	        showMessage(error.responseJSON.message);
 	      }
 	    });
 	  },
@@ -31669,7 +31672,7 @@
 	  getInitialState: function () {
 	    return {
 	      user: undefined,
-	      error: MessageStore.error(),
+	      error: [],
 	      username: '',
 	      password: ''
 	    };
@@ -32024,12 +32027,12 @@
 	      this.receiveError(payload.error);
 	      MessageStore.__emitChange();
 	      break;
-	    case "CLEAN_ERROR":
-	      this.cleanMessage();
+	    case "MESSAGE":
+	      this.receiveMessage(payload.message);
 	      MessageStore.__emitChange();
 	      break;
-	    case "RECEIVE_MESSAGE":
-	      this.receiveMessage(payload.message);
+	    case "CLEAN_ERROR":
+	      this.cleanMessage();
 	      MessageStore.__emitChange();
 	      break;
 	  }
@@ -32056,7 +32059,7 @@
 	  getInitialState: function () {
 	    return {
 	      user: undefined,
-	      error: MessageStore.error(),
+	      error: [],
 	      username: '',
 	      password: '',
 	      passwordConfirmation: '',
@@ -32270,6 +32273,12 @@
 	    AppDispatcher.dispatch({
 	      actionType: 'RECEIVE_SINGLE_CAR',
 	      car: car
+	    });
+	  },
+	
+	  cleanError: function () {
+	    AppDispatcher.dispatch({
+	      actionType: 'CLEAN_ERROR'
 	    });
 	  },
 	
@@ -32828,7 +32837,6 @@
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(239);
-	// var DateTime = require('react-datetime');
 	
 	var RequestActions = __webpack_require__(254);
 	var UserStore = __webpack_require__(220);
@@ -32854,7 +32862,8 @@
 	      startDate: date.yyyymmdd(),
 	      endDate: tomorrow.yyyymmdd(),
 	      currentUser: UserStore.all(),
-	      message: []
+	      error: [],
+	      request: undefined
 	    };
 	  },
 	
@@ -32869,27 +32878,15 @@
 	  },
 	
 	  updateMessage: function () {
-	    this.setState({ message: MessageStore.message() });
+	    this.setState({ error: MessageStore.message() });
 	  },
 	
 	  updateCurrentUser: function () {
 	    this.setState({ currentUser: UserStore.all() });
 	  },
 	
-	  renderMessage: function (message) {
-	    if (message.length > 0) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'li',
-	          null,
-	          message[0]
-	        )
-	      );
-	    } else {
-	      return null;
-	    }
+	  updateRequest: function (request) {
+	    this.setState({ request: request });
 	  },
 	
 	  handleSubmit: function (e) {
@@ -32898,29 +32895,124 @@
 	      var startDate = this.state.startDate;
 	      var endDate = this.state.endDate;
 	      var carId = parseInt(this.props.carId);
-	      RequestActions.makeRequest(startDate, endDate, carId);
+	      RequestActions.makeRequest(startDate, endDate, carId, this.updateRequest);
 	    } else {
 	      e.preventDefault();
 	      alert('Log in first');
 	    }
 	  },
 	
+	  renderRequest: function () {
+	    if (this.state.request) {
+	      var request = this.state.request;
+	      return React.createElement(
+	        'div',
+	        { className: 'request-detail' },
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Request Detail'
+	        ),
+	        React.createElement(
+	          'ul',
+	          null,
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Request By:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.requester.username
+	            )
+	          ),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Status:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.status
+	            )
+	          ),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Start Date:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.start_date
+	            )
+	          ),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'End Date:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.end_date
+	            )
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'form',
+	          { className: 'request-form', onSubmit: this.handleSubmit },
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Check in'
+	          ),
+	          React.createElement('input', { className: 'request-form-date', type: 'date', defaultValue: this.state.startDate, valueLink: this.linkState('startDate') }),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Check out'
+	          ),
+	          React.createElement('input', { className: 'request-form-date', type: 'date', valueLink: this.linkState('endDate') }),
+	          React.createElement('input', { className: 'request-form-submit-btn', type: 'submit', value: 'Send Request' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'request-form-error-message' },
+	          this.renderError(this.state.error)
+	        )
+	      );
+	    }
+	  },
+	
+	  excuteCleanError: function () {
+	    setTimeout(RequestActions.cleanError(), 5000);
+	  },
+	
+	  renderError: function (error) {
+	    if (error.length > 0) {
+	      var returnArray = [];
+	      error.forEach(function (message) {
+	        returnArray.push(React.createElement(
+	          'li',
+	          { className: 'error-message' },
+	          message
+	        ));
+	      });
+	      return returnArray;
+	    } else {
+	      return null;
+	    }
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit },
-	        React.createElement('input', { type: 'date', defaultValue: this.state.startDate, valueLink: this.linkState('startDate') }),
-	        React.createElement('input', { type: 'date', valueLink: this.linkState('endDate') }),
-	        React.createElement('input', { type: 'submit', value: 'Send Request' })
-	      ),
-	      React.createElement(
-	        'div',
-	        null,
-	        this.renderMessage(this.state.message)
-	      )
+	      { className: 'request-form-container' },
+	      this.renderRequest()
 	    );
 	  }
 	});
@@ -32935,15 +33027,15 @@
 	var ApiUtil = __webpack_require__(219);
 	
 	var RequestActions = {
-	  receiveMessage: function (message) {
+	  showMessage: function (message) {
 	    AppDispatcher.dispatch({
-	      actionType: 'RECEIVE_MESSAGE',
+	      actionType: 'MESSAGE',
 	      message: message
 	    });
 	  },
 	
-	  makeRequest: function (startDate, endDate, carId) {
-	    ApiUtil.makeRequest(startDate, endDate, carId, this.receiveMessage);
+	  makeRequest: function (startDate, endDate, carId, callback) {
+	    ApiUtil.makeRequest(startDate, endDate, carId, callback, this.showMessage);
 	  }
 	};
 	

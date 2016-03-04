@@ -17,6 +17,12 @@ var SearchActions = {
     });
   },
 
+  cleanError: function() {
+    AppDispatcher.dispatch({
+      actionType: 'CLEAN_ERROR',
+    });
+  },
+
   fetchCarsInCity: function(city) {
     ApiUtil.fetchCarsInCity(city, this.receiveCars);
   },

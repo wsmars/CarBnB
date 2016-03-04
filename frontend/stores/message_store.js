@@ -32,14 +32,14 @@ MessageStore.__onDispatch = function(payload) {
       this.receiveError(payload.error);
       MessageStore.__emitChange();
       break;
+    case "MESSAGE":
+      this.receiveMessage(payload.message);
+      MessageStore.__emitChange();
+      break;
     case "CLEAN_ERROR":
     	this.cleanMessage();
     	MessageStore.__emitChange();
     	break;
-    case "RECEIVE_MESSAGE":
-      this.receiveMessage(payload.message);
-      MessageStore.__emitChange();
-      break;
   }
 };
 
