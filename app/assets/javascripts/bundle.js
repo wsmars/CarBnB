@@ -32783,7 +32783,7 @@
 	          React.createElement(
 	            'div',
 	            { className: 'img-container' },
-	            React.createElement('img', { onClick: that.handleClick.bind(that, null, car), className: 'car-img', src: '/assets/' + car.img_url })
+	            React.createElement('img', { onClick: that.handleClick.bind(that, null, car), className: 'car-img', src: car.img_url })
 	          ),
 	          React.createElement(
 	            'li',
@@ -33153,7 +33153,7 @@
 	        'div',
 	        { className: 'car-show-page-container' },
 	        React.createElement('div', { className: 'car-show-page-header' }),
-	        React.createElement('img', { className: 'car-show-page-img', src: '/assets/' + this.state.car.img_url }),
+	        React.createElement('img', { className: 'car-show-page-img', src: this.state.car.img_url }),
 	        React.createElement(
 	          'div',
 	          { className: 'car-show-page-left-container' },

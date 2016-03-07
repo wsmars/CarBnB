@@ -60,7 +60,7 @@ var CarShow = React.createClass({
       return (
         <div  className='car-show-page-container'>
           <div className='car-show-page-header'></div>
-          <img className='car-show-page-img' src={'/assets/' + this.state.car.img_url}/>
+          <img className='car-show-page-img' src={this.state.car.img_url}/>
           <div  className='car-show-page-left-container'>
             {this.renderCar()}
           </div>

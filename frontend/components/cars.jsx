@@ -37,7 +37,7 @@ var Cars = React.createClass({
         renderArray.push(
           <ul id={"car-" + car.id} className='car-list-element-container'>
             <div className='img-container'>
-            <img onClick={that.handleClick.bind(that, null, car)} className='car-img' src={'/assets/' + car.img_url}/>
+            <img onClick={that.handleClick.bind(that, null, car)} className='car-img' src={car.img_url}/>
             </div>
             <li className='car-list-element'>{car.year}  {car.make}  {car.model}  <div className='price-container'>${car.price}</div></li>
           </ul>
