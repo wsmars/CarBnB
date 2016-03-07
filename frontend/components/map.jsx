@@ -12,7 +12,7 @@ function _getCoordsObj(latLng) {
 
 var CENTER = {lat: 37.7758, lng: -122.435};
 var mapMoved = false;
-
+var _markers = {};
 var Map = React.createClass({
 
   getInitialState: function() {
@@ -50,8 +50,35 @@ var Map = React.createClass({
     mapMoved = false;
   },
 
-  componentDidUpdate: function () {
+componentDidUpdate: function (oldstate) {
     this._onChange();
+    var that = this;
+
+    var toggleBounce = function(marker, status) {
+        if (status) {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        } else {
+          marker.setAnimation(null);
+        }
+      };
+
+    for (var key in _markers) {
+      var carDoc = document.getElementById("car-" + key);
+      if (carDoc) {
+        (function(k){
+          google.maps.event.addDomListener(carDoc,
+            "mouseenter",
+            function() {
+              toggleBounce(_markers[k], true);
+            });
+            google.maps.event.addDomListener(carDoc,
+              "mouseleave",
+              function() {
+                toggleBounce(_markers[k], false);
+              });
+        })(key);
+      }
+    }
   },
 
   _onChange: function(){
@@ -116,6 +143,8 @@ var Map = React.createClass({
       map: this.map,
       carId: car.id
     });
+
+    _markers[car.id] = marker;
     marker.addListener('click', function () {
       that.props.history.pushState(null, 'cars/' + this.carId);
     });

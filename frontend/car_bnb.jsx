@@ -10,6 +10,7 @@ var App = require('./components/app');
 var LandingPage = require('./components/landing_page.jsx');
 var Cars = require('./components/cars');
 var CarShow = require('./components/car_show');
+var CarPost = require('./components/car_post');
 
 
 var routes = (
@@ -18,6 +19,7 @@ var routes = (
 	  	<IndexRoute component={LandingPage}/>
 			<Route path='cars' component={Cars}/>
 			<Route path="cars/:carId" component={CarShow} />
+			<Route path="newcar" component={CarPost} />
 	  </Route>
 	</Router>)
 

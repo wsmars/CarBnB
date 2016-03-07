@@ -3,6 +3,8 @@ var Link = require('react-router').Link;
 
 var Session = require('./session/session');
 var Search = require('./landing_component/search');
+var CarPost = require('./car_post');
+
 
 var Header = React.createClass({
 
@@ -40,6 +42,10 @@ var Header = React.createClass({
     }
   },
 
+  handleCarPost: function() {
+    this.props.history.push('newcar');
+  },
+
   render: function() {
     return (
       <div className='header-container'>
@@ -47,6 +53,9 @@ var Header = React.createClass({
         {this.renderSearch()}
         <Session />
         {this.renderHelp()}
+        <div className='post-btn-container'>
+          <button onClick={this.handleCarPost} className='car-post-btn'>Post a Car</button>
+        </div>
       </div>
     );
   }

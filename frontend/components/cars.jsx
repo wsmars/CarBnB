@@ -35,7 +35,7 @@ var Cars = React.createClass({
     if (jsonCars.length > 0) {
       jsonCars.forEach(function(car) {
         renderArray.push(
-          <ul className='car-list-element-container'>
+          <ul id={"car-" + car.id} className='car-list-element-container'>
             <div className='img-container'>
             <img onClick={that.handleClick.bind(that, null, car)} className='car-img' src={'/assets/' + car.img_url}/>
             </div>
@@ -47,7 +47,8 @@ var Cars = React.createClass({
     else {
       renderArray.push(
         <h4 className='no-cars-loading'>
-          We couldn find any car that matched your query. Try a different city or landmark.
+          We could not find any car that matched your query. Try a different city or landmark.
+          The website currently only has Cars Data in San Francisco & Cupertino!
         </h4>
       );
     }

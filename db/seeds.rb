@@ -8,6 +8,8 @@
 User.destroy_all
 Car.destroy_all
 
+
+User.create!(username: 'wsmars', password: 123456, email: 'wsmars@hotmail.com')
 User.create!(username: 'wsmars1', password: 123456, email: 'wsmars1@hotmail.com')
 User.create!(username: 'wsmars2', password: 123456, email: 'wsmars2@hotmail.com')
 User.create!(username: 'wsmars3', password: 123456, email: 'wsmars3@hotmail.com')

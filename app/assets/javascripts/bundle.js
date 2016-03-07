@@ -53,9 +53,10 @@
 	var History = __webpack_require__(206);
 	
 	var App = __webpack_require__(211);
-	var LandingPage = __webpack_require__(248);
-	var Cars = __webpack_require__(250);
-	var CarShow = __webpack_require__(252);
+	var LandingPage = __webpack_require__(249);
+	var Cars = __webpack_require__(251);
+	var CarShow = __webpack_require__(253);
+	var CarPost = __webpack_require__(248);
 	
 	var routes = React.createElement(
 			Router,
@@ -65,7 +66,8 @@
 					{ path: '/', component: App },
 					React.createElement(IndexRoute, { component: LandingPage }),
 					React.createElement(Route, { path: 'cars', component: Cars }),
-					React.createElement(Route, { path: 'cars/:carId', component: CarShow })
+					React.createElement(Route, { path: 'cars/:carId', component: CarShow }),
+					React.createElement(Route, { path: 'newcar', component: CarPost })
 			)
 	);
 	
@@ -24458,6 +24460,7 @@
 	
 	var Session = __webpack_require__(213);
 	var Search = __webpack_require__(245);
+	var CarPost = __webpack_require__(248);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -24508,6 +24511,10 @@
 	    }
 	  },
 	
+	  handleCarPost: function () {
+	    this.props.history.push('newcar');
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -24515,7 +24522,16 @@
 	      this.renderLogo(),
 	      this.renderSearch(),
 	      React.createElement(Session, null),
-	      this.renderHelp()
+	      this.renderHelp(),
+	      React.createElement(
+	        'div',
+	        { className: 'post-btn-container' },
+	        React.createElement(
+	          'button',
+	          { onClick: this.handleCarPost, className: 'car-post-btn' },
+	          'Post a Car'
+	        )
+	      )
 	    );
 	  }
 	});
@@ -25094,6 +25110,33 @@
 	    });
 	  },
 	
+	  fetchLatLng: function (street, city, state, receiveLatLng) {
+	    $.ajax({
+	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+	      type: 'GET',
+	      success: function (result) {
+	        debugger;
+	        var location = result.results[0].geometry.location;
+	        receiveLatLng(location);
+	      }
+	    });
+	  },
+	
+	  createCar: function (carAttributes, redirectPage, cleanError, showError) {
+	    $.ajax({
+	      url: '/api/cars',
+	      data: { car: carAttributes },
+	      type: 'POST',
+	      success: function (response) {
+	        cleanError();
+	        redirectPage(response.id);
+	      },
+	      error: function (error) {
+	        showError(error.responseJSON.message);
+	      }
+	    });
+	  },
+	
 	  fetchLocationCoor: function (address, city, state, zipcode) {
 	    var location = address + '+' + city + '+' + state + '+' + zipcode;
 	    $.ajax({
@@ -25123,7 +25166,6 @@
 	      },
 	      error: function (error) {
 	        showError(error.responseJSON.message);
-	        // do something with errors
 	      }
 	    });
 	  },
@@ -25149,7 +25191,6 @@
 	      },
 	      error: function (error) {
 	        showError(error.responseJSON.message);
-	        // do something with errors
 	      }
 	    });
 	  }
@@ -31714,6 +31755,14 @@
 	    }
 	  },
 	
+	  handleAutoFill: function () {
+	    // SessionActions.login({
+	    //   username: 'wsmars',
+	    //   password: 123456
+	    // });
+	    this.setState({ username: 'wsmars', password: 123456 });
+	  },
+	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 	    SessionActions.logIn({
@@ -31747,6 +31796,11 @@
 	          '  '
 	        ),
 	        React.createElement('input', { className: 'log-in-submit-btn', type: 'submit', value: 'Sign In' })
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'log-in-auto-fill-btn', onClick: this.handleAutoFill },
+	        'Auto Fill'
 	      ),
 	      React.createElement(
 	        'div',
@@ -32302,8 +32356,279 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(239);
 	
-	var Footer = __webpack_require__(249);
+	var UserStore = __webpack_require__(220);
+	var MessageStore = __webpack_require__(243);
+	var ApiUtil = __webpack_require__(219);
+	var CarPostActions = __webpack_require__(256);
+	
+	var YEAR = [];
+	var generateYear = function () {
+	  for (var i = 1960; i <= 2017; i++) {
+	    YEAR.push(i);
+	  }
+	};
+	generateYear();
+	
+	var TYPE = ['Economy', 'Compact', 'Midsize', 'Standard', 'Fullsize', 'Premium', 'Luxury', 'Convertible', 'Minivan', 'SUV', 'Sports Car'];
+	
+	var STATE = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+	
+	var CarPost = React.createClass({
+	  displayName: 'CarPost',
+	
+	
+	  mixins: [LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return {
+	      currentUser: UserStore.all(),
+	      error: [],
+	      make: '',
+	      model: '',
+	      year: '',
+	      milage: '',
+	      price: '',
+	      type: '',
+	      street: undefined,
+	      city: undefined,
+	      state: undefined,
+	      zipcode: undefined,
+	      userId: '',
+	      lat: '',
+	      lng: '',
+	      description: ''
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token1 = UserStore.addListener(this.updateUser);
+	    this.token2 = MessageStore.addListener(this.updateMessage);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token1.remove();
+	    this.token2.remove();
+	  },
+	
+	  updateUser: function () {
+	    this.setState({ currentUser: UserStore.all() });
+	  },
+	
+	  updateMessage: function () {
+	    this.setState({ error: MessageStore.error() });
+	  },
+	
+	  selectOptions: function (array) {
+	    var returnArray = [];
+	    array.forEach(function (el) {
+	      returnArray.push(React.createElement(
+	        'option',
+	        null,
+	        el
+	      ));
+	    });
+	    return returnArray;
+	  },
+	
+	  renderError: function (error) {
+	    if (error.length > 0) {
+	      var returnArray = [];
+	      error.forEach(function (message) {
+	        returnArray.push(React.createElement(
+	          'li',
+	          { className: 'error-message' },
+	          message
+	        ));
+	      });
+	      return returnArray;
+	    } else {
+	      return null;
+	    }
+	  },
+	
+	  receiveLatLng: function (location) {
+	    this.setState({ lat: location.lat, lng: location.lng });
+	  },
+	
+	  requestLatLng: function (street, city, state) {
+	    ApiUtil.fetchLatLng(street, city, state, this.receiveLatLng);
+	  },
+	
+	  redirectPage: function (carId) {
+	    this.props.history.pushState(null, 'cars/' + carId);
+	  },
+	
+	  handleSubmit: function () {
+	    if (this.state.currentUser) {
+	      if (this.state.street || this.state.city || this.state.state) {
+	        this.requestLatLng(this.state.street, this.state.city, this.state.state);
+	      }
+	      CarPostActions.createCar({
+	        make: this.state.make,
+	        model: this.state.model,
+	        year: this.state.year,
+	        milage: this.state.milage,
+	        price: this.state.price,
+	        car_type: this.state.type,
+	        street: this.state.street,
+	        city: this.state.city,
+	        state: this.state.state,
+	        zip_code: this.state.zipcode,
+	        user_id: this.state.currentUser.id,
+	        lat: this.state.lat,
+	        lng: this.state.lng,
+	        description: this.state.description
+	      }, this.redirectPage);
+	    } else {
+	      alert('You need to log in first');
+	    }
+	  },
+	
+	  renderPostForm: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'form',
+	        { className: 'car-post-form', onSubmit: this.handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Make'
+	          ),
+	          React.createElement('input', { className: 'car-post-form-make', type: 'text', valueLink: this.linkState('make') })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Model'
+	          ),
+	          React.createElement('input', { className: 'car-post-form-model', type: 'text', valueLink: this.linkState('model') })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Year'
+	          ),
+	          React.createElement(
+	            'select',
+	            { className: 'car-post-form-year', valueLink: this.linkState('year') },
+	            React.createElement('option', null),
+	            this.selectOptions(YEAR)
+	          )
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Milage'
+	          ),
+	          React.createElement('input', { className: 'car-post-form-mileage', type: 'number', valueLink: this.linkState('milage') })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Price'
+	          ),
+	          React.createElement('input', { className: 'car-post-form-price', type: 'number', step: '0.01', valueLink: this.linkState('price') })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Car Type'
+	          ),
+	          React.createElement(
+	            'select',
+	            { className: 'car-post-form-type', valueLink: this.linkState('type') },
+	            React.createElement('option', null),
+	            this.selectOptions(TYPE)
+	          )
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Location:'
+	          ),
+	          React.createElement('input', { className: 'car-post-form-street', type: 'text', placeholder: 'street', valueLink: this.linkState('street') }),
+	          React.createElement('input', { className: 'car-post-form-city', type: 'text', placeholder: 'city', valueLink: this.linkState('city') }),
+	          React.createElement(
+	            'select',
+	            { className: 'car-post-form-state', valueLink: this.linkState('state') },
+	            React.createElement(
+	              'option',
+	              null,
+	              'state'
+	            ),
+	            this.selectOptions(STATE)
+	          ),
+	          React.createElement('input', { className: 'car-post-form-zipcode', type: 'text', placeholder: 'zip code', valueLink: this.linkState('zipcode') })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Description:'
+	          ),
+	          React.createElement('br', null),
+	          React.createElement('textarea', { className: 'car-post-form-description', valueLink: this.linkState('description'), rows: '8', cols: '40' })
+	        ),
+	        React.createElement('input', { className: 'car-post-form-submit-btn', type: 'submit', value: 'Submit' })
+	      )
+	    );
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'car-post-page' },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Please fill out following Information'
+	      ),
+	      this.renderPostForm(),
+	      React.createElement(
+	        'div',
+	        null,
+	        this.renderError(this.state.error)
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = CarPost;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Footer = __webpack_require__(250);
 	
 	var LandingPage = React.createClass({
 	  displayName: 'LandingPage',
@@ -32343,7 +32668,7 @@
 	module.exports = LandingPage;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32411,7 +32736,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32420,7 +32745,7 @@
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
 	var Search = __webpack_require__(245);
-	var Map = __webpack_require__(251);
+	var Map = __webpack_require__(252);
 	
 	var Cars = React.createClass({
 	  displayName: 'Cars',
@@ -32454,7 +32779,7 @@
 	      jsonCars.forEach(function (car) {
 	        renderArray.push(React.createElement(
 	          'ul',
-	          { className: 'car-list-element-container' },
+	          { id: "car-" + car.id, className: 'car-list-element-container' },
 	          React.createElement(
 	            'div',
 	            { className: 'img-container' },
@@ -32482,7 +32807,7 @@
 	      renderArray.push(React.createElement(
 	        'h4',
 	        { className: 'no-cars-loading' },
-	        'We couldn find any car that matched your query. Try a different city or landmark.'
+	        'We could not find any car that matched your query. Try a different city or landmark. The website currently only has Cars Data in San Francisco & Cupertino!'
 	      ));
 	    }
 	    return renderArray;
@@ -32514,7 +32839,7 @@
 	module.exports = Cars;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32531,7 +32856,7 @@
 	
 	var CENTER = { lat: 37.7758, lng: -122.435 };
 	var mapMoved = false;
-	
+	var _markers = {};
 	var Map = React.createClass({
 	  displayName: 'Map',
 	
@@ -32571,8 +32896,31 @@
 	    mapMoved = false;
 	  },
 	
-	  componentDidUpdate: function () {
+	  componentDidUpdate: function (oldstate) {
 	    this._onChange();
+	    var that = this;
+	
+	    var toggleBounce = function (marker, status) {
+	      if (status) {
+	        marker.setAnimation(google.maps.Animation.BOUNCE);
+	      } else {
+	        marker.setAnimation(null);
+	      }
+	    };
+	
+	    for (var key in _markers) {
+	      var carDoc = document.getElementById("car-" + key);
+	      if (carDoc) {
+	        (function (k) {
+	          google.maps.event.addDomListener(carDoc, "mouseenter", function () {
+	            toggleBounce(_markers[k], true);
+	          });
+	          google.maps.event.addDomListener(carDoc, "mouseleave", function () {
+	            toggleBounce(_markers[k], false);
+	          });
+	        })(key);
+	      }
+	    }
 	  },
 	
 	  _onChange: function () {
@@ -32638,6 +32986,8 @@
 	      map: this.map,
 	      carId: car.id
 	    });
+	
+	    _markers[car.id] = marker;
 	    marker.addListener('click', function () {
 	      that.props.history.pushState(null, 'cars/' + this.carId);
 	    });
@@ -32664,14 +33014,14 @@
 	module.exports = Map;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
-	var RequestForm = __webpack_require__(253);
+	var RequestForm = __webpack_require__(254);
 	
 	var CarShow = React.createClass({
 	  displayName: 'CarShow',
@@ -32832,13 +33182,13 @@
 	module.exports = CarShow;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(239);
 	
-	var RequestActions = __webpack_require__(254);
+	var RequestActions = __webpack_require__(255);
 	var UserStore = __webpack_require__(220);
 	var MessageStore = __webpack_require__(243);
 	
@@ -33020,7 +33370,7 @@
 	module.exports = RequestForm;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(215);
@@ -33040,6 +33390,35 @@
 	};
 	
 	module.exports = RequestActions;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(215);
+	var ApiUtil = __webpack_require__(219);
+	
+	var CarPostActions = {
+	
+	  showError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: 'ERROR',
+	      error: error
+	    });
+	  },
+	
+	  cleanError: function () {
+	    AppDispatcher.dispatch({
+	      actionType: 'CLEAN_ERROR'
+	    });
+	  },
+	
+	  createCar: function (carAttributes, redirectPage) {
+	    ApiUtil.createCar(carAttributes, redirectPage, this.cleanError, this.showError);
+	  }
+	};
+	
+	module.exports = CarPostActions;
 
 /***/ }
 /******/ ]);

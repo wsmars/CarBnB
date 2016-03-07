@@ -51,6 +51,14 @@ var LogInForm = React.createClass({
     }
   },
 
+  handleAutoFill: function() {
+    // SessionActions.login({
+    //   username: 'wsmars',
+    //   password: 123456
+    // });
+    this.setState({username: 'wsmars', password: 123456});
+  },
+
   handleSubmit: function(e) {
     e.preventDefault();
     SessionActions.logIn({
@@ -70,8 +78,10 @@ var LogInForm = React.createClass({
           <input className='log-in-password-input' placeholder="Password" type="password" valueLink={this.linkState('password')} />
 
           <div className='log-in-form-btn-border'>  </div>
+
           <input className='log-in-submit-btn' type="submit" value="Sign In"/>
         </form>
+        <button className='log-in-auto-fill-btn' onClick={this.handleAutoFill}>Auto Fill</button>
 
         <div>
           {this.renderError(this.state.error)}

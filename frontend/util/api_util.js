@@ -47,6 +47,33 @@ var ApiUtil = {
     })
   },
 
+  fetchLatLng: function(street, city, state, receiveLatLng) {
+    $.ajax ({
+      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+      type: 'GET',
+      success: function(result) {
+        debugger;
+        var location = result.results[0].geometry.location
+        receiveLatLng(location);
+      }
+    })
+  },
+
+  createCar: function(carAttributes, redirectPage, cleanError, showError) {
+    $.ajax ({
+      url: '/api/cars',
+      data: {car: carAttributes},
+      type: 'POST',
+      success: function(response) {
+        cleanError();
+        redirectPage(response.id)
+      },
+      error: function(error){
+        showError(error.responseJSON.message);
+      }
+    })
+  },
+
   fetchLocationCoor: function(address, city, state, zipcode) {
     var location = address + '+' + city + '+' + state + '+' + zipcode;
     $.ajax ({
@@ -76,7 +103,6 @@ var ApiUtil = {
       },
       error: function(error){
         showError(error.responseJSON.message);
-      // do something with errors
       }
     })
   },
@@ -102,7 +128,6 @@ var ApiUtil = {
       },
       error: function(error){
         showError(error.responseJSON.message);
-      // do something with errors
       }
     })
   }
