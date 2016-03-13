@@ -41,7 +41,6 @@ class Api::CarsController < ApplicationController
 
   def create
     @car = current_user.cars.new(car_params)
-    @car.user_id = current_user.id
     if @car.save
       render :show
     else
@@ -71,6 +70,6 @@ class Api::CarsController < ApplicationController
   private
   def car_params
     params.require(:car).permit(:make, :model, :year, :milage, :price, :description,
-                                :street, :city, :state, :zip_code, :car_type)
+                                :street, :city, :state, :zip_code, :car_type, :user_id)
   end
 end

@@ -40,7 +40,6 @@ class Api::RequestsController < ApplicationController
 
   def create
     @request = Request.new(request_params)
-    @request.user_id = current_user.id
     if @request.save
       @requester = @request.user
       @owner = @request.owner
@@ -52,6 +51,6 @@ class Api::RequestsController < ApplicationController
 
   private
   def request_params
-    params.require(:request).permit(:start_date, :end_date, :car_id)
+    params.require(:request).permit(:start_date, :end_date, :car_id, :user_id)
   end
 end

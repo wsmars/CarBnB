@@ -56,11 +56,13 @@ var RequestForm = CarShow = React.createClass({
       var startDate = this.state.startDate;
       var endDate = this.state.endDate;
       var carId = parseInt(this.props.carId);
-      RequestActions.makeRequest(startDate, endDate, carId, this.updateRequest);
+      debugger;
+      var userId = this.state.currentUser.id;
+      RequestActions.makeRequest(startDate, endDate, carId, userId, this.updateRequest);
     }
     else {
       e.preventDefault();
-      alert('Log in first');
+      $('#log-in-btn-id').click();
     }
   },
 

@@ -491,6 +491,7 @@ input, textarea, keygen, select, button {
   bottom: 0;
 }
 
+/*overflow: hidden;*/
 
 .bottom-container {
   height: 450px;

@@ -9,8 +9,8 @@ var RequestActions = {
     });
   },
 
-  makeRequest: function(startDate, endDate, carId, callback) {
-    ApiUtil.makeRequest(startDate, endDate, carId, callback, this.showMessage);
+  makeRequest: function(startDate, endDate, carId, userId, callback) {
+    ApiUtil.makeRequest(startDate, endDate, carId, userId, callback, this.showMessage);
   }
 };
 

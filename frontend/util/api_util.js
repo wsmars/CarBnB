@@ -33,10 +33,10 @@ var ApiUtil = {
       })
   },
 
-  makeRequest: function(startDate, endDate, carId, receiveRequest, showMessage) {
+  makeRequest: function(startDate, endDate, carId, userId, receiveRequest, showMessage) {
     $.ajax ({
       url: '/api/requests',
-      data: {request: {start_date: startDate, end_date: endDate, car_id: carId}},
+      data: {request: {start_date: startDate, end_date: endDate, car_id: carId, user_id: userId}},
       type: 'POST',
       success: function(request) {
         receiveRequest(request);

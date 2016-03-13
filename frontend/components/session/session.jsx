@@ -83,7 +83,7 @@ var Session = React.createClass({
       return (
         <div className='login-signup-button'>
           <div className='log-in-container'>
-            <button onClick={this.toSignInForm} className='log-in-btn'>Sign In</button>
+            <button onClick={this.toSignInForm} id='log-in-btn-id' className='log-in-btn'>Sign In</button>
           </div>
           <div className='sign-up-container'>
             <button onClick={this.toSignUpForm} className='sign-up-btn'>Sign Up</button>

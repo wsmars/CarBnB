@@ -81,7 +81,7 @@ var LogInForm = React.createClass({
 
           <input className='log-in-submit-btn' type="submit" value="Sign In"/>
         </form>
-        <button className='log-in-auto-fill-btn' onClick={this.handleAutoFill}>Auto Fill</button>
+        <button className='log-in-auto-fill-btn' onClick={this.handleAutoFill}>Demo Login</button>
 
         <div>
           {this.renderError(this.state.error)}

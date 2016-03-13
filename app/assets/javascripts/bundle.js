@@ -53,9 +53,9 @@
 	var History = __webpack_require__(206);
 	
 	var App = __webpack_require__(211);
-	var LandingPage = __webpack_require__(249);
-	var Cars = __webpack_require__(251);
-	var CarShow = __webpack_require__(253);
+	var LandingPage = __webpack_require__(250);
+	var Cars = __webpack_require__(252);
+	var CarShow = __webpack_require__(254);
 	var CarPost = __webpack_require__(248);
 	
 	var routes = React.createElement(
@@ -24652,7 +24652,7 @@
 	          { className: 'log-in-container' },
 	          React.createElement(
 	            'button',
-	            { onClick: this.toSignInForm, className: 'log-in-btn' },
+	            { onClick: this.toSignInForm, id: 'log-in-btn-id', className: 'log-in-btn' },
 	            'Sign In'
 	          )
 	        ),
@@ -25096,10 +25096,10 @@
 	    });
 	  },
 	
-	  makeRequest: function (startDate, endDate, carId, receiveRequest, showMessage) {
+	  makeRequest: function (startDate, endDate, carId, userId, receiveRequest, showMessage) {
 	    $.ajax({
 	      url: '/api/requests',
-	      data: { request: { start_date: startDate, end_date: endDate, car_id: carId } },
+	      data: { request: { start_date: startDate, end_date: endDate, car_id: carId, user_id: userId } },
 	      type: 'POST',
 	      success: function (request) {
 	        receiveRequest(request);
@@ -31800,7 +31800,7 @@
 	      React.createElement(
 	        'button',
 	        { className: 'log-in-auto-fill-btn', onClick: this.handleAutoFill },
-	        'Auto Fill'
+	        'Demo Login'
 	      ),
 	      React.createElement(
 	        'div',
@@ -32361,7 +32361,7 @@
 	var UserStore = __webpack_require__(220);
 	var MessageStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(219);
-	var CarPostActions = __webpack_require__(256);
+	var CarPostActions = __webpack_require__(249);
 	
 	var YEAR = [];
 	var generateYear = function () {
@@ -32460,30 +32460,32 @@
 	    this.props.history.pushState(null, 'cars/' + carId);
 	  },
 	
-	  handleSubmit: function () {
-	    if (this.state.currentUser) {
-	      if (this.state.street || this.state.city || this.state.state) {
-	        this.requestLatLng(this.state.street, this.state.city, this.state.state);
-	      }
-	      CarPostActions.createCar({
-	        make: this.state.make,
-	        model: this.state.model,
-	        year: this.state.year,
-	        milage: this.state.milage,
-	        price: this.state.price,
-	        car_type: this.state.type,
-	        street: this.state.street,
-	        city: this.state.city,
-	        state: this.state.state,
-	        zip_code: this.state.zipcode,
-	        user_id: this.state.currentUser.id,
-	        lat: this.state.lat,
-	        lng: this.state.lng,
-	        description: this.state.description
-	      }, this.redirectPage);
+	  handleSubmit: function (e) {
+	    if (!this.state.currentUser) {
+	      e.preventDefault();
+	      $('#log-in-btn-id').click();
+	      // if (this.state.street || this.state.city || this.state.state) {
+	      //   // this.requestLatLng(this.state.street, this.state.city, this.state.state);
+	      // }
 	    } else {
-	      alert('You need to log in first');
-	    }
+	        e.preventDefault();
+	        CarPostActions.createCar({
+	          make: this.state.make,
+	          model: this.state.model,
+	          year: this.state.year,
+	          milage: this.state.milage,
+	          price: this.state.price,
+	          car_type: this.state.type,
+	          street: this.state.street,
+	          city: this.state.city,
+	          state: this.state.state,
+	          zip_code: this.state.zipcode,
+	          user_id: this.state.currentUser.id,
+	          lat: this.state.lat,
+	          lng: this.state.lng,
+	          description: this.state.description
+	        }, this.redirectPage);
+	      }
 	  },
 	
 	  renderPostForm: function () {
@@ -32534,7 +32536,7 @@
 	          React.createElement(
 	            'h4',
 	            null,
-	            'Milage'
+	            'Mileage'
 	          ),
 	          React.createElement('input', { className: 'car-post-form-mileage', type: 'number', valueLink: this.linkState('milage') })
 	        ),
@@ -32626,9 +32628,38 @@
 /* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(215);
+	var ApiUtil = __webpack_require__(219);
+	
+	var CarPostActions = {
+	
+	  showError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: 'ERROR',
+	      error: error
+	    });
+	  },
+	
+	  cleanError: function () {
+	    AppDispatcher.dispatch({
+	      actionType: 'CLEAN_ERROR'
+	    });
+	  },
+	
+	  createCar: function (carAttributes, redirectPage) {
+	    ApiUtil.createCar(carAttributes, redirectPage, this.cleanError, this.showError);
+	  }
+	};
+	
+	module.exports = CarPostActions;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	
-	var Footer = __webpack_require__(250);
+	var Footer = __webpack_require__(251);
 	
 	var LandingPage = React.createClass({
 	  displayName: 'LandingPage',
@@ -32668,7 +32699,7 @@
 	module.exports = LandingPage;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32736,7 +32767,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32745,7 +32776,7 @@
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
 	var Search = __webpack_require__(245);
-	var Map = __webpack_require__(252);
+	var Map = __webpack_require__(253);
 	
 	var Cars = React.createClass({
 	  displayName: 'Cars',
@@ -32839,7 +32870,7 @@
 	module.exports = Cars;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33014,14 +33045,14 @@
 	module.exports = Map;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
-	var RequestForm = __webpack_require__(254);
+	var RequestForm = __webpack_require__(255);
 	
 	var CarShow = React.createClass({
 	  displayName: 'CarShow',
@@ -33103,7 +33134,7 @@
 	          React.createElement(
 	            'h3',
 	            null,
-	            'Milage: '
+	            'Mileage: '
 	          ),
 	          car.milage
 	        ),
@@ -33182,13 +33213,13 @@
 	module.exports = CarShow;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(239);
 	
-	var RequestActions = __webpack_require__(255);
+	var RequestActions = __webpack_require__(256);
 	var UserStore = __webpack_require__(220);
 	var MessageStore = __webpack_require__(243);
 	
@@ -33245,10 +33276,12 @@
 	      var startDate = this.state.startDate;
 	      var endDate = this.state.endDate;
 	      var carId = parseInt(this.props.carId);
-	      RequestActions.makeRequest(startDate, endDate, carId, this.updateRequest);
+	      debugger;
+	      var userId = this.state.currentUser.id;
+	      RequestActions.makeRequest(startDate, endDate, carId, userId, this.updateRequest);
 	    } else {
 	      e.preventDefault();
-	      alert('Log in first');
+	      $('#log-in-btn-id').click();
 	    }
 	  },
 	
@@ -33370,7 +33403,7 @@
 	module.exports = RequestForm;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(215);
@@ -33384,41 +33417,12 @@
 	    });
 	  },
 	
-	  makeRequest: function (startDate, endDate, carId, callback) {
-	    ApiUtil.makeRequest(startDate, endDate, carId, callback, this.showMessage);
+	  makeRequest: function (startDate, endDate, carId, userId, callback) {
+	    ApiUtil.makeRequest(startDate, endDate, carId, userId, callback, this.showMessage);
 	  }
 	};
 	
 	module.exports = RequestActions;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(215);
-	var ApiUtil = __webpack_require__(219);
-	
-	var CarPostActions = {
-	
-	  showError: function (error) {
-	    AppDispatcher.dispatch({
-	      actionType: 'ERROR',
-	      error: error
-	    });
-	  },
-	
-	  cleanError: function () {
-	    AppDispatcher.dispatch({
-	      actionType: 'CLEAN_ERROR'
-	    });
-	  },
-	
-	  createCar: function (carAttributes, redirectPage) {
-	    ApiUtil.createCar(carAttributes, redirectPage, this.cleanError, this.showError);
-	  }
-	};
-	
-	module.exports = CarPostActions;
 
 /***/ }
 /******/ ]);

@@ -98,11 +98,16 @@ var CarPost = React.createClass({
     this.props.history.pushState(null, 'cars/' + carId);
   },
 
-  handleSubmit: function() {
-    if (this.state.currentUser) {
-      if (this.state.street || this.state.city || this.state.state) {
-        this.requestLatLng(this.state.street, this.state.city, this.state.state);
-      }
+  handleSubmit: function(e) {
+    if (!this.state.currentUser) {
+      e.preventDefault();
+      $('#log-in-btn-id').click();
+      // if (this.state.street || this.state.city || this.state.state) {
+      //   // this.requestLatLng(this.state.street, this.state.city, this.state.state);
+      // }
+    }
+    else {
+      e.preventDefault();
       CarPostActions.createCar({
         make: this.state.make,
         model: this.state.model,
@@ -117,11 +122,8 @@ var CarPost = React.createClass({
         user_id: this.state.currentUser.id,
         lat: this.state.lat,
         lng: this.state.lng,
-        description: this.state.description
+        description: this.state.description,
       }, this.redirectPage);
-    }
-    else {
-      alert('You need to log in first')
     }
   },
 
@@ -148,7 +150,7 @@ var CarPost = React.createClass({
           </label>
 
           <label>
-            <h4>Milage</h4>
+            <h4>Mileage</h4>
             <input className='car-post-form-mileage' type="number" valueLink={this.linkState('milage')} />
           </label>
 

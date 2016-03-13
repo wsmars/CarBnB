@@ -41,7 +41,7 @@ var CarShow = React.createClass({
           <li className='car-show-page-list'><h3>Year: </h3>{car.year}</li>
           <li className='car-show-page-list'><h3>Model: </h3>{car.model}</li>
           <li className='car-show-page-list'><h3>Make: </h3>{car.make}</li>
-          <li className='car-show-page-list'><h3>Milage: </h3>{car.milage}</li>
+          <li className='car-show-page-list'><h3>Mileage: </h3>{car.milage}</li>
           <li className='car-show-page-list'><h3>Type: </h3>{car.car_type}</li>
           <li className='car-show-page-list'><h3>Location:</h3>
             {car.street}
