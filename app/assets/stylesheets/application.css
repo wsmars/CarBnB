@@ -480,12 +480,12 @@ input, textarea, keygen, select, button {
 	font-family: Circular,"Helvetica Neue",Helvetica,Arial,sans-serif;
   background-color: #f5f5f5;
   -webkit-font-smoothing: antialiased;
-  background-image: url('http://res.cloudinary.com/dvy2aua0n/image/upload/v1457342456/home_page_background_ekcb9g.jpg');
+  background-image: url('http://res.cloudinary.com/dvy2aua0n/image/upload/c_crop,h_670,r_0,w_1200,x_0/v1457342456/home_page_background_ekcb9g.jpg');
   background-size: cover;
   position: relative;
   display: block;
   width: 100%;
-  height: 1080px;
+  height: 800px;
   vertical-align: middle;
   top: 0;
   bottom: 0;
@@ -874,6 +874,9 @@ input, textarea, keygen, select, button {
   position: relative;
   max-width: 100%;
   z-index: -1;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .car-show-page-list-container {
@@ -890,7 +893,7 @@ input, textarea, keygen, select, button {
 }
 
 .car-show-page-price {
-  top: -60px;
+  top: -55px;
   left: 101.4%;
   padding: 7px 10px;
   background-color: rgba(60,63,64,0.9);
@@ -948,7 +951,7 @@ input, textarea, keygen, select, button {
   display: block;
   width: 29%;
   height: 100%;
-  top: -5px;
+  top: 0px;
   float: right;
 }
 

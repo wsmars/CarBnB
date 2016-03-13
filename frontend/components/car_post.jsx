@@ -102,12 +102,12 @@ var CarPost = React.createClass({
     if (!this.state.currentUser) {
       e.preventDefault();
       $('#log-in-btn-id').click();
-      // if (this.state.street || this.state.city || this.state.state) {
-      //   // this.requestLatLng(this.state.street, this.state.city, this.state.state);
-      // }
     }
     else {
       e.preventDefault();
+      if (this.state.street || this.state.city || this.state.state) {
+        this.requestLatLng(this.state.street, this.state.city, this.state.state);
+      }
       CarPostActions.createCar({
         make: this.state.make,
         model: this.state.model,

@@ -32464,28 +32464,28 @@
 	    if (!this.state.currentUser) {
 	      e.preventDefault();
 	      $('#log-in-btn-id').click();
-	      // if (this.state.street || this.state.city || this.state.state) {
-	      //   // this.requestLatLng(this.state.street, this.state.city, this.state.state);
-	      // }
 	    } else {
-	        e.preventDefault();
-	        CarPostActions.createCar({
-	          make: this.state.make,
-	          model: this.state.model,
-	          year: this.state.year,
-	          milage: this.state.milage,
-	          price: this.state.price,
-	          car_type: this.state.type,
-	          street: this.state.street,
-	          city: this.state.city,
-	          state: this.state.state,
-	          zip_code: this.state.zipcode,
-	          user_id: this.state.currentUser.id,
-	          lat: this.state.lat,
-	          lng: this.state.lng,
-	          description: this.state.description
-	        }, this.redirectPage);
+	      e.preventDefault();
+	      if (this.state.street || this.state.city || this.state.state) {
+	        this.requestLatLng(this.state.street, this.state.city, this.state.state);
 	      }
+	      CarPostActions.createCar({
+	        make: this.state.make,
+	        model: this.state.model,
+	        year: this.state.year,
+	        milage: this.state.milage,
+	        price: this.state.price,
+	        car_type: this.state.type,
+	        street: this.state.street,
+	        city: this.state.city,
+	        state: this.state.state,
+	        zip_code: this.state.zipcode,
+	        user_id: this.state.currentUser.id,
+	        lat: this.state.lat,
+	        lng: this.state.lng,
+	        description: this.state.description
+	      }, this.redirectPage);
+	    }
 	  },
 	
 	  renderPostForm: function () {
