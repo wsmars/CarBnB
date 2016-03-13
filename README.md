@@ -1,6 +1,6 @@
 # CarBnB
 
-[CarBnB][amzn], a clone of airbnb.com, is a Single Page Application built with Ruby on Rails,
+[CarBnB][amzn], is a Single Page Application built with Ruby on Rails,
 PostgreSQL, React.js, Flux, Google Maps API v3, jQuery and jQuery-ui.
 
 [amzn]: http://www.coolcarkit.com/
