@@ -25110,14 +25110,12 @@
 	    });
 	  },
 	
-	  fetchLatLng: function (street, city, state, receiveLatLng) {
-	    $.ajax({
+	  fetchLatLng: function (street, city, state, handleCreate) {
+	    $.getJSON({
 	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
-	      type: 'GET',
 	      success: function (result) {
-	        debugger;
 	        var location = result.results[0].geometry.location;
-	        receiveLatLng(location);
+	        handleCreate(location);
 	      }
 	    });
 	  },
@@ -32449,15 +32447,37 @@
 	  },
 	
 	  receiveLatLng: function (location) {
-	    this.setState({ lat: location.lat, lng: location.lng });
+	    this.state.lat = location.lat;
+	    this.state.lng = location.lng;
 	  },
 	
 	  requestLatLng: function (street, city, state) {
-	    ApiUtil.fetchLatLng(street, city, state, this.receiveLatLng);
+	    ApiUtil.fetchLatLng(street, city, state, this.handleCreate);
 	  },
 	
 	  redirectPage: function (carId) {
 	    this.props.history.pushState(null, 'cars/' + carId);
+	  },
+	
+	  handleCreate: function (location) {
+	    this.receiveLatLng(location);
+	    debugger;
+	    CarPostActions.createCar({
+	      make: this.state.make,
+	      model: this.state.model,
+	      year: this.state.year,
+	      milage: this.state.milage,
+	      price: this.state.price,
+	      car_type: this.state.type,
+	      street: this.state.street,
+	      city: this.state.city,
+	      state: this.state.state,
+	      zip_code: this.state.zipcode,
+	      user_id: this.state.currentUser.id,
+	      lat: this.state.lat,
+	      lng: this.state.lng,
+	      description: this.state.description
+	    }, this.redirectPage);
 	  },
 	
 	  handleSubmit: function (e) {
@@ -32466,25 +32486,7 @@
 	      $('#log-in-btn-id').click();
 	    } else {
 	      e.preventDefault();
-	      if (this.state.street || this.state.city || this.state.state) {
-	        this.requestLatLng(this.state.street, this.state.city, this.state.state);
-	      }
-	      CarPostActions.createCar({
-	        make: this.state.make,
-	        model: this.state.model,
-	        year: this.state.year,
-	        milage: this.state.milage,
-	        price: this.state.price,
-	        car_type: this.state.type,
-	        street: this.state.street,
-	        city: this.state.city,
-	        state: this.state.state,
-	        zip_code: this.state.zipcode,
-	        user_id: this.state.currentUser.id,
-	        lat: this.state.lat,
-	        lng: this.state.lng,
-	        description: this.state.description
-	      }, this.redirectPage);
+	      this.requestLatLng(this.state.street, this.state.city, this.state.state);
 	    }
 	  },
 	

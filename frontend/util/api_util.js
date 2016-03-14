@@ -47,14 +47,12 @@ var ApiUtil = {
     })
   },
 
-  fetchLatLng: function(street, city, state, receiveLatLng) {
-    $.ajax ({
+  fetchLatLng: function(street, city, state, handleCreate) {
+    $.getJSON ({
       url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
-      type: 'GET',
       success: function(result) {
-        debugger;
         var location = result.results[0].geometry.location
-        receiveLatLng(location);
+        handleCreate(location);
       }
     })
   },
