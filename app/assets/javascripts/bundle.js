@@ -32902,7 +32902,8 @@
 	function _getCoordsObj(latLng) {
 	  return {
 	    lat: latLng.lat(),
-	    lng: latLng.lng()
+	    lng: latLng.lng(),
+	    notFirst: false
 	  };
 	}
 	
@@ -33023,7 +33024,10 @@
 	        northEast: northEast,
 	        southWest: southWest
 	      };
-	      SearchActions.fetchCarsByBounds(bounds);
+	      if (that.state.notFirst) {
+	        SearchActions.fetchCarsByBounds(bounds);
+	      }
+	      that.state.notFirst = true;
 	    });
 	    // google.maps.event.addListener(this.map, 'click', function(event) {
 	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };

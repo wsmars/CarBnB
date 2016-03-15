@@ -6,7 +6,8 @@ var SearchActions = require('../actions/search_actions');
 function _getCoordsObj(latLng) {
   return {
     lat: latLng.lat(),
-    lng: latLng.lng()
+    lng: latLng.lng(),
+    notFirst: false
   };
 }
 
@@ -118,18 +119,21 @@ componentDidUpdate: function (oldstate) {
 
   registerListeners: function(){
     var that = this;
-    google.maps.event.addListener(this.map, 'idle', function() {
-      mapMoved = true;
-      var bounds = that.map.getBounds();
-      var northEast = _getCoordsObj(bounds.getNorthEast());
-      var southWest = _getCoordsObj(bounds.getSouthWest());
-      //actually issue the request
-      var bounds = {
-        northEast: northEast,
-        southWest: southWest
-      };
-      SearchActions.fetchCarsByBounds(bounds);
-    });
+      google.maps.event.addListener(this.map, 'idle', function() {
+        mapMoved = true;
+        var bounds = that.map.getBounds();
+        var northEast = _getCoordsObj(bounds.getNorthEast());
+        var southWest = _getCoordsObj(bounds.getSouthWest());
+        //actually issue the request
+        var bounds = {
+          northEast: northEast,
+          southWest: southWest
+        };
+        if (that.state.notFirst) {
+          SearchActions.fetchCarsByBounds(bounds);
+        }
+        that.state.notFirst = true;
+      });
     // google.maps.event.addListener(this.map, 'click', function(event) {
     //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
     //   that.props.onMapClick(coords);
