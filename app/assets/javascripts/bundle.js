@@ -57,6 +57,7 @@
 	var Cars = __webpack_require__(252);
 	var CarShow = __webpack_require__(254);
 	var CarPost = __webpack_require__(248);
+	window.NotFirst = false;
 	
 	var routes = React.createElement(
 			Router,
@@ -32227,6 +32228,7 @@
 	      });
 	      return outPutArray.join(' ');
 	    };
+	    window.NotFirst = false;
 	    var input = transfer(this.state.searchValue);
 	    e.preventDefault(); //let the output stay in same page.
 	    SearchActions.fetchCarsInCity(input);
@@ -32891,7 +32893,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'right-side-container' },
-	        React.createElement(Map, { history: this.props.history, className: 'car-page-map' })
+	        React.createElement(Map, { notFirst: this.props.notFirst, history: this.props.history, className: 'car-page-map' })
 	      )
 	    );
 	  }
@@ -33033,10 +33035,10 @@
 	        northEast: northEast,
 	        southWest: southWest
 	      };
-	      if (that.state.notFirst) {
+	      if (window.NotFirst) {
 	        SearchActions.fetchCarsByBounds(bounds);
 	      }
-	      that.state.notFirst = true;
+	      window.NotFirst = true;
 	    });
 	    // google.maps.event.addListener(this.map, 'click', function(event) {
 	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };

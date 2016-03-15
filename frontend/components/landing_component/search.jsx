@@ -21,6 +21,7 @@ var Search = React.createClass({
       });
       return outPutArray.join(' ');
     };
+    window.NotFirst = false;
     var input = transfer(this.state.searchValue);
     e.preventDefault(); //let the output stay in same page.
     SearchActions.fetchCarsInCity(input);

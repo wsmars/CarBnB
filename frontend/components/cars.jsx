@@ -73,7 +73,7 @@ var Cars = React.createClass({
         </div>
 
         <div className='right-side-container'>
-          <Map history={this.props.history} className='car-page-map'/>
+          <Map notFirst={this.props.notFirst} history={this.props.history} className='car-page-map'/>
         </div>
       </div>
     );

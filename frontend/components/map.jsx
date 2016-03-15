@@ -129,10 +129,10 @@ componentDidUpdate: function (oldstate) {
           northEast: northEast,
           southWest: southWest
         };
-        if (that.state.notFirst) {
+        if (window.NotFirst) {
           SearchActions.fetchCarsByBounds(bounds);
         }
-        that.state.notFirst = true;
+        window.NotFirst = true;
       });
     // google.maps.event.addListener(this.map, 'click', function(event) {
     //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
