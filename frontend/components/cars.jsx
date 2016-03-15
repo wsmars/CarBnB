@@ -3,7 +3,6 @@ var Link = require('react-router').Link;
 
 var CarStore = require('../stores/car_store');
 var SearchActions = require('../actions/search_actions');
-var Search = require('./landing_component/search');
 var Map = require('./map');
 
 var Cars = React.createClass({
@@ -43,6 +42,9 @@ var Cars = React.createClass({
           </ul>
         );
       });
+      renderArray.push(
+        <h6>{jsonCars.length} results founded</h6>
+      );
     }
     else {
       renderArray.push(
@@ -52,7 +54,11 @@ var Cars = React.createClass({
         </h4>
       );
     }
-    return renderArray;
+    return (
+      <ul className='cars-list-ul'>
+        {renderArray}
+      </ul>
+    );
   },
 
   render: function() {

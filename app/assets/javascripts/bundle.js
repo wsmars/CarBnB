@@ -32796,7 +32796,6 @@
 	
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
-	var Search = __webpack_require__(245);
 	var Map = __webpack_require__(253);
 	
 	var Cars = React.createClass({
@@ -32855,6 +32854,12 @@
 	          )
 	        ));
 	      });
+	      renderArray.push(React.createElement(
+	        'h6',
+	        null,
+	        jsonCars.length,
+	        ' results founded'
+	      ));
 	    } else {
 	      renderArray.push(React.createElement(
 	        'h4',
@@ -32862,7 +32867,11 @@
 	        'We could not find any car that matched your query. Try a different city or landmark. The website currently only has Cars Data in San Francisco & Cupertino!'
 	      ));
 	    }
-	    return renderArray;
+	    return React.createElement(
+	      'ul',
+	      { className: 'cars-list-ul' },
+	      renderArray
+	    );
 	  },
 	
 	  render: function () {
