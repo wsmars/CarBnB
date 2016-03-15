@@ -25114,7 +25114,10 @@
 	    $.getJSON({
 	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
 	      success: function (result) {
-	        var location = result.results[0].geometry.location;
+	        if (result.results[0]) {
+	          //if request did not get any useful info, result.results[0] is undefined
+	          var location = result.results[0].geometry.location;
+	        }
 	        handleCreate(location);
 	      }
 	    });
@@ -25132,14 +25135,6 @@
 	      error: function (error) {
 	        showError(error.responseJSON.message);
 	      }
-	    });
-	  },
-	
-	  fetchLocationCoor: function (address, city, state, zipcode) {
-	    var location = address + '+' + city + '+' + state + '+' + zipcode;
-	    $.ajax({
-	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
-	      type: 'GET'
 	    });
 	  },
 	
@@ -32440,7 +32435,11 @@
 	          message
 	        ));
 	      });
-	      return returnArray;
+	      return React.createElement(
+	        'ul',
+	        null,
+	        returnArray
+	      );
 	    } else {
 	      return null;
 	    }
@@ -32460,8 +32459,9 @@
 	  },
 	
 	  handleCreate: function (location) {
-	    this.receiveLatLng(location);
-	    debugger;
+	    if (location) {
+	      this.receiveLatLng(location);
+	    }
 	    CarPostActions.createCar({
 	      make: this.state.make,
 	      model: this.state.model,
@@ -32498,109 +32498,124 @@
 	        'form',
 	        { className: 'car-post-form', onSubmit: this.handleSubmit },
 	        React.createElement(
-	          'label',
-	          null,
+	          'div',
+	          { className: 'car-post-form-top-container' },
 	          React.createElement(
-	            'h4',
-	            null,
-	            'Make'
-	          ),
-	          React.createElement('input', { className: 'car-post-form-make', type: 'text', valueLink: this.linkState('make') })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Model'
-	          ),
-	          React.createElement('input', { className: 'car-post-form-model', type: 'text', valueLink: this.linkState('model') })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Year'
-	          ),
-	          React.createElement(
-	            'select',
-	            { className: 'car-post-form-year', valueLink: this.linkState('year') },
-	            React.createElement('option', null),
-	            this.selectOptions(YEAR)
-	          )
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Mileage'
-	          ),
-	          React.createElement('input', { className: 'car-post-form-mileage', type: 'number', valueLink: this.linkState('milage') })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Price'
-	          ),
-	          React.createElement('input', { className: 'car-post-form-price', type: 'number', step: '0.01', valueLink: this.linkState('price') })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Car Type'
-	          ),
-	          React.createElement(
-	            'select',
-	            { className: 'car-post-form-type', valueLink: this.linkState('type') },
-	            React.createElement('option', null),
-	            this.selectOptions(TYPE)
-	          )
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Location:'
-	          ),
-	          React.createElement('input', { className: 'car-post-form-street', type: 'text', placeholder: 'street', valueLink: this.linkState('street') }),
-	          React.createElement('input', { className: 'car-post-form-city', type: 'text', placeholder: 'city', valueLink: this.linkState('city') }),
-	          React.createElement(
-	            'select',
-	            { className: 'car-post-form-state', valueLink: this.linkState('state') },
+	            'div',
+	            { className: 'car-post-make-container' },
 	            React.createElement(
-	              'option',
+	              'h4',
 	              null,
-	              'state'
+	              'Make'
 	            ),
-	            this.selectOptions(STATE)
+	            React.createElement('input', { className: 'car-post-form-make', type: 'text', valueLink: this.linkState('make') })
 	          ),
-	          React.createElement('input', { className: 'car-post-form-zipcode', type: 'text', placeholder: 'zip code', valueLink: this.linkState('zipcode') })
+	          React.createElement(
+	            'div',
+	            { className: 'car-post-model-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Model'
+	            ),
+	            React.createElement('input', { className: 'car-post-form-model', type: 'text', valueLink: this.linkState('model') })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'car-post-year-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Year'
+	            ),
+	            React.createElement(
+	              'select',
+	              { className: 'car-post-form-year', valueLink: this.linkState('year') },
+	              React.createElement('option', null),
+	              this.selectOptions(YEAR)
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'car-post-mileage-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Mileage'
+	            ),
+	            React.createElement('input', { className: 'car-post-form-mileage', type: 'number', valueLink: this.linkState('milage') })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'car-post-price-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Price'
+	            ),
+	            React.createElement('input', { className: 'car-post-form-price', type: 'number', step: '0.01', valueLink: this.linkState('price') })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'car-post-type-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Car Type'
+	            ),
+	            React.createElement(
+	              'select',
+	              { className: 'car-post-form-type', valueLink: this.linkState('type') },
+	              React.createElement('option', null),
+	              this.selectOptions(TYPE)
+	            )
+	          )
 	        ),
 	        React.createElement(
-	          'label',
-	          null,
+	          'div',
+	          { className: 'car-post-form-middle-container' },
 	          React.createElement(
-	            'h4',
-	            null,
-	            'Description:'
-	          ),
-	          React.createElement('br', null),
-	          React.createElement('textarea', { className: 'car-post-form-description', valueLink: this.linkState('description'), rows: '8', cols: '40' })
+	            'div',
+	            { className: 'car-post-location-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Location:'
+	            ),
+	            React.createElement('input', { className: 'car-post-form-street', type: 'text', placeholder: 'street', valueLink: this.linkState('street') }),
+	            React.createElement('input', { className: 'car-post-form-city', type: 'text', placeholder: 'city', valueLink: this.linkState('city') }),
+	            React.createElement(
+	              'select',
+	              { className: 'car-post-form-state', valueLink: this.linkState('state') },
+	              React.createElement(
+	                'option',
+	                null,
+	                'state'
+	              ),
+	              this.selectOptions(STATE)
+	            ),
+	            React.createElement('input', { className: 'car-post-form-zipcode', type: 'text', placeholder: 'zip code', valueLink: this.linkState('zipcode') })
+	          )
 	        ),
-	        React.createElement('input', { className: 'car-post-form-submit-btn', type: 'submit', value: 'Submit' })
+	        React.createElement(
+	          'div',
+	          { className: 'car-post-form-bottom-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'car-post-form-description-container' },
+	            React.createElement(
+	              'h4',
+	              null,
+	              'Description:'
+	            ),
+	            React.createElement('textarea', { className: 'car-post-form-description', valueLink: this.linkState('description'), rows: '8', cols: '40' })
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'car-post-form-submit-btn-container' },
+	          React.createElement('input', { className: 'car-post-form-submit-btn', type: 'submit', value: 'Submit' })
+	        )
 	      )
 	    );
 	  },
@@ -32618,7 +32633,11 @@
 	      React.createElement(
 	        'div',
 	        null,
-	        this.renderError(this.state.error)
+	        React.createElement(
+	          'div',
+	          { className: 'car-post-page-error-container' },
+	          this.renderError(this.state.error)
+	        )
 	      )
 	    );
 	  }

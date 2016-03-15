@@ -79,7 +79,11 @@ var CarPost = React.createClass({
       error.forEach(function(message) {
         returnArray.push(<li className='error-message'>{message}</li>);
       });
-      return returnArray;
+      return (
+        <ul>
+          {returnArray}
+        </ul>
+      );
     }
     else {
       return null;
@@ -100,8 +104,9 @@ var CarPost = React.createClass({
   },
 
   handleCreate: function(location) {
-    this.receiveLatLng(location)
-    debugger;
+    if (location) {
+      this.receiveLatLng(location)
+    }
     CarPostActions.createCar({
       make: this.state.make,
       model: this.state.model,
@@ -135,60 +140,67 @@ var CarPost = React.createClass({
     return (
       <div>
         <form className='car-post-form' onSubmit={this.handleSubmit}>
-          <label>
-            <h4>Make</h4>
-            <input className='car-post-form-make' type="text" valueLink={this.linkState('make')} />
-          </label>
+          <div className='car-post-form-top-container'>
+            <div className='car-post-make-container'>
+              <h4>Make</h4>
+              <input className='car-post-form-make' type="text" valueLink={this.linkState('make')} />
+            </div>
 
-          <label>
-            <h4>Model</h4>
-            <input className='car-post-form-model' type="text" valueLink={this.linkState('model')} />
-          </label>
+            <div className='car-post-model-container'>
+              <h4>Model</h4>
+              <input className='car-post-form-model' type="text" valueLink={this.linkState('model')} />
+            </div>
 
-          <label>
-            <h4>Year</h4>
-            <select className='car-post-form-year' valueLink={this.linkState('year')}>
-            <option></option>
-            {this.selectOptions(YEAR)}
-            </select>
-          </label>
-
-          <label>
-            <h4>Mileage</h4>
-            <input className='car-post-form-mileage' type="number" valueLink={this.linkState('milage')} />
-          </label>
-
-          <label>
-            <h4>Price</h4>
-            <input className='car-post-form-price' type="number" step="0.01" valueLink={this.linkState('price')} />
-          </label>
-
-          <label>
-            <h4>Car Type</h4>
-            <select className='car-post-form-type' valueLink={this.linkState('type')}>
+            <div className='car-post-year-container'>
+              <h4>Year</h4>
+              <select className='car-post-form-year' valueLink={this.linkState('year')}>
               <option></option>
-              {this.selectOptions(TYPE)}
-            </select>
-          </label>
+              {this.selectOptions(YEAR)}
+              </select>
+            </div>
 
-          <label>
-            <h4>Location:</h4>
-            <input className='car-post-form-street' type="text" placeholder='street' valueLink={this.linkState('street')} />
-            <input className='car-post-form-city' type="text" placeholder='city' valueLink={this.linkState('city')} />
-            <select className='car-post-form-state' valueLink={this.linkState('state')}>
-              <option>state</option>
-              {this.selectOptions(STATE)}
-            </select>
-            <input className='car-post-form-zipcode' type="text" placeholder='zip code' valueLink={this.linkState('zipcode')} />
-          </label>
+            <div className='car-post-mileage-container'>
+              <h4>Mileage</h4>
+              <input className='car-post-form-mileage' type="number" valueLink={this.linkState('milage')} />
+            </div>
 
-          <label>
-            <h4>Description:</h4>
-            <br/>
-            <textarea className='car-post-form-description' valueLink={this.linkState('description')} rows="8" cols="40"></textarea>
-          </label>
+            <div className='car-post-price-container'>
+              <h4>Price</h4>
+              <input className='car-post-form-price' type="number" step="0.01" valueLink={this.linkState('price')} />
+            </div>
 
-          <input className='car-post-form-submit-btn' type="submit" value="Submit"/>
+            <div className='car-post-type-container'>
+              <h4>Car Type</h4>
+              <select className='car-post-form-type' valueLink={this.linkState('type')}>
+                <option></option>
+                {this.selectOptions(TYPE)}
+              </select>
+            </div>
+          </div>
+
+          <div className='car-post-form-middle-container'>
+            <div className='car-post-location-container'>
+              <h4>Location:</h4>
+              <input className='car-post-form-street' type="text" placeholder='street' valueLink={this.linkState('street')} />
+              <input className='car-post-form-city' type="text" placeholder='city' valueLink={this.linkState('city')} />
+              <select className='car-post-form-state' valueLink={this.linkState('state')}>
+                <option>state</option>
+                {this.selectOptions(STATE)}
+              </select>
+              <input className='car-post-form-zipcode' type="text" placeholder='zip code' valueLink={this.linkState('zipcode')} />
+            </div>
+          </div>
+
+          <div className='car-post-form-bottom-container'>
+            <div className='car-post-form-description-container'>
+              <h4>Description:</h4>
+              <textarea className='car-post-form-description' valueLink={this.linkState('description')} rows="8" cols="40"></textarea>
+            </div>
+          </div>
+
+          <div className='car-post-form-submit-btn-container'>
+            <input className='car-post-form-submit-btn' type="submit" value="Submit"/>
+          </div>
         </form>
       </div>
     );
@@ -201,7 +213,9 @@ var CarPost = React.createClass({
         {this.renderPostForm()}
 
         <div>
-          {this.renderError(this.state.error)}
+          <div className='car-post-page-error-container'>
+            {this.renderError(this.state.error)}
+          </div>
         </div>
       </div>
     )

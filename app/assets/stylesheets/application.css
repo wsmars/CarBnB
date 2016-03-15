@@ -1067,39 +1067,107 @@ input, textarea, keygen, select, button {
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: rgba(236, 236, 235, 0.48);
-  left: 15px;
+  background-color: rgb(245, 245, 245);
+}
+
+.car-post-form h4 {
+  font-size: 18px;
+  font-weight: bold;
+  float: left;
+  margin-bottom: 10px;
+  position: relative;
+  margin-left: 10px;
 }
 
 .car-post-form input {
-  display: block;
+  display: inline-block;
   position: relative;
-  top: 5px;
-  width: 15%;
-  left: 25px;
+  width: 140px;
   height: 50px;
   border: 1px solid rgba(0, 0, 0, 0.22);
-  margin: 10px;
   font-size: 18px;
   font-weight: 500;
+  text-align: center;
+  margin-top: 0;
+  float: left;
+  outline: none;
+}
+
+.car-post-form-top-container {
+  width: 803px;
+  height: 110px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  position: relative;
+}
+
+.car-post-make-container {
+  display: block;
+  position: relative;
+  width: 143px;
+  height: 110px;
+  float: left;
+}
+
+.car-post-model-container {
+  display: block;
+  position: relative;
+  width: 143px;
+  height: 110px;
+  float: left;
+}
+
+.car-post-year-container {
+  display: block;
+  position: relative;
+  width: 85px;
+  height: 110px;
+  float: left;
 }
 
 .car-post-form-year {
   background-color: #FFFFFF;
   padding-top: 22px;
   padding-bottom: 21px;
-  -moz-border-radius: 0;
   border-radius: 0;
   cursor: pointer;
-  display: block;
-  padding: 8px 10px;
+  display: inline-block;
+  padding: 0;
   width: 86px;
   position: relative;
-  margin-left: 35px;
-  height: 50px;
+  margin: 0;
+  height: 54px;
   font-size: 19px;
   -webkit-appearance: none;
   border: 1px solid rgba(0, 0, 0, 0.22);
+  float: left;
+  outline: none;
+}
+
+.car-post-mileage-container {
+  display: block;
+  position: relative;
+  width: 143px;
+  height: 110px;
+  float: left;
+}
+
+.car-post-price-container {
+  display: block;
+  position: relative;
+  width: 143px;
+  height: 110px;
+  float: left;
+}
+
+.car-post-type-container {
+  display: block;
+  position: relative;
+  width: 143px;
+  height: 110px;
+  float: left;
 }
 
 .car-post-form-type {
@@ -1113,50 +1181,116 @@ input, textarea, keygen, select, button {
   padding: 8px 10px;
   width: 146px;
   position: relative;
-  margin-left: 35px;
-  height: 50px;
+  margin: 0;
+  height: 54px;
   font-size: 19px;
   -webkit-appearance: none;
   border: 1px solid rgba(0, 0, 0, 0.22);
+  outline: none;
+}
+
+.car-post-form-middle-container{
+  position: relative;
+  height: 169px;
+  width: 803px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+.car-post-location-container {
+  position: relative;
+  display: block;
+  height: 170px;
+  width: 461px;
+  float: left;
 }
 
 .car-post-form-state {
   background-color: #FFFFFF;
-  padding-top: 22px;
-  padding-bottom: 21px;
-  -moz-border-radius: 0;
+  margin: 0;
+  margin-top: 10px;
   border-radius: 0;
   cursor: pointer;
   display: block;
   padding: 8px 10px;
   width: 70px;
   position: relative;
-  margin-left: 35px;
-  margin-top: 18px;
-  height: 50px;
+  height: 52px;
   -webkit-appearance: none;
   border: 1px solid rgba(0, 0, 0, 0.22);
   font-size: 19px;
+  color: #B7B7B7;
+  float: left;
+  outline: none;
 }
 
 .car-post-form .car-post-form-street {
-  width: 25%;
+  width: 400px;
+  float: left;
+  padding: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: left;
 }
 
 .car-post-form .car-post-form-city {
-  width: 12%;
+  width: 225px;
+  float: left;
+  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  text-align: left;
 }
 
 .car-post-form .car-post-form-zipcode {
-  width: 6%;
+  display: inline-block;
+  position: relative;
+  width: 140px;
+  height: 48px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  font-size: 18px;
+  font-weight: 500;
   text-align: center;
-
+  margin-top: 10px;
+  float: left;
 }
 
+.car-post-form-bottom-container {
+  position: relative;
+  height: 250px;
+  width: 803px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+.car-post-form-description-container {
+  width: 500px;
+  float: left;
+}
 
 .car-post-form-description {
+  display: block;
   font-size: 15px;
-  width: 30%;
+  width: 500px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  outline: none;
+}
+
+.car-post-form-submit-btn-container {
+  position: relative;
+  height: 150px;
+  width: 803px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
 }
 
 .car-post-form-submit-btn {
@@ -1176,6 +1310,15 @@ input, textarea, keygen, select, button {
   cursor: pointer;
   text-transform: none;
   outline: none;
-  left: 19px;
   top: 39px;
+}
+
+.car-post-page-error-container {
+  position: absolute;
+  top: 280px;
+  left: 70%;
+}
+
+.car-post-page-error-container ul {
+
 }

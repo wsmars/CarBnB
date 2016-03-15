@@ -51,7 +51,9 @@ var ApiUtil = {
     $.getJSON ({
       url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
       success: function(result) {
-        var location = result.results[0].geometry.location
+        if (result.results[0]) { //if request did not get any useful info, result.results[0] is undefined
+          var location = result.results[0].geometry.location
+        }
         handleCreate(location);
       }
     })
@@ -69,14 +71,6 @@ var ApiUtil = {
       error: function(error){
         showError(error.responseJSON.message);
       }
-    })
-  },
-
-  fetchLocationCoor: function(address, city, state, zipcode) {
-    var location = address + '+' + city + '+' + state + '+' + zipcode;
-    $.ajax ({
-      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
-      type: 'GET'
     })
   },
 
