@@ -7,7 +7,6 @@ function _getCoordsObj(latLng) {
   return {
     lat: latLng.lat(),
     lng: latLng.lng(),
-    notFirst: false
   };
 }
 
@@ -26,7 +25,7 @@ var Map = React.createClass({
     var map = ReactDOM.findDOMNode(this.refs.map);
     var mapOptions = {
       center: this.centerCarCoords(),
-      zoom: 13
+      zoom: 12
     };
     this.map = new google.maps.Map(map, mapOptions);
     this.registerListeners();
@@ -129,16 +128,17 @@ componentDidUpdate: function (oldstate) {
           northEast: northEast,
           southWest: southWest
         };
-        if (window.NotFirst) {
+        // if (window.NotFirst) {
           SearchActions.fetchCarsByBounds(bounds);
-        }
-        window.NotFirst = true;
+          // window.NotFirst = true;
+        // }
       });
     // google.maps.event.addListener(this.map, 'click', function(event) {
     //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
     //   that.props.onMapClick(coords);
     // });
   },
+
   createMarkerFromCar: function (car) {
     var that = this;
     var pos = new google.maps.LatLng(car.lat, car.lng);
@@ -154,6 +154,7 @@ componentDidUpdate: function (oldstate) {
     });
     this.markers.push(marker);
   },
+  
   removeMarker: function(marker){
     for(var i = 0; i < this.markers.length; i++){
       if (this.markers[i].carId === marker.carId){

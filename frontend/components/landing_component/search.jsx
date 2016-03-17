@@ -21,11 +21,11 @@ var Search = React.createClass({
       });
       return outPutArray.join(' ');
     };
-    window.NotFirst = false;
-    var input = transfer(this.state.searchValue);
+    // window.NotFirst = false;
+    var city = transfer(this.state.searchValue);
     e.preventDefault(); //let the output stay in same page.
-    SearchActions.fetchCarsInCity(input);
-    this.props.history.pushState(null, '/cars', { city: input });
+    SearchActions.searchCarsInCity(city);
+    this.props.history.pushState(null, '/cars', { city: city }); //push city to path, then refresh page will fetch Cars by city again.
   },
 
   render: function() {

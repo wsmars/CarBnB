@@ -43,14 +43,14 @@ var Cars = React.createClass({
         );
       });
       renderArray.push(
-        <h6>{jsonCars.length} results founded</h6>
+        <h6>{jsonCars.length} results found</h6>
       );
     }
     else {
       renderArray.push(
         <h4 className='no-cars-loading'>
-          We could not find any car that matched your query. Try a different city or landmark.
-          The website currently only has Cars Data in San Francisco & Cupertino!
+          We could not find any car that matched your query. Try a different city.
+          (The website currently only has Cars Data in San Francisco, New York & Cupertino!)
         </h4>
       );
     }
@@ -73,7 +73,7 @@ var Cars = React.createClass({
         </div>
 
         <div className='right-side-container'>
-          <Map notFirst={this.props.notFirst} history={this.props.history} className='car-page-map'/>
+          <Map history={this.props.history} className='car-page-map'/>
         </div>
       </div>
     );

@@ -12,6 +12,17 @@ var ApiUtil = {
       })
   },
 
+  searchCarsInCity: function(city, receiveCars) {
+    $.ajax ({
+      url: '/api/cars',
+      data: {car: {city: city}},
+      type: 'GET',
+      success: function(cars) {
+        receiveCars(cars);
+        }
+      })
+  },
+
   fetchCarsByBounds: function(bounds, receiveCars) {
     $.ajax ({
       url: '/api/cars',

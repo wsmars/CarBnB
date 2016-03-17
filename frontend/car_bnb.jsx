@@ -11,7 +11,7 @@ var LandingPage = require('./components/landing_page.jsx');
 var Cars = require('./components/cars');
 var CarShow = require('./components/car_show');
 var CarPost = require('./components/car_post');
-window.NotFirst = false
+window.NotFirst = false;
 
 var routes = (
 	<Router history={History.HashHistory}>

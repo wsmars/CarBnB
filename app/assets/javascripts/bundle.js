@@ -25076,6 +25076,17 @@
 	    });
 	  },
 	
+	  searchCarsInCity: function (city, receiveCars) {
+	    $.ajax({
+	      url: '/api/cars',
+	      data: { car: { city: city } },
+	      type: 'GET',
+	      success: function (cars) {
+	        receiveCars(cars);
+	      }
+	    });
+	  },
+	
 	  fetchCarsByBounds: function (bounds, receiveCars) {
 	    $.ajax({
 	      url: '/api/cars',
@@ -32228,11 +32239,11 @@
 	      });
 	      return outPutArray.join(' ');
 	    };
-	    window.NotFirst = false;
-	    var input = transfer(this.state.searchValue);
+	    // window.NotFirst = false;
+	    var city = transfer(this.state.searchValue);
 	    e.preventDefault(); //let the output stay in same page.
-	    SearchActions.fetchCarsInCity(input);
-	    this.props.history.pushState(null, '/cars', { city: input });
+	    SearchActions.searchCarsInCity(city);
+	    this.props.history.pushState(null, '/cars', { city: city }); //push city to path, then refresh page will fetch Cars by city again.
 	  },
 	
 	  render: function () {
@@ -32333,6 +32344,10 @@
 	
 	  fetchCarsInCity: function (city) {
 	    ApiUtil.fetchCarsInCity(city, this.receiveCars);
+	  },
+	
+	  searchCarsInCity: function (city) {
+	    ApiUtil.searchCarsInCity(city, this.receiveCars);
 	  },
 	
 	  fetchCarsByBounds: function (bounds) {
@@ -32860,13 +32875,13 @@
 	        'h6',
 	        null,
 	        jsonCars.length,
-	        ' results founded'
+	        ' results found'
 	      ));
 	    } else {
 	      renderArray.push(React.createElement(
 	        'h4',
 	        { className: 'no-cars-loading' },
-	        'We could not find any car that matched your query. Try a different city or landmark. The website currently only has Cars Data in San Francisco & Cupertino!'
+	        'We could not find any car that matched your query. Try a different city. (The website currently only has Cars Data in San Francisco, New York & Cupertino!)'
 	      ));
 	    }
 	    return React.createElement(
@@ -32893,7 +32908,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'right-side-container' },
-	        React.createElement(Map, { notFirst: this.props.notFirst, history: this.props.history, className: 'car-page-map' })
+	        React.createElement(Map, { history: this.props.history, className: 'car-page-map' })
 	      )
 	    );
 	  }
@@ -32913,8 +32928,7 @@
 	function _getCoordsObj(latLng) {
 	  return {
 	    lat: latLng.lat(),
-	    lng: latLng.lng(),
-	    notFirst: false
+	    lng: latLng.lng()
 	  };
 	}
 	
@@ -32935,7 +32949,7 @@
 	    var map = ReactDOM.findDOMNode(this.refs.map);
 	    var mapOptions = {
 	      center: this.centerCarCoords(),
-	      zoom: 13
+	      zoom: 12
 	    };
 	    this.map = new google.maps.Map(map, mapOptions);
 	    this.registerListeners();
@@ -33035,16 +33049,17 @@
 	        northEast: northEast,
 	        southWest: southWest
 	      };
-	      if (window.NotFirst) {
-	        SearchActions.fetchCarsByBounds(bounds);
-	      }
-	      window.NotFirst = true;
+	      // if (window.NotFirst) {
+	      SearchActions.fetchCarsByBounds(bounds);
+	      // window.NotFirst = true;
+	      // }
 	    });
 	    // google.maps.event.addListener(this.map, 'click', function(event) {
 	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
 	    //   that.props.onMapClick(coords);
 	    // });
 	  },
+	
 	  createMarkerFromCar: function (car) {
 	    var that = this;
 	    var pos = new google.maps.LatLng(car.lat, car.lng);
@@ -33060,6 +33075,7 @@
 	    });
 	    this.markers.push(marker);
 	  },
+	
 	  removeMarker: function (marker) {
 	    for (var i = 0; i < this.markers.length; i++) {
 	      if (this.markers[i].carId === marker.carId) {

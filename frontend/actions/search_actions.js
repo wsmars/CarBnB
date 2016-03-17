@@ -27,6 +27,10 @@ var SearchActions = {
     ApiUtil.fetchCarsInCity(city, this.receiveCars);
   },
 
+  searchCarsInCity: function(city) {
+    ApiUtil.searchCarsInCity(city, this.receiveCars);
+  },
+
   fetchCarsByBounds: function(bounds) {
     ApiUtil.fetchCarsByBounds(bounds, this.receiveCars);
   },
