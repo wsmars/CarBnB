@@ -23,6 +23,13 @@ var SearchActions = {
     });
   },
 
+  receiveLocation: function(location) {
+    AppDispatcher.dispatch({
+      actionType: 'RECEIVE_LOCATION',
+      location: location
+    });
+  },
+
   fetchCarsInCity: function(city) {
     ApiUtil.fetchCarsInCity(city, this.receiveCars);
   },
@@ -37,6 +44,10 @@ var SearchActions = {
 
   fetchCarById: function(carId) {
     ApiUtil.fetchCarById(carId, this.receiveSingleCar);
+  },
+
+  fetchCenterLatLng: function(city) {
+    ApiUtil.fetchCenterLatLng(city, this.receiveLocation);
   }
 };
 

@@ -55,9 +55,8 @@
 	var App = __webpack_require__(211);
 	var LandingPage = __webpack_require__(250);
 	var Cars = __webpack_require__(252);
-	var CarShow = __webpack_require__(254);
+	var CarShow = __webpack_require__(255);
 	var CarPost = __webpack_require__(248);
-	window.NotFirst = false;
 	
 	var routes = React.createElement(
 			Router,
@@ -25076,13 +25075,28 @@
 	    });
 	  },
 	
-	  searchCarsInCity: function (city, receiveCars) {
-	    $.ajax({
-	      url: '/api/cars',
-	      data: { car: { city: city } },
-	      type: 'GET',
-	      success: function (cars) {
-	        receiveCars(cars);
+	  // searchCarsInCity: function(city, receiveCars) {
+	  //   $.ajax ({
+	  //     url: '/api/cars',
+	  //     data: {car: {city: city}},
+	  //     type: 'GET',
+	  //     success: function(cars) {
+	  //       receiveCars(cars);
+	  //       }
+	  //     })
+	  // },
+	
+	  fetchCenterLatLng: function (city, receiveLocation) {
+	    $.getJSON({
+	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+	      success: function (result) {
+	        if (result.results[0]) {
+	          //if request did not get any useful info, result.results[0] is undefined
+	          var location = result.results[0].geometry.location;
+	        } else {
+	          var location = undefined;
+	        }
+	        receiveLocation(location);
 	      }
 	    });
 	  },
@@ -32228,7 +32242,9 @@
 	  mixins: [LinkedStateMixin],
 	
 	  getInitialState: function () {
-	    return { searchValue: '' };
+	    return { searchValue: '',
+	      center: {}
+	    };
 	  },
 	
 	  handleSubmit: function (e) {
@@ -32239,10 +32255,10 @@
 	      });
 	      return outPutArray.join(' ');
 	    };
-	    // window.NotFirst = false;
 	    var city = transfer(this.state.searchValue);
 	    e.preventDefault(); //let the output stay in same page.
-	    SearchActions.searchCarsInCity(city);
+	    // SearchActions.fetchCarsInCity(city);
+	    SearchActions.fetchCenterLatLng(city);
 	    this.props.history.pushState(null, '/cars', { city: city }); //push city to path, then refresh page will fetch Cars by city again.
 	  },
 	
@@ -32342,6 +32358,13 @@
 	    });
 	  },
 	
+	  receiveLocation: function (location) {
+	    AppDispatcher.dispatch({
+	      actionType: 'RECEIVE_LOCATION',
+	      location: location
+	    });
+	  },
+	
 	  fetchCarsInCity: function (city) {
 	    ApiUtil.fetchCarsInCity(city, this.receiveCars);
 	  },
@@ -32356,6 +32379,10 @@
 	
 	  fetchCarById: function (carId) {
 	    ApiUtil.fetchCarById(carId, this.receiveSingleCar);
+	  },
+	
+	  fetchCenterLatLng: function (city) {
+	    ApiUtil.fetchCenterLatLng(city, this.receiveLocation);
 	  }
 	};
 	
@@ -32825,7 +32852,8 @@
 	
 	  componentDidMount: function () {
 	    this.token = CarStore.addListener(this.updateCars);
-	    SearchActions.fetchCarsInCity(this.props.location.query.city);
+	    // SearchActions.fetchCarsInCity(this.props.location.query.city);
+	    SearchActions.fetchCenterLatLng(this.props.location.query.city);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32923,6 +32951,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var CarStore = __webpack_require__(246);
+	var MapStore = __webpack_require__(254);
 	var SearchActions = __webpack_require__(247);
 	
 	function _getCoordsObj(latLng) {
@@ -32935,17 +32964,21 @@
 	var CENTER = { lat: 37.7758, lng: -122.435 };
 	var mapMoved = false;
 	var _markers = {};
+	
 	var Map = React.createClass({
 	  displayName: 'Map',
 	
 	
 	  getInitialState: function () {
-	    return { cars: CarStore.all() };
+	    return { cars: CarStore.all(),
+	      location: MapStore.all()
+	    };
 	  },
 	
 	  componentDidMount: function () {
 	    console.log('map mounted');
-	    this.token = CarStore.addListener(this.updateCars);
+	    this.token1 = CarStore.addListener(this.updateCars);
+	    this.token2 = MapStore.addListener(this.updateLocation);
 	    var map = ReactDOM.findDOMNode(this.refs.map);
 	    var mapOptions = {
 	      center: this.centerCarCoords(),
@@ -32958,9 +32991,9 @@
 	  },
 	
 	  centerCarCoords: function () {
-	    if (this.state.cars[0] && this.state.cars[0].lng) {
-	      var car = this.state.cars[0];
-	      return { lat: car.lat, lng: car.lng };
+	    if (this.state.location) {
+	      var center = this.props.center;
+	      return { lat: this.state.location.lat, lng: this.state.location.lng };
 	    } else {
 	      return CENTER;
 	    }
@@ -32968,10 +33001,11 @@
 	
 	  updateCars: function () {
 	    this.setState({ cars: CarStore.all() });
-	    if (!mapMoved) {
-	      this.map.panTo(this.centerCarCoords());
-	    }
-	    mapMoved = false;
+	  },
+	
+	  updateLocation: function () {
+	    this.setState({ location: MapStore.all() });
+	    this.map.panTo(this.centerCarCoords());
 	  },
 	
 	  componentDidUpdate: function (oldstate) {
@@ -33034,12 +33068,14 @@
 	
 	  componentWillUnmount: function () {
 	    console.log("map UNmounted");
-	    this.token.remove();
+	    this.token1.remove();
+	    this.token2.remove();
+	    this.token3.remove();
 	  },
 	
 	  registerListeners: function () {
 	    var that = this;
-	    google.maps.event.addListener(this.map, 'idle', function () {
+	    this.token3 = google.maps.event.addListener(this.map, 'idle', function () {
 	      mapMoved = true;
 	      var bounds = that.map.getBounds();
 	      var northEast = _getCoordsObj(bounds.getNorthEast());
@@ -33049,10 +33085,7 @@
 	        northEast: northEast,
 	        southWest: southWest
 	      };
-	      // if (window.NotFirst) {
 	      SearchActions.fetchCarsByBounds(bounds);
-	      // window.NotFirst = true;
-	      // }
 	    });
 	    // google.maps.event.addListener(this.map, 'click', function(event) {
 	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
@@ -33100,11 +33133,44 @@
 /* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(221).Store;
+	var AppDispatcher = __webpack_require__(215);
+	var MapStore = new Store(AppDispatcher);
+	
+	var _location = undefined;
+	
+	MapStore.receiveLocation = function (location) {
+	  _location = location;
+	};
+	
+	MapStore.removeLocation = function () {
+	  _location = undefined;
+	};
+	
+	MapStore.all = function () {
+	  return _location;
+	};
+	
+	MapStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "RECEIVE_LOCATION":
+	      this.receiveLocation(payload.location);
+	      MapStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = MapStore;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	
 	var CarStore = __webpack_require__(246);
 	var SearchActions = __webpack_require__(247);
-	var RequestForm = __webpack_require__(255);
+	var RequestForm = __webpack_require__(256);
 	
 	var CarShow = React.createClass({
 	  displayName: 'CarShow',
@@ -33137,110 +33203,106 @@
 	
 	  renderCar: function () {
 	    var car = this.state.car;
-	    return React.createElement(
-	      'div',
-	      { className: 'car-show-page-list-container' },
-	      React.createElement(
-	        'ul',
-	        null,
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-price' },
-	          '$',
-	          car.price,
-	          ' Per Day'
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-list' },
-	          React.createElement(
-	            'h3',
-	            null,
-	            'Year: '
-	          ),
-	          car.year
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-list' },
-	          React.createElement(
-	            'h3',
-	            null,
-	            'Model: '
-	          ),
-	          car.model
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-list' },
-	          React.createElement(
-	            'h3',
-	            null,
-	            'Make: '
-	          ),
-	          car.make
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-list' },
-	          React.createElement(
-	            'h3',
-	            null,
-	            'Mileage: '
-	          ),
-	          car.milage
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-list' },
-	          React.createElement(
-	            'h3',
-	            null,
-	            'Type: '
-	          ),
-	          car.car_type
-	        ),
-	        React.createElement(
-	          'li',
-	          { className: 'car-show-page-list' },
-	          React.createElement(
-	            'h3',
-	            null,
-	            'Location:'
-	          ),
-	          car.street,
-	          React.createElement('br', null),
-	          car.city,
-	          ', ',
-	          car.state,
-	          ' ',
-	          car.zip_code
-	        ),
-	        React.createElement(
-	          'h2',
-	          null,
-	          'Description: '
-	        ),
-	        React.createElement(
-	          'p',
-	          { className: 'car-show-page-description' },
-	          car.description
-	        )
-	      )
-	    );
-	  },
-	
-	  render: function () {
 	    if (this.state.car) {
 	      return React.createElement(
 	        'div',
-	        { className: 'car-show-page-container' },
+	        null,
 	        React.createElement('div', { className: 'car-show-page-header' }),
 	        React.createElement('img', { className: 'car-show-page-img', src: this.state.car.img_url }),
 	        React.createElement(
 	          'div',
 	          { className: 'car-show-page-left-container' },
-	          this.renderCar()
+	          React.createElement(
+	            'div',
+	            { className: 'car-show-page-list-container' },
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-price' },
+	                '$',
+	                car.price,
+	                ' Per Day'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Year: '
+	                ),
+	                car.year
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Model: '
+	                ),
+	                car.model
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Make: '
+	                ),
+	                car.make
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Mileage: '
+	                ),
+	                car.milage
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Type: '
+	                ),
+	                car.car_type
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Location:'
+	                ),
+	                car.street,
+	                React.createElement('br', null),
+	                car.city,
+	                ', ',
+	                car.state,
+	                ' ',
+	                car.zip_code
+	              ),
+	              React.createElement(
+	                'h2',
+	                null,
+	                'Description: '
+	              ),
+	              React.createElement(
+	                'p',
+	                { className: 'car-show-page-description' },
+	                car.description
+	              )
+	            )
+	          )
 	        ),
 	        React.createElement(
 	          'div',
@@ -33251,7 +33313,7 @@
 	    } else {
 	      return React.createElement(
 	        'div',
-	        { className: 'car-show-page-container' },
+	        null,
 	        React.createElement(
 	          'h4',
 	          { className: 'car-show-no-car-found' },
@@ -33259,19 +33321,27 @@
 	        )
 	      );
 	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'car-show-page-container' },
+	      this.renderCar()
+	    );
 	  }
 	});
 	
 	module.exports = CarShow;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(239);
 	
-	var RequestActions = __webpack_require__(256);
+	var RequestActions = __webpack_require__(257);
 	var UserStore = __webpack_require__(220);
 	var MessageStore = __webpack_require__(243);
 	
@@ -33455,7 +33525,7 @@
 	module.exports = RequestForm;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(215);

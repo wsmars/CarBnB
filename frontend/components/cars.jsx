@@ -13,7 +13,8 @@ var Cars = React.createClass({
 
   componentDidMount: function() {
     this.token = CarStore.addListener(this.updateCars);
-    SearchActions.fetchCarsInCity(this.props.location.query.city);
+    // SearchActions.fetchCarsInCity(this.props.location.query.city);
+    SearchActions.fetchCenterLatLng(this.props.location.query.city);
   },
 
   componentWillUnmount: function() {

@@ -12,15 +12,30 @@ var ApiUtil = {
       })
   },
 
-  searchCarsInCity: function(city, receiveCars) {
-    $.ajax ({
-      url: '/api/cars',
-      data: {car: {city: city}},
-      type: 'GET',
-      success: function(cars) {
-        receiveCars(cars);
+  // searchCarsInCity: function(city, receiveCars) {
+  //   $.ajax ({
+  //     url: '/api/cars',
+  //     data: {car: {city: city}},
+  //     type: 'GET',
+  //     success: function(cars) {
+  //       receiveCars(cars);
+  //       }
+  //     })
+  // },
+
+  fetchCenterLatLng: function(city, receiveLocation) {
+    $.getJSON ({
+      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+      success: function(result) {
+        if (result.results[0]) { //if request did not get any useful info, result.results[0] is undefined
+          var location = result.results[0].geometry.location;
         }
-      })
+        else {
+          var location = undefined;
+        }
+        receiveLocation(location);
+      }
+    })
   },
 
   fetchCarsByBounds: function(bounds, receiveCars) {

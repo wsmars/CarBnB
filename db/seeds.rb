@@ -52,7 +52,7 @@ Car.create!(make: 'Mecedes-Benz', model: 'GLA', year: 2015, milage: 15000, price
             lat: 37.322040, lng: -122.010506)
 
 Car.create!(make: 'VW', model: 'GTI', year: 2015, milage: 15000, price: 70.00,
-            car_type: 'Convertible', description: 'A small car', status: 'rent out',
+            car_type: 'Convertible', description: 'A small car',
             street: '194 Brentwood Ave', city: 'San Francisco', state: 'CA', zip_code: 94127,
             user_id: 3, img_url: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,w_900/v1457342455/2015_vw_gti_qggg1y.jpg',
             lat: 37.733922, lng: -122.458925)
@@ -66,7 +66,6 @@ Car.create!(make: 'Alfa Romeo', model: '4C Coupe', year: 2015, milage: 9000, pri
 Car.create!(make: 'Lexus', model: 'IS F', year: 2013, milage: 25000, price: 120.00,
             car_type: 'Sports Car',
             description: 'Craving adrenaline? The IS 350 F SPORT offers the ultimate in performance with exclusive upgrades including an Adaptive Variable Suspension, Sport S+ driving mode and available Variable Gear-Ratio Steering (RWD).',
-            status: 'rent out',
             street: '1727 2nd Ave', city: 'New York', state: 'NY', zip_code: 10128,
             user_id: 5, img_url: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,w_900/v1458255671/lexus-is-f_mshu4p.jpg',
             lat: 40.780043, lng: -73.950350)
@@ -94,8 +93,7 @@ Car.create!(make: 'Porsche', model: 'Cayenne', year: 2010, milage: 75000, price:
 
 Car.create!(make: 'Audi', model: 'Allroad', year: 2016, milage: 2500, price: 210.00,
             car_type: 'Convertible',
-            description: 'It’s a steady performer, hitting 60mph in 6.5 seconds, despite packing nearly 400lbs more than the sedan.',
-            status: 'rent out',
+            description: 'It is a steady performer, hitting 60mph in 6.5 seconds, despite packing nearly 400lbs more than the sedan.',
             street: '120 Broadway', city: 'New York', state: 'NY', zip_code: 10271,
             user_id: 6, img_url: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,w_900/v1458255669/audi-allroad_wpioyb.jpg',
             lat: 40.708188, lng: -74.010301)
@@ -107,10 +105,9 @@ Car.create!(make: 'Lamborghini', model: 'Spyder', year: 2015, milage: 15000, pri
             user_id: 6, img_url: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,w_900/v1458255668/Lamborghini-Spyder_tczj7w.jpg',
             lat: 40.731008, lng: -74.009728)
 
-Car.create!(make: 'Google', model: 'Self Driving', year: 2018, milage: 0, price: 1000.00,
+Car.create!(make: 'Google', model: 'Self Driving', year: 2016, milage: 0, price: 1000.00,
             car_type: 'Convertible',
             description: 'The car processes both map and sensor information to determine where it is in the world. Our car knows what street it is on and which lane it is in.',
-            status: 'rent out',
             street: 'Jacqueline Kennedy Onassis Reservoir', city: 'New York', state: 'NY', zip_code: 10128,
             user_id: 6, img_url: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,w_900/v1458255675/google-autodrive_sdpsli.jpg',
             lat: 40.786638, lng: -73.962290)

@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var CarStore = require('../stores/car_store');
+var MapStore = require('../stores/map_store');
 var SearchActions = require('../actions/search_actions');
 
 function _getCoordsObj(latLng) {
@@ -13,15 +14,19 @@ function _getCoordsObj(latLng) {
 var CENTER = {lat: 37.7758, lng: -122.435};
 var mapMoved = false;
 var _markers = {};
+
 var Map = React.createClass({
 
   getInitialState: function() {
-    return {cars: CarStore.all()};
+    return {cars: CarStore.all(),
+            location: MapStore.all()
+           };
   },
 
   componentDidMount: function(){
     console.log('map mounted');
-    this.token = CarStore.addListener(this.updateCars);
+    this.token1 = CarStore.addListener(this.updateCars);
+    this.token2 = MapStore.addListener(this.updateLocation);
     var map = ReactDOM.findDOMNode(this.refs.map);
     var mapOptions = {
       center: this.centerCarCoords(),
@@ -34,9 +39,9 @@ var Map = React.createClass({
   },
 
   centerCarCoords: function () {
-    if (this.state.cars[0] && this.state.cars[0].lng) {
-      var car = this.state.cars[0];
-      return { lat: car.lat, lng: car.lng };
+    if (this.state.location) {
+      var center = this.props.center
+      return { lat: this.state.location.lat, lng: this.state.location.lng };
     } else {
       return CENTER;
     }
@@ -44,13 +49,14 @@ var Map = React.createClass({
 
   updateCars: function() {
     this.setState({cars: CarStore.all()});
-    if (!mapMoved) {
-      this.map.panTo(this.centerCarCoords());
-    }
-    mapMoved = false;
   },
 
-componentDidUpdate: function (oldstate) {
+  updateLocation: function() {
+    this.setState({location: MapStore.all()})
+    this.map.panTo(this.centerCarCoords());
+  },
+
+  componentDidUpdate: function (oldstate) {
     this._onChange();
     var that = this;
 
@@ -113,12 +119,14 @@ componentDidUpdate: function (oldstate) {
 
   componentWillUnmount: function(){
     console.log("map UNmounted");
-    this.token.remove();
+    this.token1.remove();
+    this.token2.remove();
+    this.token3.remove();
   },
 
   registerListeners: function(){
     var that = this;
-      google.maps.event.addListener(this.map, 'idle', function() {
+    this.token3 = google.maps.event.addListener(this.map, 'idle', function() {
         mapMoved = true;
         var bounds = that.map.getBounds();
         var northEast = _getCoordsObj(bounds.getNorthEast());
@@ -128,10 +136,7 @@ componentDidUpdate: function (oldstate) {
           northEast: northEast,
           southWest: southWest
         };
-        // if (window.NotFirst) {
-          SearchActions.fetchCarsByBounds(bounds);
-          // window.NotFirst = true;
-        // }
+        SearchActions.fetchCarsByBounds(bounds);
       });
     // google.maps.event.addListener(this.map, 'click', function(event) {
     //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
@@ -154,7 +159,7 @@ componentDidUpdate: function (oldstate) {
     });
     this.markers.push(marker);
   },
-  
+
   removeMarker: function(marker){
     for(var i = 0; i < this.markers.length; i++){
       if (this.markers[i].carId === marker.carId){

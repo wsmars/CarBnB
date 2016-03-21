@@ -34,35 +34,29 @@ var CarShow = React.createClass({
 
   renderCar: function() {
     var car = this.state.car;
-    return (
-      <div  className='car-show-page-list-container'>
-        <ul>
-          <li className='car-show-page-price'>${car.price} Per Day</li>
-          <li className='car-show-page-list'><h3>Year: </h3>{car.year}</li>
-          <li className='car-show-page-list'><h3>Model: </h3>{car.model}</li>
-          <li className='car-show-page-list'><h3>Make: </h3>{car.make}</li>
-          <li className='car-show-page-list'><h3>Mileage: </h3>{car.milage}</li>
-          <li className='car-show-page-list'><h3>Type: </h3>{car.car_type}</li>
-          <li className='car-show-page-list'><h3>Location:</h3>
-            {car.street}
-            <br/>
-            {car.city}, {car.state} {car.zip_code}
-            </li>
-          <h2>Description: </h2>
-          <p className='car-show-page-description'>{car.description}</p>
-        </ul>
-      </div>
-    );
-  },
-
-  render: function() {
     if (this.state.car) {
       return (
-        <div  className='car-show-page-container'>
+        <div>
           <div className='car-show-page-header'></div>
           <img className='car-show-page-img' src={this.state.car.img_url}/>
           <div  className='car-show-page-left-container'>
-            {this.renderCar()}
+            <div  className='car-show-page-list-container'>
+              <ul>
+                <li className='car-show-page-price'>${car.price} Per Day</li>
+                <li className='car-show-page-list'><h3>Year: </h3>{car.year}</li>
+                <li className='car-show-page-list'><h3>Model: </h3>{car.model}</li>
+                <li className='car-show-page-list'><h3>Make: </h3>{car.make}</li>
+                <li className='car-show-page-list'><h3>Mileage: </h3>{car.milage}</li>
+                <li className='car-show-page-list'><h3>Type: </h3>{car.car_type}</li>
+                <li className='car-show-page-list'><h3>Location:</h3>
+                  {car.street}
+                  <br/>
+                  {car.city}, {car.state} {car.zip_code}
+                  </li>
+                <h2>Description: </h2>
+                <p className='car-show-page-description'>{car.description}</p>
+              </ul>
+            </div>
           </div>
 
           <div className='car-show-page-right-container'>
@@ -73,12 +67,19 @@ var CarShow = React.createClass({
     }
     else {
       return (
-        <div  className='car-show-page-container'>
+        <div>
           <h4 className='car-show-no-car-found'>There is no car found!</h4>
         </div>
       );
     }
+  },
 
+  render: function() {
+    return (
+      <div className='car-show-page-container'>
+        {this.renderCar()}
+      </div>
+    );
   }
 });
 

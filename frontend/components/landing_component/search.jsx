@@ -10,7 +10,9 @@ var Search = React.createClass({
   mixins: [LinkedStateMixin],
 
   getInitialState: function() {
-    return {searchValue: ''};
+    return {searchValue: '',
+            center: {}
+           };
   },
 
   handleSubmit: function(e) {
@@ -21,10 +23,10 @@ var Search = React.createClass({
       });
       return outPutArray.join(' ');
     };
-    // window.NotFirst = false;
     var city = transfer(this.state.searchValue);
     e.preventDefault(); //let the output stay in same page.
-    SearchActions.searchCarsInCity(city);
+    // SearchActions.fetchCarsInCity(city);
+    SearchActions.fetchCenterLatLng(city);
     this.props.history.pushState(null, '/cars', { city: city }); //push city to path, then refresh page will fetch Cars by city again.
   },
 
