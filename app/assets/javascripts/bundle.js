@@ -24497,11 +24497,7 @@
 	  renderSearch: function () {
 	    var path = this.props.path;
 	    if (path === '/') {
-	      return React.createElement(
-	        'div',
-	        { className: 'home-page-search-bar' },
-	        React.createElement(Search, { history: this.props.history })
-	      );
+	      return null;
 	    } else {
 	      return React.createElement(
 	        'div',
@@ -32724,6 +32720,7 @@
 
 	var React = __webpack_require__(1);
 	
+	var Search = __webpack_require__(245);
 	var Footer = __webpack_require__(251);
 	
 	var LandingPage = React.createClass({
@@ -32733,7 +32730,7 @@
 	  renderSlogan: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'middle-container' },
+	      { className: 'middle-slogan-container' },
 	      React.createElement(
 	        'h2',
 	        { className: 'home-page-slogan' },
@@ -32747,14 +32744,80 @@
 	    );
 	  },
 	
+	  renderBottom: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'bottom-slogan-container' },
+	        React.createElement(
+	          'h2',
+	          { className: 'bottom-slogan' },
+	          'Beyond your dreams, within your reach'
+	        ),
+	        React.createElement(
+	          'h4',
+	          { className: 'bottom-statement' },
+	          'Smiling faces, beautiful places'
+	        )
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        React.createElement(
+	          'div',
+	          { className: 'bottom-img-container' },
+	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761877/San-Francisco_yrkwsa.jpg' }),
+	          React.createElement(
+	            'h4',
+	            null,
+	            'San Francisco'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'bottom-img-container' },
+	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458763132/NYC_vtxnx3.jpg' }),
+	          React.createElement(
+	            'h4',
+	            null,
+	            'New York'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'bottom-img-container' },
+	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761884/Cupertino_qkbj9n.jpg' }),
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Cupertino'
+	          )
+	        )
+	      )
+	    );
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { className: 'land-page' },
 	      React.createElement(
 	        'div',
+	        { className: 'middle-container' },
+	        this.renderSlogan(),
+	        React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/v1458690030/home_page_background_ekcb9g_wwbu2k.jpg', className: 'landing-page-img' }),
+	        React.createElement(
+	          'div',
+	          { className: 'home-page-search-bar' },
+	          React.createElement(Search, { history: this.props.history })
+	        )
+	      ),
+	      React.createElement(
+	        'div',
 	        { className: 'bottom-container' },
-	        this.renderSlogan()
+	        this.renderBottom()
 	      ),
 	      React.createElement(Footer, null)
 	    );

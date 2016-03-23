@@ -27,11 +27,7 @@ var Header = React.createClass({
   renderSearch: function() {
     var path = this.props.path;
     if (path === '/') {
-      return (
-        <div className='home-page-search-bar'>
-          <Search history={this.props.history}/>
-        </div>
-      )
+      return null
     }
     else {
       return (
