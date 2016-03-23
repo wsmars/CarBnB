@@ -688,6 +688,7 @@ input, textarea, keygen, select, button {
     position: relative;
     height: 100%;
     width: 100%;
+    cursor: pointer;
 }
 
 .bottom-img-container h4 {
@@ -699,6 +700,7 @@ input, textarea, keygen, select, button {
     color: #fff;
     font-size: 30px;
     width: 100%;
+    cursor: pointer;
 }
 
 .footer-container {

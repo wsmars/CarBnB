@@ -16,6 +16,18 @@ var LandingPage = React.createClass({
     );
   },
 
+  clickSF: function() {
+    this.props.history.pushState(null, 'cars?city=San+Francisco');
+  },
+
+  clickNY: function() {
+    this.props.history.pushState(null, 'cars?city=New+York');
+  },
+
+  clickCupertino: function() {
+    this.props.history.pushState(null, 'cars?city=Cupertino');
+  },
+
   renderBottom: function() {
     return (
       <div>
@@ -24,17 +36,17 @@ var LandingPage = React.createClass({
           <h4 className='bottom-statement'>Smiling faces, beautiful places</h4>
         </div>
         <ul>
-          <div className="bottom-img-container">
+          <div onClick={this.clickSF} className="bottom-img-container">
             <img src="http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761877/San-Francisco_yrkwsa.jpg"/>
             <h4>San Francisco</h4>
           </div>
 
-          <div className="bottom-img-container">
+          <div onClick={this.clickNY} className="bottom-img-container">
             <img src="http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458763132/NYC_vtxnx3.jpg"/>
             <h4>New York</h4>
           </div>
 
-          <div className="bottom-img-container">
+          <div onClick={this.clickCupertino} className="bottom-img-container">
             <img src="http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761884/Cupertino_qkbj9n.jpg"/>
             <h4>Cupertino</h4>
           </div>

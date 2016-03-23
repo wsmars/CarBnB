@@ -32744,6 +32744,18 @@
 	    );
 	  },
 	
+	  clickSF: function () {
+	    this.props.history.pushState(null, 'cars?city=San+Francisco');
+	  },
+	
+	  clickNY: function () {
+	    this.props.history.pushState(null, 'cars?city=New+York');
+	  },
+	
+	  clickCupertino: function () {
+	    this.props.history.pushState(null, 'cars?city=Cupertino');
+	  },
+	
 	  renderBottom: function () {
 	    return React.createElement(
 	      'div',
@@ -32767,7 +32779,7 @@
 	        null,
 	        React.createElement(
 	          'div',
-	          { className: 'bottom-img-container' },
+	          { onClick: this.clickSF, className: 'bottom-img-container' },
 	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761877/San-Francisco_yrkwsa.jpg' }),
 	          React.createElement(
 	            'h4',
@@ -32777,7 +32789,7 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'bottom-img-container' },
+	          { onClick: this.clickNY, className: 'bottom-img-container' },
 	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458763132/NYC_vtxnx3.jpg' }),
 	          React.createElement(
 	            'h4',
@@ -32787,7 +32799,7 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'bottom-img-container' },
+	          { onClick: this.clickCupertino, className: 'bottom-img-container' },
 	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761884/Cupertino_qkbj9n.jpg' }),
 	          React.createElement(
 	            'h4',
