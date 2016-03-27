@@ -38,6 +38,25 @@ var Header = React.createClass({
     }
   },
 
+  renderGitLinkedin: function () {
+    var path = this.props.path;
+    if (path === '/') {
+      return (
+        <div className='git-linkedin-container'>
+          <a href="https://github.com/wsmars">
+            <img className='git-icon' src='http://res.cloudinary.com/dvy2aua0n/image/upload/v1459108881/github_icon_f9svjh.png'/>
+          </a>
+          <a href="https://www.linkedin.com/in/mingshuo-zhang-43a79a114?trk=hp-identity-name">
+            <img className='linkedin-icon' src='http://res.cloudinary.com/dvy2aua0n/image/upload/v1459108880/linkedin_icon_z1x017.png'/>
+          </a>
+        </div>
+      )
+    }
+    else {
+      return null;
+    }
+  },
+
   handleCarPost: function() {
     this.props.history.push('newcar');
   },
@@ -47,8 +66,8 @@ var Header = React.createClass({
       <div className='header-container'>
         {this.renderLogo()}
         {this.renderSearch()}
+        {this.renderGitLinkedin()}
         <Session />
-        {this.renderHelp()}
         <div className='post-btn-container'>
           <button onClick={this.handleCarPost} className='car-post-btn'>Post a Car</button>
         </div>

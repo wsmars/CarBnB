@@ -53,10 +53,10 @@
 	var History = __webpack_require__(206);
 	
 	var App = __webpack_require__(211);
-	var LandingPage = __webpack_require__(250);
-	var Cars = __webpack_require__(252);
-	var CarShow = __webpack_require__(255);
-	var CarPost = __webpack_require__(248);
+	var LandingPage = __webpack_require__(213);
+	var Cars = __webpack_require__(244);
+	var CarShow = __webpack_require__(247);
+	var CarPost = __webpack_require__(252);
 	
 	var routes = React.createElement(
 			Router,
@@ -24458,9 +24458,9 @@
 	var React = __webpack_require__(1);
 	var Link = __webpack_require__(159).Link;
 	
-	var Session = __webpack_require__(213);
-	var Search = __webpack_require__(245);
-	var CarPost = __webpack_require__(248);
+	var Session = __webpack_require__(254);
+	var Search = __webpack_require__(214);
+	var CarPost = __webpack_require__(252);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -24507,6 +24507,28 @@
 	    }
 	  },
 	
+	  renderGitLinkedin: function () {
+	    var path = this.props.path;
+	    if (path === '/') {
+	      return React.createElement(
+	        'div',
+	        { className: 'git-linkedin-container' },
+	        React.createElement(
+	          'a',
+	          { href: 'https://github.com/wsmars' },
+	          React.createElement('img', { className: 'git-icon', src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/v1459108881/github_icon_f9svjh.png' })
+	        ),
+	        React.createElement(
+	          'a',
+	          { href: 'https://www.linkedin.com/in/mingshuo-zhang-43a79a114?trk=hp-identity-name' },
+	          React.createElement('img', { className: 'linkedin-icon', src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/v1459108880/linkedin_icon_z1x017.png' })
+	        )
+	      );
+	    } else {
+	      return null;
+	    }
+	  },
+	
 	  handleCarPost: function () {
 	    this.props.history.push('newcar');
 	  },
@@ -24517,8 +24539,8 @@
 	      { className: 'header-container' },
 	      this.renderLogo(),
 	      this.renderSearch(),
+	      this.renderGitLinkedin(),
 	      React.createElement(Session, null),
-	      this.renderHelp(),
 	      React.createElement(
 	        'div',
 	        { className: 'post-btn-container' },
@@ -24540,469 +24562,195 @@
 
 	var React = __webpack_require__(1);
 	
-	var SessionActions = __webpack_require__(214);
-	var UserStore = __webpack_require__(220);
-	var LogInForm = __webpack_require__(238);
-	var SignUpForm = __webpack_require__(244);
+	var Search = __webpack_require__(214);
+	var Footer = __webpack_require__(243);
 	
-	var Session = React.createClass({
-	  displayName: 'Session',
+	var LandingPage = React.createClass({
+	  displayName: 'LandingPage',
 	
 	
-	  getInitialState: function () {
-	    return {
-	      currentUser: UserStore.all(),
-	      button: ''
-	    };
+	  renderSlogan: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'middle-slogan-container' },
+	      React.createElement(
+	        'h2',
+	        { className: 'home-page-slogan' },
+	        'Love the road'
+	      ),
+	      React.createElement(
+	        'h4',
+	        { className: 'home-page-statement' },
+	        'Rent unique cars to travel from local hosts.'
+	      )
+	    );
 	  },
 	
-	  componentDidMount: function () {
-	    this.token = UserStore.addListener(this.updateCurrentUser);
-	    SessionActions.fetchCurrentUser();
+	  clickSF: function () {
+	    this.props.history.pushState(null, 'cars?city=San+Francisco');
 	  },
 	
-	  componentWillUnmount: function () {
-	    this.token.remove();
+	  clickNY: function () {
+	    this.props.history.pushState(null, 'cars?city=New+York');
 	  },
 	
-	  updateCurrentUser: function () {
-	    this.setState({
-	      currentUser: UserStore.all()
-	    });
+	  clickCupertino: function () {
+	    this.props.history.pushState(null, 'cars?city=Cupertino');
 	  },
 	
-	  toSignUpForm: function () {
-	    this.setState({ button: 'signup' });
-	  },
-	
-	  toSignInForm: function () {
-	    this.setState({ button: 'signin' });
-	  },
-	
-	  handleLogOut: function (e) {
-	    e.preventDefault();
-	    this.setState({ button: '' });
-	    SessionActions.logOut();
-	  },
-	
-	  handleCancel: function () {
-	    SessionActions.cleanError();
-	    this.setState({ button: '' });
-	  },
-	
-	  renderForm: function () {
-	    if (this.state.button === '') {
-	      return null;
-	    } else if (this.state.button === 'signup') {
-	      return React.createElement(
+	  renderBottom: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
 	        'div',
-	        { className: 'sign-up-page-container' },
-	        React.createElement(SignUpForm, null),
+	        { className: 'bottom-slogan-container' },
 	        React.createElement(
-	          'button',
-	          { className: 'session-sign-up-cancel-button', onClick: this.handleCancel },
-	          'Cancel'
-	        )
-	      );
-	    } else if (this.state.button === 'signin') {
-	      return React.createElement(
-	        'div',
-	        { className: 'log-in-page-container' },
-	        React.createElement(LogInForm, null),
-	        React.createElement(
-	          'button',
-	          { className: 'session-log-in-cancel-button', onClick: this.handleCancel },
-	          'Cancel'
-	        )
-	      );
-	    }
-	  },
-	
-	  switchButton: function () {
-	    if (this.state.currentUser) {
-	      return React.createElement(
-	        'div',
-	        { className: 'logged-user-container' },
-	        React.createElement(
-	          'div',
-	          { className: 'log-out-btn-container' },
-	          React.createElement(
-	            'button',
-	            { onClick: this.handleLogOut, className: 'log-out-btn' },
-	            'Log out'
-	          )
+	          'h2',
+	          { className: 'bottom-slogan' },
+	          'Beyond your dreams, within your reach'
 	        ),
 	        React.createElement(
 	          'h4',
-	          { className: 'username-container' },
-	          'Hello, ',
-	          this.state.currentUser.username
+	          { className: 'bottom-statement' },
+	          'Smiling faces, beautiful places'
 	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'login-signup-button' },
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
 	        React.createElement(
 	          'div',
-	          { className: 'log-in-container' },
+	          { onClick: this.clickSF, className: 'bottom-img-container' },
+	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761877/San-Francisco_yrkwsa.jpg' }),
 	          React.createElement(
-	            'button',
-	            { onClick: this.toSignInForm, id: 'log-in-btn-id', className: 'log-in-btn' },
-	            'Sign In'
+	            'h4',
+	            null,
+	            'San Francisco'
 	          )
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'sign-up-container' },
+	          { onClick: this.clickNY, className: 'bottom-img-container' },
+	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458763132/NYC_vtxnx3.jpg' }),
 	          React.createElement(
-	            'button',
-	            { onClick: this.toSignUpForm, className: 'sign-up-btn' },
-	            'Sign Up'
+	            'h4',
+	            null,
+	            'New York'
 	          )
 	        ),
-	        this.renderForm()
-	      );
-	    }
+	        React.createElement(
+	          'div',
+	          { onClick: this.clickCupertino, className: 'bottom-img-container' },
+	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761884/Cupertino_qkbj9n.jpg' }),
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Cupertino'
+	          )
+	        )
+	      )
+	    );
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'session-container' },
-	      this.switchButton()
+	      { className: 'land-page' },
+	      React.createElement(
+	        'div',
+	        { className: 'middle-container' },
+	        this.renderSlogan(),
+	        React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/v1458690030/home_page_background_ekcb9g_wwbu2k.jpg', className: 'landing-page-img' }),
+	        React.createElement(
+	          'div',
+	          { className: 'home-page-search-bar' },
+	          React.createElement(Search, { history: this.props.history })
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'bottom-container' },
+	        this.renderBottom()
+	      ),
+	      React.createElement(Footer, null)
 	    );
 	  }
 	});
 	
-	module.exports = Session;
+	module.exports = LandingPage;
 
 /***/ },
 /* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(215);
-	var ApiUtil = __webpack_require__(219);
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	var LinkedStateMixin = __webpack_require__(215);
 	
-	var SessionActions = {
-	  receiveCurrentUser: function (user) {
-	    AppDispatcher.dispatch({
-	      actionType: 'RECEIVE_CURRENT_USER',
-	      user: user
-	    });
+	var CarStore = __webpack_require__(219);
+	var SearchActions = __webpack_require__(241);
+	
+	var Search = React.createClass({
+	  displayName: 'Search',
+	
+	
+	  mixins: [LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return { searchValue: '',
+	      center: {}
+	    };
 	  },
 	
-	  removeCurrentUser: function () {
-	    AppDispatcher.dispatch({
-	      actionType: 'REMOVE_CURRENT_USER'
-	    });
+	  handleSubmit: function (e) {
+	    var transfer = function (string) {
+	      var array = string.split(' ');
+	      var outPutArray = array.map(function (string) {
+	        return string.toLowerCase().charAt(0).toUpperCase() + string.slice(1);
+	      });
+	      return outPutArray.join(' ');
+	    };
+	    var city = transfer(this.state.searchValue);
+	    e.preventDefault(); //let the output stay in same page.
+	    // SearchActions.fetchCarsInCity(city);
+	    SearchActions.fetchCenterLatLng(city);
+	    this.props.history.pushState(null, '/cars', { city: city }); //push city to path, then refresh page will fetch Cars by city again.
 	  },
 	
-	  receiveNewUser: function (user) {
-	    AppDispatcher.dispatch({
-	      actionType: 'RECEIVE_NEW_USER',
-	      user: user
-	    });
-	  },
+	  render: function () {
 	
-	  showError: function (error) {
-	    AppDispatcher.dispatch({
-	      actionType: 'ERROR',
-	      error: error
-	    });
-	  },
-	
-	  cleanError: function () {
-	    AppDispatcher.dispatch({
-	      actionType: 'CLEAN_ERROR'
-	    });
-	  },
-	
-	  fetchCurrentUser: function () {
-	    ApiUtil.fetchCurrentUser(this.receiveCurrentUser);
-	  },
-	
-	  logIn: function (credential) {
-	    ApiUtil.createSession(credential, this.receiveCurrentUser, this.cleanError, this.showError);
-	  },
-	
-	  logOut: function () {
-	    ApiUtil.deleteSession(this.removeCurrentUser);
-	  },
-	
-	  signUp: function (userAttributes) {
-	    ApiUtil.createUser(userAttributes, this.receiveNewUser, this.cleanError, this.showError);
+	    return React.createElement(
+	      'div',
+	      { className: 'searchbar-container' },
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, className: 'search-bar' },
+	        React.createElement(
+	          'span',
+	          { className: 'search-bar-span screen-reader-only' },
+	          'Where do you want to go?'
+	        ),
+	        React.createElement('input', { type: 'text', placeholder: 'Where do you want to go?', className: 'search-bar-input', valueLink: this.linkState('searchValue') }),
+	        React.createElement('input', { type: 'submit', className: 'search-bar-submit-btn btn-primary', value: 'Search' })
+	      )
+	    );
 	  }
-	};
+	});
 	
-	module.exports = SessionActions;
+	module.exports = Search;
 
 /***/ },
 /* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(216).Dispatcher;
-	
-	module.exports = new Dispatcher();
+	module.exports = __webpack_require__(216);
 
 /***/ },
 /* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-	
-	module.exports.Dispatcher = __webpack_require__(217);
-
-
-/***/ },
-/* 217 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright (c) 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Dispatcher
-	 * 
-	 * @preventMunge
-	 */
-	
-	'use strict';
-	
-	exports.__esModule = true;
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	var invariant = __webpack_require__(218);
-	
-	var _prefix = 'ID_';
-	
-	/**
-	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
-	 * different from generic pub-sub systems in two ways:
-	 *
-	 *   1) Callbacks are not subscribed to particular events. Every payload is
-	 *      dispatched to every registered callback.
-	 *   2) Callbacks can be deferred in whole or part until other callbacks have
-	 *      been executed.
-	 *
-	 * For example, consider this hypothetical flight destination form, which
-	 * selects a default city when a country is selected:
-	 *
-	 *   var flightDispatcher = new Dispatcher();
-	 *
-	 *   // Keeps track of which country is selected
-	 *   var CountryStore = {country: null};
-	 *
-	 *   // Keeps track of which city is selected
-	 *   var CityStore = {city: null};
-	 *
-	 *   // Keeps track of the base flight price of the selected city
-	 *   var FlightPriceStore = {price: null}
-	 *
-	 * When a user changes the selected city, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'city-update',
-	 *     selectedCity: 'paris'
-	 *   });
-	 *
-	 * This payload is digested by `CityStore`:
-	 *
-	 *   flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'city-update') {
-	 *       CityStore.city = payload.selectedCity;
-	 *     }
-	 *   });
-	 *
-	 * When the user selects a country, we dispatch the payload:
-	 *
-	 *   flightDispatcher.dispatch({
-	 *     actionType: 'country-update',
-	 *     selectedCountry: 'australia'
-	 *   });
-	 *
-	 * This payload is digested by both stores:
-	 *
-	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       CountryStore.country = payload.selectedCountry;
-	 *     }
-	 *   });
-	 *
-	 * When the callback to update `CountryStore` is registered, we save a reference
-	 * to the returned token. Using this token with `waitFor()`, we can guarantee
-	 * that `CountryStore` is updated before the callback that updates `CityStore`
-	 * needs to query its data.
-	 *
-	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
-	 *     if (payload.actionType === 'country-update') {
-	 *       // `CountryStore.country` may not be updated.
-	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
-	 *       // `CountryStore.country` is now guaranteed to be updated.
-	 *
-	 *       // Select the default city for the new country
-	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
-	 *     }
-	 *   });
-	 *
-	 * The usage of `waitFor()` can be chained, for example:
-	 *
-	 *   FlightPriceStore.dispatchToken =
-	 *     flightDispatcher.register(function(payload) {
-	 *       switch (payload.actionType) {
-	 *         case 'country-update':
-	 *         case 'city-update':
-	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
-	 *           FlightPriceStore.price =
-	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
-	 *           break;
-	 *     }
-	 *   });
-	 *
-	 * The `country-update` payload will be guaranteed to invoke the stores'
-	 * registered callbacks in order: `CountryStore`, `CityStore`, then
-	 * `FlightPriceStore`.
-	 */
-	
-	var Dispatcher = (function () {
-	  function Dispatcher() {
-	    _classCallCheck(this, Dispatcher);
-	
-	    this._callbacks = {};
-	    this._isDispatching = false;
-	    this._isHandled = {};
-	    this._isPending = {};
-	    this._lastID = 1;
-	  }
-	
-	  /**
-	   * Registers a callback to be invoked with every dispatched payload. Returns
-	   * a token that can be used with `waitFor()`.
-	   */
-	
-	  Dispatcher.prototype.register = function register(callback) {
-	    var id = _prefix + this._lastID++;
-	    this._callbacks[id] = callback;
-	    return id;
-	  };
-	
-	  /**
-	   * Removes a callback based on its token.
-	   */
-	
-	  Dispatcher.prototype.unregister = function unregister(id) {
-	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	    delete this._callbacks[id];
-	  };
-	
-	  /**
-	   * Waits for the callbacks specified to be invoked before continuing execution
-	   * of the current callback. This method should only be used by a callback in
-	   * response to a dispatched payload.
-	   */
-	
-	  Dispatcher.prototype.waitFor = function waitFor(ids) {
-	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
-	    for (var ii = 0; ii < ids.length; ii++) {
-	      var id = ids[ii];
-	      if (this._isPending[id]) {
-	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
-	        continue;
-	      }
-	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
-	      this._invokeCallback(id);
-	    }
-	  };
-	
-	  /**
-	   * Dispatches a payload to all registered callbacks.
-	   */
-	
-	  Dispatcher.prototype.dispatch = function dispatch(payload) {
-	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
-	    this._startDispatching(payload);
-	    try {
-	      for (var id in this._callbacks) {
-	        if (this._isPending[id]) {
-	          continue;
-	        }
-	        this._invokeCallback(id);
-	      }
-	    } finally {
-	      this._stopDispatching();
-	    }
-	  };
-	
-	  /**
-	   * Is this Dispatcher currently dispatching.
-	   */
-	
-	  Dispatcher.prototype.isDispatching = function isDispatching() {
-	    return this._isDispatching;
-	  };
-	
-	  /**
-	   * Call the callback stored with the given id. Also do some internal
-	   * bookkeeping.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
-	    this._isPending[id] = true;
-	    this._callbacks[id](this._pendingPayload);
-	    this._isHandled[id] = true;
-	  };
-	
-	  /**
-	   * Set up bookkeeping needed when dispatching.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
-	    for (var id in this._callbacks) {
-	      this._isPending[id] = false;
-	      this._isHandled[id] = false;
-	    }
-	    this._pendingPayload = payload;
-	    this._isDispatching = true;
-	  };
-	
-	  /**
-	   * Clear bookkeeping used for dispatching.
-	   *
-	   * @internal
-	   */
-	
-	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
-	    delete this._pendingPayload;
-	    this._isDispatching = false;
-	  };
-	
-	  return Dispatcher;
-	})();
-	
-	module.exports = Dispatcher;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-/***/ },
-/* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-2015, Facebook, Inc.
 	 * All rights reserved.
 	 *
@@ -25010,260 +24758,266 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule invariant
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
 	 */
 	
-	"use strict";
+	'use strict';
+	
+	var ReactLink = __webpack_require__(217);
+	var ReactStateSetters = __webpack_require__(218);
 	
 	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
+	 * A simple mixin around ReactLink.forState().
 	 */
-	
-	var invariant = function (condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-	
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
-	        return args[argIndex++];
-	      }));
-	    }
-	
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
 	  }
 	};
 	
-	module.exports = invariant;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+	
+	var React = __webpack_require__(2);
+	
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+	
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+	
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+	
+	module.exports = ReactLink;
+
+/***/ },
+/* 218 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+	
+	'use strict';
+	
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+	
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+	
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+	
+	module.exports = ReactStateSetters;
 
 /***/ },
 /* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(215);
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(238);
+	var CarStore = new Store(AppDispatcher);
+	var _cars = [];
 	
-	var ApiUtil = {
-	  fetchCarsInCity: function (city, receiveCars) {
-	    $.ajax({
-	      url: '/api/cars',
-	      data: { car: { city: city } },
-	      type: 'GET',
-	      success: function (cars) {
-	        receiveCars(cars);
-	      }
-	    });
-	  },
-	
-	  // searchCarsInCity: function(city, receiveCars) {
-	  //   $.ajax ({
-	  //     url: '/api/cars',
-	  //     data: {car: {city: city}},
-	  //     type: 'GET',
-	  //     success: function(cars) {
-	  //       receiveCars(cars);
-	  //       }
-	  //     })
-	  // },
-	
-	  fetchCenterLatLng: function (city, receiveLocation) {
-	    $.getJSON({
-	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
-	      success: function (result) {
-	        if (result.results[0]) {
-	          //if request did not get any useful info, result.results[0] is undefined
-	          var location = result.results[0].geometry.location;
-	        } else {
-	          var location = undefined;
-	        }
-	        receiveLocation(location);
-	      }
-	    });
-	  },
-	
-	  fetchCarsByBounds: function (bounds, receiveCars) {
-	    $.ajax({
-	      url: '/api/cars',
-	      data: { car: { bounds: bounds } },
-	      type: 'GET',
-	      success: function (cars) {
-	        receiveCars(cars);
-	      }
-	    });
-	  },
-	
-	  fetchCarById: function (carId, receiveSingleCar) {
-	    $.ajax({
-	      url: '/api/cars/' + carId,
-	      type: 'GET',
-	      success: function (car) {
-	        receiveSingleCar(car);
-	      }
-	    });
-	  },
-	
-	  makeRequest: function (startDate, endDate, carId, userId, receiveRequest, showMessage) {
-	    $.ajax({
-	      url: '/api/requests',
-	      data: { request: { start_date: startDate, end_date: endDate, car_id: carId, user_id: userId } },
-	      type: 'POST',
-	      success: function (request) {
-	        receiveRequest(request);
-	      },
-	      error: function (error) {
-	        showMessage(error.responseJSON.message);
-	      }
-	    });
-	  },
-	
-	  fetchLatLng: function (street, city, state, handleCreate) {
-	    $.getJSON({
-	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
-	      success: function (result) {
-	        if (result.results[0]) {
-	          //if request did not get any useful info, result.results[0] is undefined
-	          var location = result.results[0].geometry.location;
-	        }
-	        handleCreate(location);
-	      }
-	    });
-	  },
-	
-	  createCar: function (carAttributes, redirectPage, cleanError, showError) {
-	    $.ajax({
-	      url: '/api/cars',
-	      data: { car: carAttributes },
-	      type: 'POST',
-	      success: function (response) {
-	        cleanError();
-	        redirectPage(response.id);
-	      },
-	      error: function (error) {
-	        showError(error.responseJSON.message);
-	      }
-	    });
-	  },
-	
-	  fetchCurrentUser: function (receiveCurrentUser) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'GET',
-	      success: function (user) {
-	        receiveCurrentUser(user);
-	      }
-	    });
-	  },
-	
-	  createSession: function (credential, receiveCurrentUser, cleanError, showError) {
-	    $.ajax({
-	      url: '/api/session',
-	      data: { user: credential },
-	      type: 'POST',
-	      success: function (user) {
-	        cleanError();
-	        receiveCurrentUser(user);
-	      },
-	      error: function (error) {
-	        showError(error.responseJSON.message);
-	      }
-	    });
-	  },
-	
-	  deleteSession: function (removeCurrentUser) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'DELETE',
-	      success: function () {
-	        removeCurrentUser();
-	      }
-	    });
-	  },
-	
-	  createUser: function (userAttributes, receiveNewUser, cleanError, showError) {
-	    $.ajax({
-	      url: '/api/users',
-	      data: { user: userAttributes },
-	      type: 'POST',
-	      success: function (user) {
-	        cleanError();
-	        receiveNewUser(user);
-	      },
-	      error: function (error) {
-	        showError(error.responseJSON.message);
-	      }
-	    });
+	CarStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "RECEIVE_CARS":
+	      this.receiveCars(payload.cars);
+	      CarStore.__emitChange();
+	      break;
+	    case "RECEIVE_SINGLE_CAR":
+	      this.receiveSingleCar(payload.car);
+	      CarStore.__emitChange();
+	      break;
 	  }
 	};
 	
-	module.exports = ApiUtil;
+	CarStore.all = function () {
+	  return _cars.slice(0);
+	};
+	
+	CarStore.receiveCars = function (cars) {
+	  _cars = cars;
+	};
+	
+	CarStore.receiveSingleCar = function (car) {
+	  _cars = [car];
+	};
+	
+	CarStore.findCarById = function (id) {
+	  var returnObj;
+	  _cars.forEach(function (car) {
+	    if (car.id == id) {
+	      returnObj = car;
+	    }
+	  });
+	  return returnObj;
+	};
+	
+	module.exports = CarStore;
 
 /***/ },
 /* 220 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(221).Store;
-	var AppDispatcher = __webpack_require__(215);
-	var UserStore = new Store(AppDispatcher);
-	
-	var _user = undefined;
-	
-	UserStore.receiveUser = function (user) {
-	  _user = user;
-	};
-	
-	UserStore.removeUser = function () {
-	  _user = undefined;
-	};
-	
-	UserStore.all = function () {
-	  return _user;
-	};
-	
-	UserStore.isLoggedIn = function () {
-	  if (_user) {
-	    return true;
-	  } else {
-	    return false;
-	  }
-	};
-	
-	UserStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "RECEIVE_CURRENT_USER":
-	      this.receiveUser(payload.user);
-	      UserStore.__emitChange();
-	      break;
-	    case "RECEIVE_NEW_USER":
-	      this.receiveUser(payload.user);
-	      UserStore.__emitChange();
-	      break;
-	    case "REMOVE_CURRENT_USER":
-	      this.removeUser();
-	      UserStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = UserStore;
-
-/***/ },
-/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25275,7 +25029,7 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(222);
+	module.exports.Container = __webpack_require__(221);
 	module.exports.MapStore = __webpack_require__(225);
 	module.exports.Mixin = __webpack_require__(237);
 	module.exports.ReduceStore = __webpack_require__(226);
@@ -25283,7 +25037,7 @@
 
 
 /***/ },
-/* 222 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25305,9 +25059,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(223);
+	var FluxStoreGroup = __webpack_require__(222);
 	
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	var shallowEqual = __webpack_require__(224);
 	
 	var DEFAULT_OPTIONS = {
@@ -25466,7 +25220,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 223 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25485,7 +25239,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -25544,6 +25298,61 @@
 	}
 	
 	module.exports = FluxStoreGroup;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+	
+	"use strict";
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
@@ -25626,7 +25435,7 @@
 	var FluxReduceStore = __webpack_require__(226);
 	var Immutable = __webpack_require__(236);
 	
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -25776,7 +25585,7 @@
 	var FluxStore = __webpack_require__(227);
 	
 	var abstractMethod = __webpack_require__(235);
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25882,7 +25691,7 @@
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -26589,7 +26398,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -31603,9 +31412,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(223);
+	var FluxStoreGroup = __webpack_require__(222);
 	
-	var invariant = __webpack_require__(218);
+	var invariant = __webpack_require__(223);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -31712,626 +31521,269 @@
 /* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(239);
+	var Dispatcher = __webpack_require__(239).Dispatcher;
 	
-	var SessionActions = __webpack_require__(214);
-	var UserStore = __webpack_require__(220);
-	var MessageStore = __webpack_require__(243);
-	
-	var LogInForm = React.createClass({
-	  displayName: 'LogInForm',
-	
-	
-	  mixins: [LinkedStateMixin],
-	
-	  getInitialState: function () {
-	    return {
-	      user: undefined,
-	      error: [],
-	      username: '',
-	      password: ''
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.token1 = UserStore.addListener(this.updateUser);
-	    this.token2 = MessageStore.addListener(this.updateMessage);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.token1.remove();
-	    this.token2.remove();
-	  },
-	
-	  updateUser: function () {
-	    this.setState({ user: UserStore.all() });
-	    this.setState({ username: '' });
-	    this.setState({ password: '' });
-	  },
-	
-	  updateMessage: function () {
-	    this.setState({ error: MessageStore.error() });
-	  },
-	
-	  renderError: function (error) {
-	    if (error.length > 0) {
-	      var returnArray = [];
-	      error.forEach(function (message) {
-	        returnArray.push(React.createElement(
-	          'li',
-	          { className: 'error-message' },
-	          message
-	        ));
-	      });
-	      return returnArray;
-	    } else {
-	      return null;
-	    }
-	  },
-	
-	  handleAutoFill: function () {
-	    // SessionActions.login({
-	    //   username: 'wsmars',
-	    //   password: 123456
-	    // });
-	    this.setState({ username: 'wsmars', password: 123456 });
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    SessionActions.logIn({
-	      username: this.state.username,
-	      password: this.state.password
-	    });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'log-in-form-container' },
-	      React.createElement(
-	        'h4',
-	        { className: 'log-in-title' },
-	        'Log In'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'log-in-form-title-border' },
-	        ' '
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'log-in-form', onSubmit: this.handleSubmit },
-	        React.createElement('input', { className: 'log-in-username-input', placeholder: 'Username', type: 'text', valueLink: this.linkState('username') }),
-	        React.createElement('input', { className: 'log-in-password-input', placeholder: 'Password', type: 'password', valueLink: this.linkState('password') }),
-	        React.createElement(
-	          'div',
-	          { className: 'log-in-form-btn-border' },
-	          '  '
-	        ),
-	        React.createElement('input', { className: 'log-in-submit-btn', type: 'submit', value: 'Sign In' })
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'log-in-auto-fill-btn', onClick: this.handleAutoFill },
-	        'Demo Login'
-	      ),
-	      React.createElement(
-	        'div',
-	        null,
-	        this.renderError(this.state.error)
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = LogInForm;
+	module.exports = new Dispatcher();
 
 /***/ },
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(240);
+	/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	module.exports.Dispatcher = __webpack_require__(240);
+
 
 /***/ },
 /* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2014-2015, Facebook, Inc.
 	 * All rights reserved.
 	 *
 	 * This source code is licensed under the BSD-style license found in the
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule LinkedStateMixin
-	 * @typechecks static-only
+	 * @providesModule Dispatcher
+	 * 
+	 * @preventMunge
 	 */
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(241);
-	var ReactStateSetters = __webpack_require__(242);
+	exports.__esModule = true;
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	var invariant = __webpack_require__(223);
+	
+	var _prefix = 'ID_';
 	
 	/**
-	 * A simple mixin around ReactLink.forState().
+	 * Dispatcher is used to broadcast payloads to registered callbacks. This is
+	 * different from generic pub-sub systems in two ways:
+	 *
+	 *   1) Callbacks are not subscribed to particular events. Every payload is
+	 *      dispatched to every registered callback.
+	 *   2) Callbacks can be deferred in whole or part until other callbacks have
+	 *      been executed.
+	 *
+	 * For example, consider this hypothetical flight destination form, which
+	 * selects a default city when a country is selected:
+	 *
+	 *   var flightDispatcher = new Dispatcher();
+	 *
+	 *   // Keeps track of which country is selected
+	 *   var CountryStore = {country: null};
+	 *
+	 *   // Keeps track of which city is selected
+	 *   var CityStore = {city: null};
+	 *
+	 *   // Keeps track of the base flight price of the selected city
+	 *   var FlightPriceStore = {price: null}
+	 *
+	 * When a user changes the selected city, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'city-update',
+	 *     selectedCity: 'paris'
+	 *   });
+	 *
+	 * This payload is digested by `CityStore`:
+	 *
+	 *   flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'city-update') {
+	 *       CityStore.city = payload.selectedCity;
+	 *     }
+	 *   });
+	 *
+	 * When the user selects a country, we dispatch the payload:
+	 *
+	 *   flightDispatcher.dispatch({
+	 *     actionType: 'country-update',
+	 *     selectedCountry: 'australia'
+	 *   });
+	 *
+	 * This payload is digested by both stores:
+	 *
+	 *   CountryStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       CountryStore.country = payload.selectedCountry;
+	 *     }
+	 *   });
+	 *
+	 * When the callback to update `CountryStore` is registered, we save a reference
+	 * to the returned token. Using this token with `waitFor()`, we can guarantee
+	 * that `CountryStore` is updated before the callback that updates `CityStore`
+	 * needs to query its data.
+	 *
+	 *   CityStore.dispatchToken = flightDispatcher.register(function(payload) {
+	 *     if (payload.actionType === 'country-update') {
+	 *       // `CountryStore.country` may not be updated.
+	 *       flightDispatcher.waitFor([CountryStore.dispatchToken]);
+	 *       // `CountryStore.country` is now guaranteed to be updated.
+	 *
+	 *       // Select the default city for the new country
+	 *       CityStore.city = getDefaultCityForCountry(CountryStore.country);
+	 *     }
+	 *   });
+	 *
+	 * The usage of `waitFor()` can be chained, for example:
+	 *
+	 *   FlightPriceStore.dispatchToken =
+	 *     flightDispatcher.register(function(payload) {
+	 *       switch (payload.actionType) {
+	 *         case 'country-update':
+	 *         case 'city-update':
+	 *           flightDispatcher.waitFor([CityStore.dispatchToken]);
+	 *           FlightPriceStore.price =
+	 *             getFlightPriceStore(CountryStore.country, CityStore.city);
+	 *           break;
+	 *     }
+	 *   });
+	 *
+	 * The `country-update` payload will be guaranteed to invoke the stores'
+	 * registered callbacks in order: `CountryStore`, `CityStore`, then
+	 * `FlightPriceStore`.
 	 */
-	var LinkedStateMixin = {
-	  /**
-	   * Create a ReactLink that's linked to part of this component's state. The
-	   * ReactLink will have the current value of this.state[key] and will call
-	   * setState() when a change is requested.
-	   *
-	   * @param {string} key state key to update. Note: you may want to use keyOf()
-	   * if you're using Google Closure Compiler advanced mode.
-	   * @return {ReactLink} ReactLink instance linking to the state.
-	   */
-	  linkState: function (key) {
-	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
-	  }
-	};
 	
-	module.exports = LinkedStateMixin;
+	var Dispatcher = (function () {
+	  function Dispatcher() {
+	    _classCallCheck(this, Dispatcher);
+	
+	    this._callbacks = {};
+	    this._isDispatching = false;
+	    this._isHandled = {};
+	    this._isPending = {};
+	    this._lastID = 1;
+	  }
+	
+	  /**
+	   * Registers a callback to be invoked with every dispatched payload. Returns
+	   * a token that can be used with `waitFor()`.
+	   */
+	
+	  Dispatcher.prototype.register = function register(callback) {
+	    var id = _prefix + this._lastID++;
+	    this._callbacks[id] = callback;
+	    return id;
+	  };
+	
+	  /**
+	   * Removes a callback based on its token.
+	   */
+	
+	  Dispatcher.prototype.unregister = function unregister(id) {
+	    !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.unregister(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	    delete this._callbacks[id];
+	  };
+	
+	  /**
+	   * Waits for the callbacks specified to be invoked before continuing execution
+	   * of the current callback. This method should only be used by a callback in
+	   * response to a dispatched payload.
+	   */
+	
+	  Dispatcher.prototype.waitFor = function waitFor(ids) {
+	    !this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Must be invoked while dispatching.') : invariant(false) : undefined;
+	    for (var ii = 0; ii < ids.length; ii++) {
+	      var id = ids[ii];
+	      if (this._isPending[id]) {
+	        !this._isHandled[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): Circular dependency detected while ' + 'waiting for `%s`.', id) : invariant(false) : undefined;
+	        continue;
+	      }
+	      !this._callbacks[id] ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatcher.waitFor(...): `%s` does not map to a registered callback.', id) : invariant(false) : undefined;
+	      this._invokeCallback(id);
+	    }
+	  };
+	
+	  /**
+	   * Dispatches a payload to all registered callbacks.
+	   */
+	
+	  Dispatcher.prototype.dispatch = function dispatch(payload) {
+	    !!this._isDispatching ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch.') : invariant(false) : undefined;
+	    this._startDispatching(payload);
+	    try {
+	      for (var id in this._callbacks) {
+	        if (this._isPending[id]) {
+	          continue;
+	        }
+	        this._invokeCallback(id);
+	      }
+	    } finally {
+	      this._stopDispatching();
+	    }
+	  };
+	
+	  /**
+	   * Is this Dispatcher currently dispatching.
+	   */
+	
+	  Dispatcher.prototype.isDispatching = function isDispatching() {
+	    return this._isDispatching;
+	  };
+	
+	  /**
+	   * Call the callback stored with the given id. Also do some internal
+	   * bookkeeping.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._invokeCallback = function _invokeCallback(id) {
+	    this._isPending[id] = true;
+	    this._callbacks[id](this._pendingPayload);
+	    this._isHandled[id] = true;
+	  };
+	
+	  /**
+	   * Set up bookkeeping needed when dispatching.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._startDispatching = function _startDispatching(payload) {
+	    for (var id in this._callbacks) {
+	      this._isPending[id] = false;
+	      this._isHandled[id] = false;
+	    }
+	    this._pendingPayload = payload;
+	    this._isDispatching = true;
+	  };
+	
+	  /**
+	   * Clear bookkeeping used for dispatching.
+	   *
+	   * @internal
+	   */
+	
+	  Dispatcher.prototype._stopDispatching = function _stopDispatching() {
+	    delete this._pendingPayload;
+	    this._isDispatching = false;
+	  };
+	
+	  return Dispatcher;
+	})();
+	
+	module.exports = Dispatcher;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
 /* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLink
-	 * @typechecks static-only
-	 */
-	
-	'use strict';
-	
-	/**
-	 * ReactLink encapsulates a common pattern in which a component wants to modify
-	 * a prop received from its parent. ReactLink allows the parent to pass down a
-	 * value coupled with a callback that, when invoked, expresses an intent to
-	 * modify that value. For example:
-	 *
-	 * React.createClass({
-	 *   getInitialState: function() {
-	 *     return {value: ''};
-	 *   },
-	 *   render: function() {
-	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
-	 *     return <input valueLink={valueLink} />;
-	 *   },
-	 *   _handleValueChange: function(newValue) {
-	 *     this.setState({value: newValue});
-	 *   }
-	 * });
-	 *
-	 * We have provided some sugary mixins to make the creation and
-	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
-	 */
-	
-	var React = __webpack_require__(2);
-	
-	/**
-	 * @param {*} value current value of the link
-	 * @param {function} requestChange callback to request a change
-	 */
-	function ReactLink(value, requestChange) {
-	  this.value = value;
-	  this.requestChange = requestChange;
-	}
-	
-	/**
-	 * Creates a PropType that enforces the ReactLink API and optionally checks the
-	 * type of the value being passed inside the link. Example:
-	 *
-	 * MyComponent.propTypes = {
-	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
-	 * }
-	 */
-	function createLinkTypeChecker(linkType) {
-	  var shapes = {
-	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
-	    requestChange: React.PropTypes.func.isRequired
-	  };
-	  return React.PropTypes.shape(shapes);
-	}
-	
-	ReactLink.PropTypes = {
-	  link: createLinkTypeChecker
-	};
-	
-	module.exports = ReactLink;
-
-/***/ },
-/* 242 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactStateSetters
-	 */
-	
-	'use strict';
-	
-	var ReactStateSetters = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (component, funcReturningState) {
-	    return function (a, b, c, d, e, f) {
-	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
-	      if (partialState) {
-	        component.setState(partialState);
-	      }
-	    };
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (component, key) {
-	    // Memoize the setters.
-	    var cache = component.__keySetters || (component.__keySetters = {});
-	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
-	  }
-	};
-	
-	function createStateKeySetter(component, key) {
-	  // Partial state is allocated outside of the function closure so it can be
-	  // reused with every call, avoiding memory allocation when this function
-	  // is called.
-	  var partialState = {};
-	  return function stateKeySetter(value) {
-	    partialState[key] = value;
-	    component.setState(partialState);
-	  };
-	}
-	
-	ReactStateSetters.Mixin = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateSetter(function(xValue) {
-	   *     return {x: xValue};
-	   *   })(1);
-	   *
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (funcReturningState) {
-	    return ReactStateSetters.createStateSetter(this, funcReturningState);
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateKeySetter('x')(1);
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (key) {
-	    return ReactStateSetters.createStateKeySetter(this, key);
-	  }
-	};
-	
-	module.exports = ReactStateSetters;
-
-/***/ },
-/* 243 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(221).Store;
-	var AppDispatcher = __webpack_require__(215);
-	var MessageStore = new Store(AppDispatcher);
-	
-	var _error = [];
-	var _message = [];
-	
-	MessageStore.error = function () {
-	  return _error.slice(0);
-	};
-	
-	MessageStore.message = function () {
-	  return _message.slice(0);
-	};
-	
-	MessageStore.receiveError = function (error) {
-	  _error = error;
-	};
-	
-	MessageStore.receiveMessage = function (message) {
-	  _message = message;
-	};
-	
-	MessageStore.cleanMessage = function () {
-	  _error = [];
-	  _message = [];
-	};
-	
-	MessageStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "ERROR":
-	      this.receiveError(payload.error);
-	      MessageStore.__emitChange();
-	      break;
-	    case "MESSAGE":
-	      this.receiveMessage(payload.message);
-	      MessageStore.__emitChange();
-	      break;
-	    case "CLEAN_ERROR":
-	      this.cleanMessage();
-	      MessageStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = MessageStore;
-
-/***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(239);
-	
-	var SessionActions = __webpack_require__(214);
-	var UserStore = __webpack_require__(220);
-	var MessageStore = __webpack_require__(243);
-	
-	var SignUpForm = React.createClass({
-	  displayName: 'SignUpForm',
-	
-	  mixins: [LinkedStateMixin],
-	
-	  getInitialState: function () {
-	    return {
-	      user: undefined,
-	      error: [],
-	      username: '',
-	      password: '',
-	      passwordConfirmation: '',
-	      email: ''
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.token1 = UserStore.addListener(this.updateUser);
-	    this.token2 = MessageStore.addListener(this.updateMessage);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.token1.remove();
-	    this.token2.remove();
-	  },
-	
-	  updateUser: function () {
-	    this.setState({ user: UserStore.all() });
-	  },
-	
-	  updateMessage: function () {
-	    this.setState({ error: MessageStore.error() });
-	  },
-	
-	  renderError: function (error) {
-	    if (error.length > 0) {
-	      var returnArray = [];
-	      error.forEach(function (message) {
-	        returnArray.push(React.createElement(
-	          'li',
-	          { className: 'error-message' },
-	          '- ',
-	          message
-	        ));
-	      });
-	      return returnArray;
-	    } else {
-	      return null;
-	    }
-	  },
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    SessionActions.signUp({
-	      username: this.state.username,
-	      password: this.state.password,
-	      password_confirmation: this.state.passwordConfirmation,
-	      email: this.state.email
-	    });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'sign-up-form-container' },
-	      React.createElement(
-	        'h4',
-	        { className: 'sign-up-title' },
-	        'Sign Up'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'sign-up-form-title-border' },
-	        ' '
-	      ),
-	      React.createElement(
-	        'form',
-	        { className: 'sign-up-form', onSubmit: this.handleSubmit },
-	        React.createElement('input', { className: 'sign-up-username-input', placeholder: 'Username', type: 'text', valueLink: this.linkState('username') }),
-	        React.createElement('input', { className: 'sign-up-password-input', placeholder: 'Password', type: 'password', valueLink: this.linkState('password') }),
-	        React.createElement('input', { className: 'sign-up-password-confirmation-input', placeholder: 'Confirm Password', type: 'password', valueLink: this.linkState('passwordConfirmation') }),
-	        React.createElement('input', { className: 'sign-up-email-input', placeholder: 'Email', type: 'text', valueLink: this.linkState('email') }),
-	        React.createElement(
-	          'div',
-	          { className: 'sign-up-form-btn-border' },
-	          '  '
-	        ),
-	        React.createElement('input', { className: 'sign-up-submit-btn', type: 'submit', value: 'Sign Up' })
-	      ),
-	      React.createElement(
-	        'div',
-	        null,
-	        this.renderError(this.state.error)
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = SignUpForm;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	var LinkedStateMixin = __webpack_require__(239);
-	
-	var CarStore = __webpack_require__(246);
-	var SearchActions = __webpack_require__(247);
-	
-	var Search = React.createClass({
-	  displayName: 'Search',
-	
-	
-	  mixins: [LinkedStateMixin],
-	
-	  getInitialState: function () {
-	    return { searchValue: '',
-	      center: {}
-	    };
-	  },
-	
-	  handleSubmit: function (e) {
-	    var transfer = function (string) {
-	      var array = string.split(' ');
-	      var outPutArray = array.map(function (string) {
-	        return string.toLowerCase().charAt(0).toUpperCase() + string.slice(1);
-	      });
-	      return outPutArray.join(' ');
-	    };
-	    var city = transfer(this.state.searchValue);
-	    e.preventDefault(); //let the output stay in same page.
-	    // SearchActions.fetchCarsInCity(city);
-	    SearchActions.fetchCenterLatLng(city);
-	    this.props.history.pushState(null, '/cars', { city: city }); //push city to path, then refresh page will fetch Cars by city again.
-	  },
-	
-	  render: function () {
-	
-	    return React.createElement(
-	      'div',
-	      { className: 'searchbar-container' },
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit, className: 'search-bar' },
-	        React.createElement(
-	          'span',
-	          { className: 'search-bar-span screen-reader-only' },
-	          'Where do you want to go?'
-	        ),
-	        React.createElement('input', { type: 'text', placeholder: 'Where do you want to go?', className: 'search-bar-input', valueLink: this.linkState('searchValue') }),
-	        React.createElement('input', { type: 'submit', className: 'search-bar-submit-btn btn-primary', value: 'Search' })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = Search;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(221).Store;
-	var AppDispatcher = __webpack_require__(215);
-	var CarStore = new Store(AppDispatcher);
-	var _cars = [];
-	
-	CarStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "RECEIVE_CARS":
-	      this.receiveCars(payload.cars);
-	      CarStore.__emitChange();
-	      break;
-	    case "RECEIVE_SINGLE_CAR":
-	      this.receiveSingleCar(payload.car);
-	      CarStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	CarStore.all = function () {
-	  return _cars.slice(0);
-	};
-	
-	CarStore.receiveCars = function (cars) {
-	  _cars = cars;
-	};
-	
-	CarStore.receiveSingleCar = function (car) {
-	  _cars = [car];
-	};
-	
-	CarStore.findCarById = function (id) {
-	  var returnObj;
-	  _cars.forEach(function (car) {
-	    if (car.id == id) {
-	      returnObj = car;
-	    }
-	  });
-	  return returnObj;
-	};
-	
-	module.exports = CarStore;
-
-/***/ },
-/* 247 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(215);
-	var ApiUtil = __webpack_require__(219);
+	var AppDispatcher = __webpack_require__(238);
+	var ApiUtil = __webpack_require__(242);
 	
 	var SearchActions = {
 	  receiveCars: function (cars) {
@@ -32385,16 +31837,1059 @@
 	module.exports = SearchActions;
 
 /***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(238);
+	
+	var ApiUtil = {
+	  fetchCarsInCity: function (city, receiveCars) {
+	    $.ajax({
+	      url: '/api/cars',
+	      data: { car: { city: city } },
+	      type: 'GET',
+	      success: function (cars) {
+	        receiveCars(cars);
+	      }
+	    });
+	  },
+	
+	  // searchCarsInCity: function(city, receiveCars) {
+	  //   $.ajax ({
+	  //     url: '/api/cars',
+	  //     data: {car: {city: city}},
+	  //     type: 'GET',
+	  //     success: function(cars) {
+	  //       receiveCars(cars);
+	  //       }
+	  //     })
+	  // },
+	
+	  fetchCenterLatLng: function (city, receiveLocation) {
+	    $.getJSON({
+	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+	      success: function (result) {
+	        if (result.results[0]) {
+	          //if request did not get any useful info, result.results[0] is undefined
+	          var location = result.results[0].geometry.location;
+	        } else {
+	          var location = undefined;
+	        }
+	        receiveLocation(location);
+	      }
+	    });
+	  },
+	
+	  fetchCarsByBounds: function (bounds, receiveCars) {
+	    $.ajax({
+	      url: '/api/cars',
+	      data: { car: { bounds: bounds } },
+	      type: 'GET',
+	      success: function (cars) {
+	        receiveCars(cars);
+	      }
+	    });
+	  },
+	
+	  fetchCarById: function (carId, receiveSingleCar) {
+	    $.ajax({
+	      url: '/api/cars/' + carId,
+	      type: 'GET',
+	      success: function (car) {
+	        receiveSingleCar(car);
+	      }
+	    });
+	  },
+	
+	  makeRequest: function (startDate, endDate, carId, userId, receiveRequest, showMessage) {
+	    $.ajax({
+	      url: '/api/requests',
+	      data: { request: { start_date: startDate, end_date: endDate, car_id: carId, user_id: userId } },
+	      type: 'POST',
+	      success: function (request) {
+	        receiveRequest(request);
+	      },
+	      error: function (error) {
+	        showMessage(error.responseJSON.message);
+	      }
+	    });
+	  },
+	
+	  fetchLatLng: function (street, city, state, handleCreate) {
+	    $.getJSON({
+	      url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + '+' + street + '+' + city + '+' + state + '&key=AIzaSyD8k-wUnlZWL0lIp9n0VbsoIG0wDhOZcZE',
+	      success: function (result) {
+	        if (result.results[0]) {
+	          //if request did not get any useful info, result.results[0] is undefined
+	          var location = result.results[0].geometry.location;
+	        }
+	        handleCreate(location);
+	      }
+	    });
+	  },
+	
+	  createCar: function (carAttributes, redirectPage, cleanError, showError) {
+	    $.ajax({
+	      url: '/api/cars',
+	      data: { car: carAttributes },
+	      type: 'POST',
+	      success: function (response) {
+	        cleanError();
+	        redirectPage(response.id);
+	      },
+	      error: function (error) {
+	        showError(error.responseJSON.message);
+	      }
+	    });
+	  },
+	
+	  fetchCurrentUser: function (receiveCurrentUser) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'GET',
+	      success: function (user) {
+	        receiveCurrentUser(user);
+	      }
+	    });
+	  },
+	
+	  createSession: function (credential, receiveCurrentUser, cleanError, showError) {
+	    $.ajax({
+	      url: '/api/session',
+	      data: { user: credential },
+	      type: 'POST',
+	      success: function (user) {
+	        cleanError();
+	        receiveCurrentUser(user);
+	      },
+	      error: function (error) {
+	        showError(error.responseJSON.message);
+	      }
+	    });
+	  },
+	
+	  deleteSession: function (removeCurrentUser) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'DELETE',
+	      success: function () {
+	        removeCurrentUser();
+	      }
+	    });
+	  },
+	
+	  createUser: function (userAttributes, receiveNewUser, cleanError, showError) {
+	    $.ajax({
+	      url: '/api/users',
+	      data: { user: userAttributes },
+	      type: 'POST',
+	      success: function (user) {
+	        cleanError();
+	        receiveNewUser(user);
+	      },
+	      error: function (error) {
+	        showError(error.responseJSON.message);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = ApiUtil;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	
+	var Footer = React.createClass({
+	  displayName: 'Footer',
+	
+	
+	  renderAbout: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'about-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'about' },
+	        React.createElement(
+	          Link,
+	          { to: '/' },
+	          'About'
+	        )
+	      )
+	    );
+	  },
+	
+	  renderHome: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'footer-home-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'footer-home' },
+	        React.createElement(
+	          Link,
+	          { to: '/' },
+	          'Home'
+	        )
+	      )
+	    );
+	  },
+	
+	  renderHelp: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'footer-help-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'footer-help' },
+	        'Help'
+	      )
+	    );
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'footer-container' },
+	      this.renderHome(),
+	      this.renderHelp(),
+	      this.renderAbout()
+	    );
+	  }
+	});
+	
+	module.exports = Footer;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Link = __webpack_require__(159).Link;
+	
+	var CarStore = __webpack_require__(219);
+	var SearchActions = __webpack_require__(241);
+	var Map = __webpack_require__(245);
+	
+	var Cars = React.createClass({
+	  displayName: 'Cars',
+	
+	
+	  getInitialState: function () {
+	    return { cars: CarStore.all() };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token = CarStore.addListener(this.updateCars);
+	    // SearchActions.fetchCarsInCity(this.props.location.query.city);
+	    SearchActions.fetchCenterLatLng(this.props.location.query.city);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	
+	  updateCars: function () {
+	    this.setState({ cars: CarStore.all() });
+	  },
+	
+	  handleClick: function (e, car) {
+	    this.props.history.pushState(null, 'cars/' + car.id);
+	  },
+	
+	  parseCars: function (jsonCars) {
+	    var renderArray = [];
+	    var that = this;
+	    if (jsonCars.length > 0) {
+	      jsonCars.forEach(function (car) {
+	        renderArray.push(React.createElement(
+	          'ul',
+	          { id: "car-" + car.id, className: 'car-list-element-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'img-container' },
+	            React.createElement('img', { onClick: that.handleClick.bind(that, null, car), className: 'car-img', src: car.img_url })
+	          ),
+	          React.createElement(
+	            'li',
+	            { className: 'car-list-element' },
+	            car.year,
+	            '  ',
+	            car.make,
+	            '  ',
+	            car.model,
+	            '  ',
+	            React.createElement(
+	              'div',
+	              { className: 'price-container' },
+	              '$',
+	              car.price
+	            )
+	          )
+	        ));
+	      });
+	      renderArray.push(React.createElement(
+	        'h6',
+	        null,
+	        jsonCars.length,
+	        ' results found'
+	      ));
+	    } else {
+	      renderArray.push(React.createElement(
+	        'h4',
+	        { className: 'no-cars-loading' },
+	        'We could not find any car that matched your query. Try a different city. (The website currently only has Cars Data in San Francisco, New York & Cupertino!)'
+	      ));
+	    }
+	    return React.createElement(
+	      'ul',
+	      { className: 'cars-list-ul' },
+	      renderArray
+	    );
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'cars-page' },
+	      React.createElement(
+	        'div',
+	        { className: 'cars-page-header-container' },
+	        React.createElement('div', { className: 'logo-border help-border sign-up-border sign-in-border' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'left-side-container' },
+	        this.parseCars(this.state.cars)
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'right-side-container' },
+	        React.createElement(Map, { history: this.props.history, className: 'car-page-map' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Cars;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var CarStore = __webpack_require__(219);
+	var MapStore = __webpack_require__(246);
+	var SearchActions = __webpack_require__(241);
+	
+	function _getCoordsObj(latLng) {
+	  return {
+	    lat: latLng.lat(),
+	    lng: latLng.lng()
+	  };
+	}
+	
+	var CENTER = { lat: 37.7758, lng: -122.435 };
+	var mapMoved = false;
+	var _markers = {};
+	
+	var Map = React.createClass({
+	  displayName: 'Map',
+	
+	
+	  getInitialState: function () {
+	    return { cars: CarStore.all(),
+	      location: MapStore.all()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    console.log('map mounted');
+	    this.token1 = CarStore.addListener(this.updateCars);
+	    this.token2 = MapStore.addListener(this.updateLocation);
+	    var map = ReactDOM.findDOMNode(this.refs.map);
+	    var mapOptions = {
+	      center: this.centerCarCoords(),
+	      zoom: 12
+	    };
+	    this.map = new google.maps.Map(map, mapOptions);
+	    this.registerListeners();
+	    this.markers = [];
+	    this.state.cars.forEach(this.createMarkerFromCar);
+	  },
+	
+	  centerCarCoords: function () {
+	    if (this.state.location) {
+	      var center = this.props.center;
+	      return { lat: this.state.location.lat, lng: this.state.location.lng };
+	    } else {
+	      return CENTER;
+	    }
+	  },
+	
+	  updateCars: function () {
+	    this.setState({ cars: CarStore.all() });
+	  },
+	
+	  updateLocation: function () {
+	    this.setState({ location: MapStore.all() });
+	    this.map.panTo(this.centerCarCoords());
+	  },
+	
+	  componentDidUpdate: function (oldstate) {
+	    this._onChange();
+	    var that = this;
+	
+	    var toggleBounce = function (marker, status) {
+	      if (status) {
+	        marker.setAnimation(google.maps.Animation.BOUNCE);
+	      } else {
+	        marker.setAnimation(null);
+	      }
+	    };
+	
+	    for (var key in _markers) {
+	      var carDoc = document.getElementById("car-" + key);
+	      if (carDoc) {
+	        (function (k) {
+	          google.maps.event.addDomListener(carDoc, "mouseenter", function () {
+	            toggleBounce(_markers[k], true);
+	          });
+	          google.maps.event.addDomListener(carDoc, "mouseleave", function () {
+	            toggleBounce(_markers[k], false);
+	          });
+	        })(key);
+	      }
+	    }
+	  },
+	
+	  _onChange: function () {
+	    var cars = this.state.cars;
+	    var toAdd = [],
+	        toRemove = this.markers.slice(0);
+	    cars.forEach(function (car, idx) {
+	      var idx = -1;
+	      //check if car is already on map as a marker
+	      for (var i = 0; i < toRemove.length; i++) {
+	        if (toRemove[i].carId == car.id) {
+	          idx = i;
+	          break;
+	        }
+	      }
+	      if (idx === -1) {
+	        //if it's not already on the map, we need to add a marker
+	        toAdd.push(car);
+	      } else {
+	        //if it IS already on the map AND in the store, we don't need
+	        //to remove it
+	        toRemove.splice(idx, 1);
+	      }
+	    });
+	    toAdd.forEach(this.createMarkerFromCar);
+	    toRemove.forEach(this.removeMarker);
+	
+	    if (this.props.singleCar) {
+	      this.map.setOptions({ draggable: false });
+	      this.map.setCenter(this.centerCarCoords());
+	    }
+	  },
+	
+	  componentWillUnmount: function () {
+	    console.log("map UNmounted");
+	    this.token1.remove();
+	    this.token2.remove();
+	    this.token3.remove();
+	  },
+	
+	  registerListeners: function () {
+	    var that = this;
+	    this.token3 = google.maps.event.addListener(this.map, 'idle', function () {
+	      mapMoved = true;
+	      var bounds = that.map.getBounds();
+	      var northEast = _getCoordsObj(bounds.getNorthEast());
+	      var southWest = _getCoordsObj(bounds.getSouthWest());
+	      //actually issue the request
+	      var bounds = {
+	        northEast: northEast,
+	        southWest: southWest
+	      };
+	      SearchActions.fetchCarsByBounds(bounds);
+	    });
+	    // google.maps.event.addListener(this.map, 'click', function(event) {
+	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+	    //   that.props.onMapClick(coords);
+	    // });
+	  },
+	
+	  createMarkerFromCar: function (car) {
+	    var that = this;
+	    var pos = new google.maps.LatLng(car.lat, car.lng);
+	    var marker = new google.maps.Marker({
+	      position: pos,
+	      map: this.map,
+	      carId: car.id
+	    });
+	
+	    _markers[car.id] = marker;
+	    marker.addListener('click', function () {
+	      that.props.history.pushState(null, 'cars/' + this.carId);
+	    });
+	    this.markers.push(marker);
+	  },
+	
+	  removeMarker: function (marker) {
+	    for (var i = 0; i < this.markers.length; i++) {
+	      if (this.markers[i].carId === marker.carId) {
+	        this.markers[i].setMap(null);
+	        this.markers.splice(i, 1);
+	        break;
+	      }
+	    }
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'map', ref: 'map' },
+	      'Map'
+	    );
+	  }
+	});
+	
+	module.exports = Map;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(238);
+	var MapStore = new Store(AppDispatcher);
+	
+	var _location = undefined;
+	
+	MapStore.receiveLocation = function (location) {
+	  _location = location;
+	};
+	
+	MapStore.removeLocation = function () {
+	  _location = undefined;
+	};
+	
+	MapStore.all = function () {
+	  return _location;
+	};
+	
+	MapStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "RECEIVE_LOCATION":
+	      this.receiveLocation(payload.location);
+	      MapStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = MapStore;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var CarStore = __webpack_require__(219);
+	var SearchActions = __webpack_require__(241);
+	var RequestForm = __webpack_require__(248);
+	
+	var CarShow = React.createClass({
+	  displayName: 'CarShow',
+	
+	
+	  getInitialState: function () {
+	    var carId = this.props.params.carId;
+	    var car = CarStore.findCarById(carId);
+	    return {
+	      car: car
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token = CarStore.addListener(this._carChanged);
+	    if (!this.state.car) {
+	      SearchActions.fetchCarById(this.props.params.carId);
+	    }
+	  },
+	
+	  _carChanged: function () {
+	    var carId = this.props.params.carId;
+	    var car = CarStore.findCarById(carId);
+	    this.setState({ car: car });
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token.remove();
+	  },
+	
+	  renderCar: function () {
+	    var car = this.state.car;
+	    if (this.state.car) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement('div', { className: 'car-show-page-header' }),
+	        React.createElement('img', { className: 'car-show-page-img', src: this.state.car.img_url }),
+	        React.createElement(
+	          'div',
+	          { className: 'car-show-page-left-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'car-show-page-list-container' },
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-price' },
+	                '$',
+	                car.price,
+	                ' Per Day'
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Year: '
+	                ),
+	                car.year
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Model: '
+	                ),
+	                car.model
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Make: '
+	                ),
+	                car.make
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Mileage: '
+	                ),
+	                car.milage
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Type: '
+	                ),
+	                car.car_type
+	              ),
+	              React.createElement(
+	                'li',
+	                { className: 'car-show-page-list' },
+	                React.createElement(
+	                  'h3',
+	                  null,
+	                  'Location:'
+	                ),
+	                car.street,
+	                React.createElement('br', null),
+	                car.city,
+	                ', ',
+	                car.state,
+	                ' ',
+	                car.zip_code
+	              ),
+	              React.createElement(
+	                'h2',
+	                null,
+	                'Description: '
+	              ),
+	              React.createElement(
+	                'p',
+	                { className: 'car-show-page-description' },
+	                car.description
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'car-show-page-right-container' },
+	          React.createElement(RequestForm, { carId: this.props.params.carId })
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h4',
+	          { className: 'car-show-no-car-found' },
+	          'There is no car found!'
+	        )
+	      );
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'car-show-page-container' },
+	      this.renderCar()
+	    );
+	  }
+	});
+	
+	module.exports = CarShow;
+
+/***/ },
 /* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(239);
+	var LinkedStateMixin = __webpack_require__(215);
 	
-	var UserStore = __webpack_require__(220);
-	var MessageStore = __webpack_require__(243);
-	var ApiUtil = __webpack_require__(219);
-	var CarPostActions = __webpack_require__(249);
+	var RequestActions = __webpack_require__(249);
+	var UserStore = __webpack_require__(250);
+	var MessageStore = __webpack_require__(251);
+	
+	Date.prototype.yyyymmdd = function () {
+	  var yyyy = this.getFullYear().toString();
+	  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+	  var dd = this.getDate().toString();
+	  return yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]); // padding
+	};
+	
+	var RequestForm = CarShow = React.createClass({
+	  displayName: 'CarShow',
+	
+	
+	  mixins: [LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    var date = new Date();
+	    var tomorrow = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+	    return {
+	      startDate: date.yyyymmdd(),
+	      endDate: tomorrow.yyyymmdd(),
+	      currentUser: UserStore.all(),
+	      error: [],
+	      request: undefined
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token1 = MessageStore.addListener(this.updateMessage);
+	    this.token2 = UserStore.addListener(this.updateCurrentUser);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token1.remove();
+	    this.token2.remove();
+	  },
+	
+	  updateMessage: function () {
+	    this.setState({ error: MessageStore.message() });
+	  },
+	
+	  updateCurrentUser: function () {
+	    this.setState({ currentUser: UserStore.all() });
+	  },
+	
+	  updateRequest: function (request) {
+	    this.setState({ request: request });
+	  },
+	
+	  handleSubmit: function (e) {
+	    if (this.state.currentUser) {
+	      e.preventDefault();
+	      var startDate = this.state.startDate;
+	      var endDate = this.state.endDate;
+	      var carId = parseInt(this.props.carId);
+	      debugger;
+	      var userId = this.state.currentUser.id;
+	      RequestActions.makeRequest(startDate, endDate, carId, userId, this.updateRequest);
+	    } else {
+	      e.preventDefault();
+	      $('#log-in-btn-id').click();
+	    }
+	  },
+	
+	  renderRequest: function () {
+	    if (this.state.request) {
+	      var request = this.state.request;
+	      return React.createElement(
+	        'div',
+	        { className: 'request-detail' },
+	        React.createElement(
+	          'h3',
+	          null,
+	          'Request Detail'
+	        ),
+	        React.createElement(
+	          'ul',
+	          null,
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Request By:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.requester.username
+	            )
+	          ),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Status:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.status
+	            )
+	          ),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Start Date:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.start_date
+	            )
+	          ),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'End Date:',
+	            React.createElement(
+	              'li',
+	              null,
+	              request.end_date
+	            )
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'form',
+	          { className: 'request-form', onSubmit: this.handleSubmit },
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Check in'
+	          ),
+	          React.createElement('input', { className: 'request-form-date', type: 'date', defaultValue: this.state.startDate, valueLink: this.linkState('startDate') }),
+	          React.createElement(
+	            'h6',
+	            null,
+	            'Check out'
+	          ),
+	          React.createElement('input', { className: 'request-form-date', type: 'date', valueLink: this.linkState('endDate') }),
+	          React.createElement('input', { className: 'request-form-submit-btn', type: 'submit', value: 'Send Request' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'request-form-error-message' },
+	          this.renderError(this.state.error)
+	        )
+	      );
+	    }
+	  },
+	
+	  excuteCleanError: function () {
+	    setTimeout(RequestActions.cleanError(), 5000);
+	  },
+	
+	  renderError: function (error) {
+	    if (error.length > 0) {
+	      var returnArray = [];
+	      error.forEach(function (message) {
+	        returnArray.push(React.createElement(
+	          'li',
+	          { className: 'error-message' },
+	          message
+	        ));
+	      });
+	      return returnArray;
+	    } else {
+	      return null;
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'request-form-container' },
+	      this.renderRequest()
+	    );
+	  }
+	});
+	
+	module.exports = RequestForm;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(238);
+	var ApiUtil = __webpack_require__(242);
+	
+	var RequestActions = {
+	  showMessage: function (message) {
+	    AppDispatcher.dispatch({
+	      actionType: 'MESSAGE',
+	      message: message
+	    });
+	  },
+	
+	  makeRequest: function (startDate, endDate, carId, userId, callback) {
+	    ApiUtil.makeRequest(startDate, endDate, carId, userId, callback, this.showMessage);
+	  }
+	};
+	
+	module.exports = RequestActions;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(238);
+	var UserStore = new Store(AppDispatcher);
+	
+	var _user = undefined;
+	
+	UserStore.receiveUser = function (user) {
+	  _user = user;
+	};
+	
+	UserStore.removeUser = function () {
+	  _user = undefined;
+	};
+	
+	UserStore.all = function () {
+	  return _user;
+	};
+	
+	UserStore.isLoggedIn = function () {
+	  if (_user) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	};
+	
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "RECEIVE_CURRENT_USER":
+	      this.receiveUser(payload.user);
+	      UserStore.__emitChange();
+	      break;
+	    case "RECEIVE_NEW_USER":
+	      this.receiveUser(payload.user);
+	      UserStore.__emitChange();
+	      break;
+	    case "REMOVE_CURRENT_USER":
+	      this.removeUser();
+	      UserStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = UserStore;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(220).Store;
+	var AppDispatcher = __webpack_require__(238);
+	var MessageStore = new Store(AppDispatcher);
+	
+	var _error = [];
+	var _message = [];
+	
+	MessageStore.error = function () {
+	  return _error.slice(0);
+	};
+	
+	MessageStore.message = function () {
+	  return _message.slice(0);
+	};
+	
+	MessageStore.receiveError = function (error) {
+	  _error = error;
+	};
+	
+	MessageStore.receiveMessage = function (message) {
+	  _message = message;
+	};
+	
+	MessageStore.cleanMessage = function () {
+	  _error = [];
+	  _message = [];
+	};
+	
+	MessageStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "ERROR":
+	      this.receiveError(payload.error);
+	      MessageStore.__emitChange();
+	      break;
+	    case "MESSAGE":
+	      this.receiveMessage(payload.message);
+	      MessageStore.__emitChange();
+	      break;
+	    case "CLEAN_ERROR":
+	      this.cleanMessage();
+	      MessageStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = MessageStore;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(215);
+	
+	var UserStore = __webpack_require__(250);
+	var MessageStore = __webpack_require__(251);
+	var ApiUtil = __webpack_require__(242);
+	var CarPostActions = __webpack_require__(253);
 	
 	var YEAR = [];
 	var generateYear = function () {
@@ -32686,11 +33181,11 @@
 	module.exports = CarPost;
 
 /***/ },
-/* 249 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(215);
-	var ApiUtil = __webpack_require__(219);
+	var AppDispatcher = __webpack_require__(238);
+	var ApiUtil = __webpack_require__(242);
 	
 	var CarPostActions = {
 	
@@ -32715,739 +33210,237 @@
 	module.exports = CarPostActions;
 
 /***/ },
-/* 250 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Search = __webpack_require__(245);
-	var Footer = __webpack_require__(251);
+	var SessionActions = __webpack_require__(255);
+	var UserStore = __webpack_require__(250);
+	var LogInForm = __webpack_require__(256);
+	var SignUpForm = __webpack_require__(257);
 	
-	var LandingPage = React.createClass({
-	  displayName: 'LandingPage',
-	
-	
-	  renderSlogan: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'middle-slogan-container' },
-	      React.createElement(
-	        'h2',
-	        { className: 'home-page-slogan' },
-	        'Love the road'
-	      ),
-	      React.createElement(
-	        'h4',
-	        { className: 'home-page-statement' },
-	        'Rent unique cars to travel from local hosts.'
-	      )
-	    );
-	  },
-	
-	  clickSF: function () {
-	    this.props.history.pushState(null, 'cars?city=San+Francisco');
-	  },
-	
-	  clickNY: function () {
-	    this.props.history.pushState(null, 'cars?city=New+York');
-	  },
-	
-	  clickCupertino: function () {
-	    this.props.history.pushState(null, 'cars?city=Cupertino');
-	  },
-	
-	  renderBottom: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'bottom-slogan-container' },
-	        React.createElement(
-	          'h2',
-	          { className: 'bottom-slogan' },
-	          'Beyond your dreams, within your reach'
-	        ),
-	        React.createElement(
-	          'h4',
-	          { className: 'bottom-statement' },
-	          'Smiling faces, beautiful places'
-	        )
-	      ),
-	      React.createElement(
-	        'ul',
-	        null,
-	        React.createElement(
-	          'div',
-	          { onClick: this.clickSF, className: 'bottom-img-container' },
-	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761877/San-Francisco_yrkwsa.jpg' }),
-	          React.createElement(
-	            'h4',
-	            null,
-	            'San Francisco'
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { onClick: this.clickNY, className: 'bottom-img-container' },
-	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458763132/NYC_vtxnx3.jpg' }),
-	          React.createElement(
-	            'h4',
-	            null,
-	            'New York'
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { onClick: this.clickCupertino, className: 'bottom-img-container' },
-	          React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/c_scale,h_900,w_900/v1458761884/Cupertino_qkbj9n.jpg' }),
-	          React.createElement(
-	            'h4',
-	            null,
-	            'Cupertino'
-	          )
-	        )
-	      )
-	    );
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'land-page' },
-	      React.createElement(
-	        'div',
-	        { className: 'middle-container' },
-	        this.renderSlogan(),
-	        React.createElement('img', { src: 'http://res.cloudinary.com/dvy2aua0n/image/upload/v1458690030/home_page_background_ekcb9g_wwbu2k.jpg', className: 'landing-page-img' }),
-	        React.createElement(
-	          'div',
-	          { className: 'home-page-search-bar' },
-	          React.createElement(Search, { history: this.props.history })
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'bottom-container' },
-	        this.renderBottom()
-	      ),
-	      React.createElement(Footer, null)
-	    );
-	  }
-	});
-	
-	module.exports = LandingPage;
-
-/***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	
-	var Footer = React.createClass({
-	  displayName: 'Footer',
-	
-	
-	  renderAbout: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'about-container' },
-	      React.createElement(
-	        'h4',
-	        { className: 'about' },
-	        React.createElement(
-	          Link,
-	          { to: '/' },
-	          'About'
-	        )
-	      )
-	    );
-	  },
-	
-	  renderHome: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'footer-home-container' },
-	      React.createElement(
-	        'h4',
-	        { className: 'footer-home' },
-	        React.createElement(
-	          Link,
-	          { to: '/' },
-	          'Home'
-	        )
-	      )
-	    );
-	  },
-	
-	  renderHelp: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'footer-help-container' },
-	      React.createElement(
-	        'h4',
-	        { className: 'footer-help' },
-	        'Help'
-	      )
-	    );
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'footer-container' },
-	      this.renderHome(),
-	      this.renderHelp(),
-	      this.renderAbout()
-	    );
-	  }
-	});
-	
-	module.exports = Footer;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Link = __webpack_require__(159).Link;
-	
-	var CarStore = __webpack_require__(246);
-	var SearchActions = __webpack_require__(247);
-	var Map = __webpack_require__(253);
-	
-	var Cars = React.createClass({
-	  displayName: 'Cars',
+	var Session = React.createClass({
+	  displayName: 'Session',
 	
 	
 	  getInitialState: function () {
-	    return { cars: CarStore.all() };
+	    return {
+	      currentUser: UserStore.all(),
+	      button: ''
+	    };
 	  },
 	
 	  componentDidMount: function () {
-	    this.token = CarStore.addListener(this.updateCars);
-	    // SearchActions.fetchCarsInCity(this.props.location.query.city);
-	    SearchActions.fetchCenterLatLng(this.props.location.query.city);
+	    this.token = UserStore.addListener(this.updateCurrentUser);
+	    SessionActions.fetchCurrentUser();
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.token.remove();
 	  },
 	
-	  updateCars: function () {
-	    this.setState({ cars: CarStore.all() });
+	  updateCurrentUser: function () {
+	    this.setState({
+	      currentUser: UserStore.all()
+	    });
 	  },
 	
-	  handleClick: function (e, car) {
-	    this.props.history.pushState(null, 'cars/' + car.id);
+	  toSignUpForm: function () {
+	    this.setState({ button: 'signup' });
 	  },
 	
-	  parseCars: function (jsonCars) {
-	    var renderArray = [];
-	    var that = this;
-	    if (jsonCars.length > 0) {
-	      jsonCars.forEach(function (car) {
-	        renderArray.push(React.createElement(
-	          'ul',
-	          { id: "car-" + car.id, className: 'car-list-element-container' },
+	  toSignInForm: function () {
+	    this.setState({ button: 'signin' });
+	  },
+	
+	  handleLogOut: function (e) {
+	    e.preventDefault();
+	    this.setState({ button: '' });
+	    SessionActions.logOut();
+	  },
+	
+	  handleCancel: function () {
+	    SessionActions.cleanError();
+	    this.setState({ button: '' });
+	  },
+	
+	  renderForm: function () {
+	    if (this.state.button === '') {
+	      return null;
+	    } else if (this.state.button === 'signup') {
+	      return React.createElement(
+	        'div',
+	        { className: 'sign-up-page-container' },
+	        React.createElement(SignUpForm, null),
+	        React.createElement(
+	          'button',
+	          { className: 'session-sign-up-cancel-button', onClick: this.handleCancel },
+	          'Cancel'
+	        )
+	      );
+	    } else if (this.state.button === 'signin') {
+	      return React.createElement(
+	        'div',
+	        { className: 'log-in-page-container' },
+	        React.createElement(LogInForm, null),
+	        React.createElement(
+	          'button',
+	          { className: 'session-log-in-cancel-button', onClick: this.handleCancel },
+	          'Cancel'
+	        )
+	      );
+	    }
+	  },
+	
+	  switchButton: function () {
+	    if (this.state.currentUser) {
+	      return React.createElement(
+	        'div',
+	        { className: 'logged-user-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'log-out-btn-container' },
 	          React.createElement(
-	            'div',
-	            { className: 'img-container' },
-	            React.createElement('img', { onClick: that.handleClick.bind(that, null, car), className: 'car-img', src: car.img_url })
-	          ),
-	          React.createElement(
-	            'li',
-	            { className: 'car-list-element' },
-	            car.year,
-	            '  ',
-	            car.make,
-	            '  ',
-	            car.model,
-	            '  ',
-	            React.createElement(
-	              'div',
-	              { className: 'price-container' },
-	              '$',
-	              car.price
-	            )
+	            'button',
+	            { onClick: this.handleLogOut, className: 'log-out-btn' },
+	            'Log out'
 	          )
-	        ));
-	      });
-	      renderArray.push(React.createElement(
-	        'h6',
-	        null,
-	        jsonCars.length,
-	        ' results found'
-	      ));
+	        ),
+	        React.createElement(
+	          'h4',
+	          { className: 'username-container' },
+	          'Hello, ',
+	          this.state.currentUser.username
+	        )
+	      );
 	    } else {
-	      renderArray.push(React.createElement(
-	        'h4',
-	        { className: 'no-cars-loading' },
-	        'We could not find any car that matched your query. Try a different city. (The website currently only has Cars Data in San Francisco, New York & Cupertino!)'
-	      ));
+	      return React.createElement(
+	        'div',
+	        { className: 'login-signup-button' },
+	        React.createElement(
+	          'div',
+	          { className: 'log-in-container' },
+	          React.createElement(
+	            'button',
+	            { onClick: this.toSignInForm, id: 'log-in-btn-id', className: 'log-in-btn' },
+	            'Sign In'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'sign-up-container' },
+	          React.createElement(
+	            'button',
+	            { onClick: this.toSignUpForm, className: 'sign-up-btn' },
+	            'Sign Up'
+	          )
+	        ),
+	        this.renderForm()
+	      );
 	    }
-	    return React.createElement(
-	      'ul',
-	      { className: 'cars-list-ul' },
-	      renderArray
-	    );
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'cars-page' },
-	      React.createElement(
-	        'div',
-	        { className: 'cars-page-header-container' },
-	        React.createElement('div', { className: 'logo-border help-border sign-up-border sign-in-border' })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'left-side-container' },
-	        this.parseCars(this.state.cars)
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'right-side-container' },
-	        React.createElement(Map, { history: this.props.history, className: 'car-page-map' })
-	      )
+	      { className: 'session-container' },
+	      this.switchButton()
 	    );
 	  }
 	});
 	
-	module.exports = Cars;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	var CarStore = __webpack_require__(246);
-	var MapStore = __webpack_require__(254);
-	var SearchActions = __webpack_require__(247);
-	
-	function _getCoordsObj(latLng) {
-	  return {
-	    lat: latLng.lat(),
-	    lng: latLng.lng()
-	  };
-	}
-	
-	var CENTER = { lat: 37.7758, lng: -122.435 };
-	var mapMoved = false;
-	var _markers = {};
-	
-	var Map = React.createClass({
-	  displayName: 'Map',
-	
-	
-	  getInitialState: function () {
-	    return { cars: CarStore.all(),
-	      location: MapStore.all()
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    console.log('map mounted');
-	    this.token1 = CarStore.addListener(this.updateCars);
-	    this.token2 = MapStore.addListener(this.updateLocation);
-	    var map = ReactDOM.findDOMNode(this.refs.map);
-	    var mapOptions = {
-	      center: this.centerCarCoords(),
-	      zoom: 12
-	    };
-	    this.map = new google.maps.Map(map, mapOptions);
-	    this.registerListeners();
-	    this.markers = [];
-	    this.state.cars.forEach(this.createMarkerFromCar);
-	  },
-	
-	  centerCarCoords: function () {
-	    if (this.state.location) {
-	      var center = this.props.center;
-	      return { lat: this.state.location.lat, lng: this.state.location.lng };
-	    } else {
-	      return CENTER;
-	    }
-	  },
-	
-	  updateCars: function () {
-	    this.setState({ cars: CarStore.all() });
-	  },
-	
-	  updateLocation: function () {
-	    this.setState({ location: MapStore.all() });
-	    this.map.panTo(this.centerCarCoords());
-	  },
-	
-	  componentDidUpdate: function (oldstate) {
-	    this._onChange();
-	    var that = this;
-	
-	    var toggleBounce = function (marker, status) {
-	      if (status) {
-	        marker.setAnimation(google.maps.Animation.BOUNCE);
-	      } else {
-	        marker.setAnimation(null);
-	      }
-	    };
-	
-	    for (var key in _markers) {
-	      var carDoc = document.getElementById("car-" + key);
-	      if (carDoc) {
-	        (function (k) {
-	          google.maps.event.addDomListener(carDoc, "mouseenter", function () {
-	            toggleBounce(_markers[k], true);
-	          });
-	          google.maps.event.addDomListener(carDoc, "mouseleave", function () {
-	            toggleBounce(_markers[k], false);
-	          });
-	        })(key);
-	      }
-	    }
-	  },
-	
-	  _onChange: function () {
-	    var cars = this.state.cars;
-	    var toAdd = [],
-	        toRemove = this.markers.slice(0);
-	    cars.forEach(function (car, idx) {
-	      var idx = -1;
-	      //check if car is already on map as a marker
-	      for (var i = 0; i < toRemove.length; i++) {
-	        if (toRemove[i].carId == car.id) {
-	          idx = i;
-	          break;
-	        }
-	      }
-	      if (idx === -1) {
-	        //if it's not already on the map, we need to add a marker
-	        toAdd.push(car);
-	      } else {
-	        //if it IS already on the map AND in the store, we don't need
-	        //to remove it
-	        toRemove.splice(idx, 1);
-	      }
-	    });
-	    toAdd.forEach(this.createMarkerFromCar);
-	    toRemove.forEach(this.removeMarker);
-	
-	    if (this.props.singleCar) {
-	      this.map.setOptions({ draggable: false });
-	      this.map.setCenter(this.centerCarCoords());
-	    }
-	  },
-	
-	  componentWillUnmount: function () {
-	    console.log("map UNmounted");
-	    this.token1.remove();
-	    this.token2.remove();
-	    this.token3.remove();
-	  },
-	
-	  registerListeners: function () {
-	    var that = this;
-	    this.token3 = google.maps.event.addListener(this.map, 'idle', function () {
-	      mapMoved = true;
-	      var bounds = that.map.getBounds();
-	      var northEast = _getCoordsObj(bounds.getNorthEast());
-	      var southWest = _getCoordsObj(bounds.getSouthWest());
-	      //actually issue the request
-	      var bounds = {
-	        northEast: northEast,
-	        southWest: southWest
-	      };
-	      SearchActions.fetchCarsByBounds(bounds);
-	    });
-	    // google.maps.event.addListener(this.map, 'click', function(event) {
-	    //   var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-	    //   that.props.onMapClick(coords);
-	    // });
-	  },
-	
-	  createMarkerFromCar: function (car) {
-	    var that = this;
-	    var pos = new google.maps.LatLng(car.lat, car.lng);
-	    var marker = new google.maps.Marker({
-	      position: pos,
-	      map: this.map,
-	      carId: car.id
-	    });
-	
-	    _markers[car.id] = marker;
-	    marker.addListener('click', function () {
-	      that.props.history.pushState(null, 'cars/' + this.carId);
-	    });
-	    this.markers.push(marker);
-	  },
-	
-	  removeMarker: function (marker) {
-	    for (var i = 0; i < this.markers.length; i++) {
-	      if (this.markers[i].carId === marker.carId) {
-	        this.markers[i].setMap(null);
-	        this.markers.splice(i, 1);
-	        break;
-	      }
-	    }
-	  },
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'map', ref: 'map' },
-	      'Map'
-	    );
-	  }
-	});
-	
-	module.exports = Map;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(221).Store;
-	var AppDispatcher = __webpack_require__(215);
-	var MapStore = new Store(AppDispatcher);
-	
-	var _location = undefined;
-	
-	MapStore.receiveLocation = function (location) {
-	  _location = location;
-	};
-	
-	MapStore.removeLocation = function () {
-	  _location = undefined;
-	};
-	
-	MapStore.all = function () {
-	  return _location;
-	};
-	
-	MapStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "RECEIVE_LOCATION":
-	      this.receiveLocation(payload.location);
-	      MapStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = MapStore;
+	module.exports = Session;
 
 /***/ },
 /* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	var AppDispatcher = __webpack_require__(238);
+	var ApiUtil = __webpack_require__(242);
 	
-	var CarStore = __webpack_require__(246);
-	var SearchActions = __webpack_require__(247);
-	var RequestForm = __webpack_require__(256);
-	
-	var CarShow = React.createClass({
-	  displayName: 'CarShow',
-	
-	
-	  getInitialState: function () {
-	    var carId = this.props.params.carId;
-	    var car = CarStore.findCarById(carId);
-	    return {
-	      car: car
-	    };
+	var SessionActions = {
+	  receiveCurrentUser: function (user) {
+	    AppDispatcher.dispatch({
+	      actionType: 'RECEIVE_CURRENT_USER',
+	      user: user
+	    });
 	  },
 	
-	  componentDidMount: function () {
-	    this.token = CarStore.addListener(this._carChanged);
-	    if (!this.state.car) {
-	      SearchActions.fetchCarById(this.props.params.carId);
-	    }
+	  removeCurrentUser: function () {
+	    AppDispatcher.dispatch({
+	      actionType: 'REMOVE_CURRENT_USER'
+	    });
 	  },
 	
-	  _carChanged: function () {
-	    var carId = this.props.params.carId;
-	    var car = CarStore.findCarById(carId);
-	    this.setState({ car: car });
+	  receiveNewUser: function (user) {
+	    AppDispatcher.dispatch({
+	      actionType: 'RECEIVE_NEW_USER',
+	      user: user
+	    });
 	  },
 	
-	  componentWillUnmount: function () {
-	    this.token.remove();
+	  showError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: 'ERROR',
+	      error: error
+	    });
 	  },
 	
-	  renderCar: function () {
-	    var car = this.state.car;
-	    if (this.state.car) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement('div', { className: 'car-show-page-header' }),
-	        React.createElement('img', { className: 'car-show-page-img', src: this.state.car.img_url }),
-	        React.createElement(
-	          'div',
-	          { className: 'car-show-page-left-container' },
-	          React.createElement(
-	            'div',
-	            { className: 'car-show-page-list-container' },
-	            React.createElement(
-	              'ul',
-	              null,
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-price' },
-	                '$',
-	                car.price,
-	                ' Per Day'
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-list' },
-	                React.createElement(
-	                  'h3',
-	                  null,
-	                  'Year: '
-	                ),
-	                car.year
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-list' },
-	                React.createElement(
-	                  'h3',
-	                  null,
-	                  'Model: '
-	                ),
-	                car.model
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-list' },
-	                React.createElement(
-	                  'h3',
-	                  null,
-	                  'Make: '
-	                ),
-	                car.make
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-list' },
-	                React.createElement(
-	                  'h3',
-	                  null,
-	                  'Mileage: '
-	                ),
-	                car.milage
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-list' },
-	                React.createElement(
-	                  'h3',
-	                  null,
-	                  'Type: '
-	                ),
-	                car.car_type
-	              ),
-	              React.createElement(
-	                'li',
-	                { className: 'car-show-page-list' },
-	                React.createElement(
-	                  'h3',
-	                  null,
-	                  'Location:'
-	                ),
-	                car.street,
-	                React.createElement('br', null),
-	                car.city,
-	                ', ',
-	                car.state,
-	                ' ',
-	                car.zip_code
-	              ),
-	              React.createElement(
-	                'h2',
-	                null,
-	                'Description: '
-	              ),
-	              React.createElement(
-	                'p',
-	                { className: 'car-show-page-description' },
-	                car.description
-	              )
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'car-show-page-right-container' },
-	          React.createElement(RequestForm, { carId: this.props.params.carId })
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'h4',
-	          { className: 'car-show-no-car-found' },
-	          'There is no car found!'
-	        )
-	      );
-	    }
+	  cleanError: function () {
+	    AppDispatcher.dispatch({
+	      actionType: 'CLEAN_ERROR'
+	    });
 	  },
 	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'car-show-page-container' },
-	      this.renderCar()
-	    );
+	  fetchCurrentUser: function () {
+	    ApiUtil.fetchCurrentUser(this.receiveCurrentUser);
+	  },
+	
+	  logIn: function (credential) {
+	    ApiUtil.createSession(credential, this.receiveCurrentUser, this.cleanError, this.showError);
+	  },
+	
+	  logOut: function () {
+	    ApiUtil.deleteSession(this.removeCurrentUser);
+	  },
+	
+	  signUp: function (userAttributes) {
+	    ApiUtil.createUser(userAttributes, this.receiveNewUser, this.cleanError, this.showError);
 	  }
-	});
+	};
 	
-	module.exports = CarShow;
+	module.exports = SessionActions;
 
 /***/ },
 /* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var LinkedStateMixin = __webpack_require__(239);
+	var LinkedStateMixin = __webpack_require__(215);
 	
-	var RequestActions = __webpack_require__(257);
-	var UserStore = __webpack_require__(220);
-	var MessageStore = __webpack_require__(243);
+	var SessionActions = __webpack_require__(255);
+	var UserStore = __webpack_require__(250);
+	var MessageStore = __webpack_require__(251);
 	
-	Date.prototype.yyyymmdd = function () {
-	  var yyyy = this.getFullYear().toString();
-	  var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-	  var dd = this.getDate().toString();
-	  return yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]); // padding
-	};
-	
-	var RequestForm = CarShow = React.createClass({
-	  displayName: 'CarShow',
+	var LogInForm = React.createClass({
+	  displayName: 'LogInForm',
 	
 	
 	  mixins: [LinkedStateMixin],
 	
 	  getInitialState: function () {
-	    var date = new Date();
-	    var tomorrow = new Date(date.getTime() + 24 * 60 * 60 * 1000);
 	    return {
-	      startDate: date.yyyymmdd(),
-	      endDate: tomorrow.yyyymmdd(),
-	      currentUser: UserStore.all(),
+	      user: undefined,
 	      error: [],
-	      request: undefined
+	      username: '',
+	      password: ''
 	    };
 	  },
 	
 	  componentDidMount: function () {
-	    this.token1 = MessageStore.addListener(this.updateMessage);
-	    this.token2 = UserStore.addListener(this.updateCurrentUser);
+	    this.token1 = UserStore.addListener(this.updateUser);
+	    this.token2 = MessageStore.addListener(this.updateMessage);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -33455,121 +33448,14 @@
 	    this.token2.remove();
 	  },
 	
+	  updateUser: function () {
+	    this.setState({ user: UserStore.all() });
+	    this.setState({ username: '' });
+	    this.setState({ password: '' });
+	  },
+	
 	  updateMessage: function () {
-	    this.setState({ error: MessageStore.message() });
-	  },
-	
-	  updateCurrentUser: function () {
-	    this.setState({ currentUser: UserStore.all() });
-	  },
-	
-	  updateRequest: function (request) {
-	    this.setState({ request: request });
-	  },
-	
-	  handleSubmit: function (e) {
-	    if (this.state.currentUser) {
-	      e.preventDefault();
-	      var startDate = this.state.startDate;
-	      var endDate = this.state.endDate;
-	      var carId = parseInt(this.props.carId);
-	      debugger;
-	      var userId = this.state.currentUser.id;
-	      RequestActions.makeRequest(startDate, endDate, carId, userId, this.updateRequest);
-	    } else {
-	      e.preventDefault();
-	      $('#log-in-btn-id').click();
-	    }
-	  },
-	
-	  renderRequest: function () {
-	    if (this.state.request) {
-	      var request = this.state.request;
-	      return React.createElement(
-	        'div',
-	        { className: 'request-detail' },
-	        React.createElement(
-	          'h3',
-	          null,
-	          'Request Detail'
-	        ),
-	        React.createElement(
-	          'ul',
-	          null,
-	          React.createElement(
-	            'h6',
-	            null,
-	            'Request By:',
-	            React.createElement(
-	              'li',
-	              null,
-	              request.requester.username
-	            )
-	          ),
-	          React.createElement(
-	            'h6',
-	            null,
-	            'Status:',
-	            React.createElement(
-	              'li',
-	              null,
-	              request.status
-	            )
-	          ),
-	          React.createElement(
-	            'h6',
-	            null,
-	            'Start Date:',
-	            React.createElement(
-	              'li',
-	              null,
-	              request.start_date
-	            )
-	          ),
-	          React.createElement(
-	            'h6',
-	            null,
-	            'End Date:',
-	            React.createElement(
-	              'li',
-	              null,
-	              request.end_date
-	            )
-	          )
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'form',
-	          { className: 'request-form', onSubmit: this.handleSubmit },
-	          React.createElement(
-	            'h6',
-	            null,
-	            'Check in'
-	          ),
-	          React.createElement('input', { className: 'request-form-date', type: 'date', defaultValue: this.state.startDate, valueLink: this.linkState('startDate') }),
-	          React.createElement(
-	            'h6',
-	            null,
-	            'Check out'
-	          ),
-	          React.createElement('input', { className: 'request-form-date', type: 'date', valueLink: this.linkState('endDate') }),
-	          React.createElement('input', { className: 'request-form-submit-btn', type: 'submit', value: 'Send Request' })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'request-form-error-message' },
-	          this.renderError(this.state.error)
-	        )
-	      );
-	    }
-	  },
-	
-	  excuteCleanError: function () {
-	    setTimeout(RequestActions.cleanError(), 5000);
+	    this.setState({ error: MessageStore.error() });
 	  },
 	
 	  renderError: function (error) {
@@ -33588,38 +33474,174 @@
 	    }
 	  },
 	
+	  handleAutoFill: function () {
+	    // SessionActions.login({
+	    //   username: 'wsmars',
+	    //   password: 123456
+	    // });
+	    this.setState({ username: 'wsmars', password: 123456 });
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    SessionActions.logIn({
+	      username: this.state.username,
+	      password: this.state.password
+	    });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'request-form-container' },
-	      this.renderRequest()
+	      { className: 'log-in-form-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'log-in-title' },
+	        'Log In'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'log-in-form-title-border' },
+	        ' '
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'log-in-form', onSubmit: this.handleSubmit },
+	        React.createElement('input', { className: 'log-in-username-input', placeholder: 'Username', type: 'text', valueLink: this.linkState('username') }),
+	        React.createElement('input', { className: 'log-in-password-input', placeholder: 'Password', type: 'password', valueLink: this.linkState('password') }),
+	        React.createElement(
+	          'div',
+	          { className: 'log-in-form-btn-border' },
+	          '  '
+	        ),
+	        React.createElement('input', { className: 'log-in-submit-btn', type: 'submit', value: 'Sign In' })
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'log-in-auto-fill-btn', onClick: this.handleAutoFill },
+	        'Demo Login'
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        this.renderError(this.state.error)
+	      )
 	    );
 	  }
 	});
 	
-	module.exports = RequestForm;
+	module.exports = LogInForm;
 
 /***/ },
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(215);
-	var ApiUtil = __webpack_require__(219);
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(215);
 	
-	var RequestActions = {
-	  showMessage: function (message) {
-	    AppDispatcher.dispatch({
-	      actionType: 'MESSAGE',
-	      message: message
+	var SessionActions = __webpack_require__(255);
+	var UserStore = __webpack_require__(250);
+	var MessageStore = __webpack_require__(251);
+	
+	var SignUpForm = React.createClass({
+	  displayName: 'SignUpForm',
+	
+	  mixins: [LinkedStateMixin],
+	
+	  getInitialState: function () {
+	    return {
+	      user: undefined,
+	      error: [],
+	      username: '',
+	      password: '',
+	      passwordConfirmation: '',
+	      email: ''
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.token1 = UserStore.addListener(this.updateUser);
+	    this.token2 = MessageStore.addListener(this.updateMessage);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.token1.remove();
+	    this.token2.remove();
+	  },
+	
+	  updateUser: function () {
+	    this.setState({ user: UserStore.all() });
+	  },
+	
+	  updateMessage: function () {
+	    this.setState({ error: MessageStore.error() });
+	  },
+	
+	  renderError: function (error) {
+	    if (error.length > 0) {
+	      var returnArray = [];
+	      error.forEach(function (message) {
+	        returnArray.push(React.createElement(
+	          'li',
+	          { className: 'error-message' },
+	          '- ',
+	          message
+	        ));
+	      });
+	      return returnArray;
+	    } else {
+	      return null;
+	    }
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    SessionActions.signUp({
+	      username: this.state.username,
+	      password: this.state.password,
+	      password_confirmation: this.state.passwordConfirmation,
+	      email: this.state.email
 	    });
 	  },
 	
-	  makeRequest: function (startDate, endDate, carId, userId, callback) {
-	    ApiUtil.makeRequest(startDate, endDate, carId, userId, callback, this.showMessage);
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'sign-up-form-container' },
+	      React.createElement(
+	        'h4',
+	        { className: 'sign-up-title' },
+	        'Sign Up'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'sign-up-form-title-border' },
+	        ' '
+	      ),
+	      React.createElement(
+	        'form',
+	        { className: 'sign-up-form', onSubmit: this.handleSubmit },
+	        React.createElement('input', { className: 'sign-up-username-input', placeholder: 'Username', type: 'text', valueLink: this.linkState('username') }),
+	        React.createElement('input', { className: 'sign-up-password-input', placeholder: 'Password', type: 'password', valueLink: this.linkState('password') }),
+	        React.createElement('input', { className: 'sign-up-password-confirmation-input', placeholder: 'Confirm Password', type: 'password', valueLink: this.linkState('passwordConfirmation') }),
+	        React.createElement('input', { className: 'sign-up-email-input', placeholder: 'Email', type: 'text', valueLink: this.linkState('email') }),
+	        React.createElement(
+	          'div',
+	          { className: 'sign-up-form-btn-border' },
+	          '  '
+	        ),
+	        React.createElement('input', { className: 'sign-up-submit-btn', type: 'submit', value: 'Sign Up' })
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        this.renderError(this.state.error)
+	      )
+	    );
 	  }
-	};
+	});
 	
-	module.exports = RequestActions;
+	module.exports = SignUpForm;
 
 /***/ }
 /******/ ]);
