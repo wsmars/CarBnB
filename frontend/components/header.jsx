@@ -43,7 +43,7 @@ var Header = React.createClass({
     if (path === '/') {
       return (
         <div className='git-linkedin-container'>
-          <a href="https://github.com/wsmars">
+          <a href="https://github.com/wsmars/CarBnB">
             <img className='git-icon' src='http://res.cloudinary.com/dvy2aua0n/image/upload/v1459108881/github_icon_f9svjh.png'/>
           </a>
           <a href="https://www.linkedin.com/in/mingshuo-zhang-43a79a114?trk=hp-identity-name">

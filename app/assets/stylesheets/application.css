@@ -87,7 +87,7 @@ input, textarea, keygen, select, button {
   display: inline-block;
   text-align: start;
   margin: 0em 0em 0em 0em;
-  font: 13px BlinkMacSystemFont;
+  /*font: 13px BlinkMacSystemFont;*/
 }
 
 .header-container {
@@ -520,7 +520,6 @@ input, textarea, keygen, select, button {
   vertical-align: middle;
   width: 100%;
   height: auto;
-  text-align: center;
   position: relative;
   display: inline-block;
   z-index: 2;
@@ -538,10 +537,8 @@ input, textarea, keygen, select, button {
   vertical-align: middle;
   width: 100%;
   height: 100px;
-  box-sizing: border-box;
   text-align: center;
   position: absolute;
-  display: table;
   padding-top: 110px;
   z-index: 5;
 }
@@ -582,7 +579,7 @@ input, textarea, keygen, select, button {
   display: inline-block;
   vertical-align: middle;
   text-align: center;
-  width: 750px;
+  width: 751px;
 }
 
 .search-bar-input {
@@ -656,6 +653,7 @@ input, textarea, keygen, select, button {
   cursor: pointer;
   text-transform: none;
   outline: none;
+  float: left;
 }
 
 .bottom-container {
