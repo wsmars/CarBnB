@@ -28,7 +28,4 @@ PostgreSQL, React.js, Flux, Google Maps API v3, jQuery and jQuery-ui.
 ### Frontend
 - Single Page Application, powered by React/Flux/ReactRouter
 - SessionStore to track and manage user login status
-- Bootstrap for styling and component positioning
-- Font Awesome for icons
-- jQuery-ui for dataRangePicker and priceRangeSlider
 - jQuery for ajax request
