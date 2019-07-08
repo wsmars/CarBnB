@@ -3,7 +3,7 @@
 [CarBnB][amzn], is a Single Page Application built with Ruby on Rails,
 PostgreSQL, React.js, Flux, Google Maps API v3, jQuery and jQuery-ui.
 
-[amzn]: http://www.coolcarkit.com/
+[amzn]: https://carbnb.herokuapp.com/
 
 ## Features
 <!-- This is a Markdown checklist. Use it to keep track of your progress! -->
